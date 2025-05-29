@@ -1,12 +1,1 @@
-# .husky/commit-msg
-#!/usr/bin/env sh
-commit_msg_file="$1"
-commit_msg=$(cat "$commit_msg_file")
-
-# 정규식 검사
-echo "$commit_msg" | grep -qE '^feat: \([A-Z]+-[0-9]+\) \[.+\]$'
-if [ $? -ne 0 ]; then
-  echo "❌ 커밋 메시지 형식이 잘못되었습니다."
-  echo "올바른 예: feat: (YGI-123) [커밋 내용]"
-  exit 1
-fi
+npx --no-install commitlint --edit "$1"
