@@ -10,9 +10,6 @@
 !.yarn/releases
 !.yarn/versions
 
-# package-lock.json (충돌이 많이 나서 추가)
-/package-lock.json
-
 # testing
 /coverage
 

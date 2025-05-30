@@ -1,1 +1,2 @@
-npx --no-install commitlint --edit "$1"
+# 안전한 방식
+./node_modules/.bin/commitlint --edit "$1"
