@@ -7,6 +7,6 @@
 
   // ESLint가 fixOnSave도 하도록 설정 (선택)
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   }
 }
