@@ -10,12 +10,13 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.21",
     "next": "15.3.2",
     "next-auth": "^4.24.11",
+    "postcss": "^8.5.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.4"
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
