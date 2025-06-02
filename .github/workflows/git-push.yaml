@@ -1,0 +1,34 @@
+name: git push into another repo to deploy to vercel
+
+on:
+  push:
+    branches: [main] # main 브랜치에 push될 때 실행
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: pandoc/latex
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install mustache (to update the date)
+        run: apk add ruby && gem install mustache
+
+      - name: creates output
+        run: sh ./build.sh
+
+      - name: Pushes to another repository
+        id: push_directory
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.EUNSEO_GITHUB_KEY }}
+        with:
+          source-directory: "output"
+          destination-github-username: arty0928
+          destination-repository-name: FE
+          user-email: ${{ secrets.EUNSEO_ACCOUNT_EMAIL }}
+          commit-message: ${{ github.event.commits[0].message }}
+          target-branch: main
+
+      - name: Test get variable exported by push-to-another-repository
+        run: echo $DESTINATION_CLONED_DIRECTORY
