@@ -1,8 +1,30 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 body {
   margin: 0;
   padding: 0;
+}
+
+/* Tailwind v4부터는 tailwind.config.js이 아닌 @theme 내부에 변수들을 정의하여 커스텀 디자인을 정의한다 */
+/* 하단에 색상, 타이포그래피(font), 여백 및 간격, 반응형 브레이크포인트(반응형 대비), 그림자 및 테두리 등의 정보가 들어갈 예정 */
+@theme {
+  --color-ku-dark-green: #366943;
+  --color-ku-cool-gray: #b2b3b4;
+  --color-ku-red: #d7260d;
+  --color-ku-green: #65b749;
+  --color-ku-dark-gray: #686f75;
+  --color-ku-light-green: #c6f059;
+  --color-ku-warm-gray: #b7ccaa;
+  --color-ku-black: #000000;
+  --color-ku-blue: #7ca6d8;
+  --color-ku-beige: #f0f4dd;
+  --color-white-smoke: #f5f5f5;
+  --color-ku-violet: #b686c2;
+  --color-ku-light-gray: #ecebe4;
+  --color-ku-white: #ffffff;
+  --color-ku-orange: #dea93d;
+  --color-ku-brown: #d96941;
+  --color-ku-yellow: #ffc000;
+  --color-ku-lime-green: #f6fde6;
+  --color-ku-light-black: #333333;
 }
