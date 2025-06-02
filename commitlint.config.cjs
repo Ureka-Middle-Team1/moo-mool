@@ -7,13 +7,9 @@ module.exports = {
       "always",
       "^#\\d+\\s+(feat|fix|docs|style|refactor|test|chore):\\s.+$",
     ],
-    "type-enum": [
-      2,
-      "always",
-      ["feat", "fix", "docs", "style", "refactor", "test", "chore"],
-    ],
     "type-case": [0], // type 대소문자 검사 비활성화 (직접 추출 어려움)
     "subject-empty": [2, "never"],
     "header-max-length": [2, "always", 120],
+    "header-min-length": [2, "always", 15], // 예: 최소 15자
   },
 };
