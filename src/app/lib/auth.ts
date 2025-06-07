@@ -15,7 +15,6 @@ export const authOptions: NextAuthOptions = {
         },
       },
       profile(profile) {
-        console.log("kakao login profile : ", profile);
         return {
           id: profile.id,
           name: profile.properties?.nickname,

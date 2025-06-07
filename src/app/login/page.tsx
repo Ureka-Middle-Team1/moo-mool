@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   const handleLogin = () => {
-    signIn("kakao", { callbackUrl: "/" });
+    signIn("kakao", { callbackUrl: "/login/userinfo" });
   };
 
   return (
