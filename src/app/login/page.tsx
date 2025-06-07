@@ -4,14 +4,14 @@ import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   const handleLogin = () => {
-    signIn("kakao", { callbackUrl: "/login/userinfo" });
+    signIn("kakao", { callbackUrl: "/" });
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex h-screen flex-col items-center justify-center">
       <button
         onClick={handleLogin}
-        className="bg-yellow-400 text-black px-4 py-2 rounded">
+        className="rounded bg-yellow-400 px-4 py-2 text-black">
         카카오로 로그인
       </button>
     </div>
