@@ -45,3 +45,5 @@ next-env.d.ts
 
 # npm lock file
 package-lock.json
+
+/src/generated/prisma
