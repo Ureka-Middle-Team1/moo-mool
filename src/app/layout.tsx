@@ -3,6 +3,7 @@ import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import "./fonts.css";
 import LayoutWrapper from "@/components/common/LayoutWrapper";
+import Providers from "./providers";
 
 export default function RootLayout({
   children,
@@ -11,9 +12,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="flex justify-center antialiased">
+      <body className="flex justify-center bg-gray-500 antialiased">
         <SessionProvider>
-          <LayoutWrapper>{children}</LayoutWrapper>
+          <Providers>
+            <LayoutWrapper>{children}</LayoutWrapper>
+          </Providers>
         </SessionProvider>
       </body>
     </html>
