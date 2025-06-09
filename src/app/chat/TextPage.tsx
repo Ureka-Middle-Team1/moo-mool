@@ -3,11 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-type Message = {
-  role: "user" | "bot";
-  content: string;
-};
+import { Message } from "@/types/Chat";
 
 interface TextPageProps {
   messages: Message[];
