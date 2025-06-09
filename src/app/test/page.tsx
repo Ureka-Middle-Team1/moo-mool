@@ -71,7 +71,7 @@ export default function TestHomePage() {
           <p className="text-lg text-black">테스트 공유하기</p>
           <div className="flex items-center gap-1">
             <Share2 className="text-black" />
-            <p className="text-lg font-medium text-black">150</p>
+            <p className="text-lg font-medium text-black">{shareCount}</p>
           </div>
         </div>
 
