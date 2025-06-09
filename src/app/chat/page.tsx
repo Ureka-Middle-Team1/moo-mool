@@ -1,8 +1,8 @@
 "use client";
 
-import CharacterScene from "@/components/chat/CharacterScene";
 import Header from "@/components/common/Header";
 import { useRouter, useSearchParams } from "next/navigation";
+import VoicePage from "./voicePage";
 type Mode = "text" | "voice";
 
 export default function ChatbotPage() {
@@ -17,7 +17,7 @@ export default function ChatbotPage() {
       <Header />
       {/* 내용 영역 */}
       <div className="flex-1 overflow-hidden">
-        {mode === "text" ? <h1>text</h1> : <h1>voice</h1>}
+        {mode === "text" ? <h1>text</h1> : <VoicePage />}
       </div>
     </div>
   );
