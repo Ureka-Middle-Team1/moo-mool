@@ -1,5 +1,5 @@
 // Smart Choice API 호출 시 보내야 할 input 자료형
-export interface RecommendationInput {
+export interface SmartChoiceApiInput {
   voice: string;
   data: string;
   sms: string;
