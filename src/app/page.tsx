@@ -1,7 +1,11 @@
+import CharacterScene from "@/components/chat/CharacterScene";
+
 export default function Home() {
   return (
-    <div className="bg-ku-dark-green h-screen w-full">
-      <main></main>
+    <div className="h-screen w-full bg-yellow-100">
+      <main>
+        <CharacterScene />
+      </main>
     </div>
   );
 }
