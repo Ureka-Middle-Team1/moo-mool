@@ -11,9 +11,9 @@ export default function VoiceFooter() {
       <div className="absolute h-28 w-28 rounded-full bg-yellow-200 opacity-60 blur-xl" />
 
       {/* 마이크 아이콘 */}
-      <button className="z-10 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 shadow-md">
+      <div className="z-10 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 shadow-md">
         <Mic size={28} className="text-gray-700" />
-      </button>
+      </div>
     </div>
   );
 }

@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Message } from "@/types/Message";
 import Header from "@/components/common/Header";
 import TextPage from "./TextPage";
-import VoicePage from "./voicePage";
+import VoicePage from "./VoicePage";
 
 type Mode = "text" | "voice";
 
