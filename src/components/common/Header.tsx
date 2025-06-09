@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, X } from "lucide-react";
+import { Button } from "../ui/button";
 
 export default function Header() {
   const router = useRouter();
@@ -21,9 +22,9 @@ export default function Header() {
 
   return (
     <div className="relative flex h-12 items-center justify-center bg-white">
-      <button className="absolute left-4" onClick={handleClick}>
+      <Button className="absolute left-2" variant="ghost" onClick={handleClick}>
         {isVoiceMode ? <ArrowLeft size={20} /> : <X size={20} />}
-      </button>
+      </Button>
       <span className="text-center text-sm font-semibold">{title}</span>
     </div>
   );

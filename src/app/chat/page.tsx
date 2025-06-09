@@ -1,23 +1,29 @@
 "use client";
 
-import Header from "@/components/common/Header";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Message } from "@/types/Message";
+import Header from "@/components/common/Header";
+import TextPage from "./TextPage";
 import VoicePage from "./voicePage";
+
 type Mode = "text" | "voice";
 
 export default function ChatbotPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
 
-  // 현재 모드 추출
   const mode = (searchParams.get("mode") as Mode) || "text";
+  const [messages, setMessages] = useState<Message[]>([]);
 
   return (
     <div className="flex h-screen flex-col bg-pink-100">
       <Header />
-      {/* 내용 영역 */}
-      <div className="flex-1 overflow-hidden">
-        {mode === "text" ? <h1>text</h1> : <VoicePage />}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {mode === "text" ? (
+          <TextPage messages={messages} setMessages={setMessages} />
+        ) : (
+          <VoicePage />
+        )}
       </div>
     </div>
   );
