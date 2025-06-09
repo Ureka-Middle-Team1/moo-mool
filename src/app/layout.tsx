@@ -1,6 +1,7 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
+import "./fonts.css";
 import LayoutWrapper from "@/components/common/LayoutWrapper";
 
 export default function RootLayout({
