@@ -1,7 +1,6 @@
 "use client";
 
 import ShareSection from "@/components/meme/shareSection";
-import { Share2, Link } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type Moono = {
@@ -12,7 +11,6 @@ type Moono = {
 
 export default function TestHomePage() {
   const [participantCount, setParticipantCount] = useState<number>(0);
-  const [shareCount, setShareCount] = useState<number>(0);
   const [topMoonos, setTopMoonos] = useState<Moono[]>([]);
 
   useEffect(() => {
@@ -22,7 +20,6 @@ export default function TestHomePage() {
       const data = await res.json();
 
       setParticipantCount(data.participantCount);
-      setShareCount(data.shareCount);
 
       const top = data.moonos
         .sort((a: Moono, b: Moono) => b.score - a.score)
@@ -66,16 +63,7 @@ export default function TestHomePage() {
         {/* 구분선 */}
         <hr className="my-3 w-[90%] border border-pink-500" />
 
-        {/* 공유 */}
-        <div className="mb-4 flex w-[90%] items-center justify-center gap-2">
-          <p className="text-lg text-black">테스트 공유하기</p>
-          <div className="flex items-center gap-1">
-            <Share2 className="text-black" />
-            <p className="text-lg font-medium text-black">{shareCount}</p>
-          </div>
-        </div>
-
-        {/* 아이콘 버튼 2개 */}
+        {/* 공유 + 아이콘 버튼 2개 */}
         <ShareSection title="테스트 공유하기" count={150} />
 
         {/* 1등 / 2등 카드 */}
