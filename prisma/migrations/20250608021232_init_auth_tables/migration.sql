@@ -24,6 +24,7 @@ CREATE TABLE `Account` (
     `scope` VARCHAR(191) NULL,
     `id_token` VARCHAR(191) NULL,
     `session_state` VARCHAR(191) NULL,
+    `refresh_token_expires_in` INTEGER NULL,
 
     UNIQUE INDEX `Account_provider_providerAccountId_key`(`provider`, `providerAccountId`),
     PRIMARY KEY (`id`)
@@ -40,8 +41,18 @@ CREATE TABLE `Session` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- AddForeignKey
-ALTER TABLE `Account` ADD CONSTRAINT `Account_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+-- CreateTable
+CREATE TABLE `VerificationToken` (
+    `identifier` VARCHAR(191) NOT NULL,
+    `token` VARCHAR(191) NOT NULL,
+    `expires` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `VerificationToken_token_key`(`token`),
+    UNIQUE INDEX `VerificationToken_identifier_token_key`(`identifier`, `token`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `Session` ADD CONSTRAINT `Session_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Account` ADD CONSTRAINT `Account_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Session` ADD CONSTRAINT `Session_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
