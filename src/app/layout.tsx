@@ -12,7 +12,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="flex justify-center antialiased">
+      <body className="flex justify-center bg-gray-500 antialiased">
         <SessionProvider>
           <Providers>
             <LayoutWrapper>{children}</LayoutWrapper>

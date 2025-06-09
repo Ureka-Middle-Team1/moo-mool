@@ -3,9 +3,5 @@ export default function LayoutWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="w-full max-w-[420px] min-h-screen px-4 bg-white">
-      {children}
-    </div>
-  );
+  return <div className="min-h-screen w-full max-w-[420px]">{children}</div>;
 }
