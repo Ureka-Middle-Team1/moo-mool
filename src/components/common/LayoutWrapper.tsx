@@ -4,8 +4,10 @@ export default function LayoutWrapper({
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full max-w-[420px] min-h-screen px-4 bg-white">
-      {children}
+    <div className="flex justify-center">
+      <div className="relative min-h-[852px] w-full max-w-[393px] bg-white">
+        {children}
+      </div>
     </div>
   );
 }
