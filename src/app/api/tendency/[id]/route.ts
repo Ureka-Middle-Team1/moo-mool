@@ -1,30 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// 테스트용 mock 데이터
-const tendencySamples: Record<string, number[]> = {
-  '3': [60, 90, 40, 70, 25, 10], // 둥근 그래프용
-  '4': [75, 85, 60, 55, 35, 20]  // 각진 그래프용
+const tendencySamples: Record<string, { name: string; data: number[] }> = {
+  '3': {
+    name: '5G 프리미엄 플러스',
+    data: [77, 50, 50, 97, 80],
+  },
+  // '4': {
+  //   name: 'LTE 실속 요금제',
+  //   data: [30, 30, 60, 60, 60],
+  // },
+  // 기존 요금제 비교 데이터
 };
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const { id } = params;
-  const result = tendencySamples[id];
+  const id = context.params.id;
 
-  if (!result) {
+  const sample = tendencySamples[id];
+
+  if (!sample) {
     return NextResponse.json(
-      {
-        success: false,
-        message: `해당 id(${id})에 대한 통신 성향 데이터가 없습니다.`
-      },
+      { success: false, message: `해당 id(${id})에 대한 데이터가 없습니다.` },
       { status: 404 }
     );
   }
 
   return NextResponse.json({
     success: true,
-    data: result
+    name: sample.name,
+    radar: sample.data,
+    bar: sample.data,
   });
 }

@@ -7,105 +7,108 @@ import {
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 
-ChartJS.register(
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend
-);
+ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
+
 
 interface TendencyRadarChartProps {
   isRounded: boolean;
   data: number[];
+  name: string;
   labels?: string[];
 }
+
 
 const TendencyRadarChart = ({
   isRounded,
   data,
-  labels = ['SNS', 'Youtube', 'Chat', 'Calling', 'Books', 'Saving']
+  name,
+  labels = ['월정액', '데이터', '속도', '음성통화', '문자'],
 }: TendencyRadarChartProps) => {
   const chartData = {
-    labels,
-    datasets: [
-      {
-        label: '나의 선호도',
-        data,
-        fill: true,
-        backgroundColor: 'rgba(253, 207, 86, 0.2)',
-        borderColor: 'rgb(253, 207, 86)',
-        pointBackgroundColor: 'rgb(253, 207, 86)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgb(253, 207, 86)'
-      }
-    ]
-  };
+  labels,
+  datasets: [
+    {
+      label: '기준값',
+      data: [100, 100, 100, 100, 100],
+      fill: true,
+      backgroundColor: 'rgba(200, 200, 255, 0.2)',
+      borderColor: 'rgba(200, 200, 255, 0.3)',
+      borderWidth: 1,
+      pointRadius: 0,
+    },
+    {
+      label: name,
+      data,
+      fill: true,
+      backgroundColor: 'rgba(253, 140, 0, 0.2)',
+      borderColor: 'rgba(253, 140, 0, 0.8)',
+      borderWidth: 1.5,
+      pointRadius: 0,
+    },
+  ],
+};
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      r: {
-        beginAtZero: true,
-        min: 0,
-        max: 100,
-        pointLabels: {
-          font: {
-            family: 'Pretendard-Regular',
-            size: 15,
-            weight: 'bold' as const
-          },
-          color: '#EB453F'
+const options = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    r: {
+      beginAtZero: true,
+      min: 0,
+      max: 100,
+      ticks: {
+        stepSize: 20,
+        color: '#888',
+        backdropColor: 'transparent',
+        font: {
+          size: 8,
+          weight: 400,
         },
-        grid: {
-          color: 'rgba(241, 145, 187, 0.2)',
-          lineWidth: 10
-        },
-        angleLines: {
-          color: 'rgba(241, 145, 187, 0.4)'
-        },
-        ticks: {
-          stepSize: 20,
-          backdropColor: 'transparent',
-          color: '#F191BB'
-        }
-      }
-    },
-    elements: {
-      line: {
-        borderWidth: 4,
-        tension: isRounded ? 0.4 : 0
+        padding: 18,
+        z: 1,
+        display: true,
       },
-      point: {
-        radius: 6,
-        hoverRadius: 8
-      }
+      grid: {
+        color: 'rgba(0, 0, 0, 0.1)',
+        circular: false,
+      },
+      angleLines: {
+        color: 'rgba(0, 0, 0, 0.1)',
+      },
+      pointLabels: {
+        color: '#666',
+        font: {
+          size: 12,
+          weight: 500,
+        },
+      },
     },
-    plugins: {
-      legend: {
-        display: false
-      }
+  },
+  plugins: {
+    legend: {
+      display: false,
     },
-    animation: {
-      duration: 1500,
-      easing: 'easeOutBounce',
-      animateScale: true,
-      animateRotate: true
-    } as const
-  };
+  },
+  animation: {
+    duration: 1000,
+    easing: 'easeOutQuart',
+  } as const,
+};
+
+
+
+
 
   return (
-    <div className="w-full h-[400px]">
+    <div className="w-full h-[320px]">
       <Radar data={chartData} options={options} />
     </div>
   );
 };
+
 
 export default TendencyRadarChart;
