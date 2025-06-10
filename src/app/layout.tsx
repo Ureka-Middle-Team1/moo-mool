@@ -12,11 +12,13 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="m-0 bg-gray-100 p-0">
-        <div className="flex min-h-screen justify-center bg-gray-100">
-          <div className="relative h-screen w-full max-w-[393px] bg-pink-200">
-            {children}
+        <SessionProvider>
+          <div className="flex h-full justify-center bg-gray-500">
+            <div className="relative h-screen w-full max-w-[393px] bg-pink-200">
+              {children}
+            </div>
           </div>
-        </div>
+        </SessionProvider>
       </body>
     </html>
   );
