@@ -27,7 +27,11 @@ export default function CharacterScene() {
           enableRotate={false}
         />
       </Canvas>
-      <ShadowRing isSpeaking={isSpeaking} />
+      <ShadowRing
+        isActive={isSpeaking}
+        color="bg-pink-400"
+        offsetBottom="11rem"
+      />
     </div>
   );
 }
