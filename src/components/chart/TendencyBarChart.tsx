@@ -93,12 +93,11 @@ const TendencyBarChart = ({
 
   return (
     <div className="w-full">
-      {/* 차트 */}
+      
       <div style={{ height: 320 }}>
         <Bar data={chartData} options={options} />
       </div>
 
-      {/* 커스텀 범례 */}
       <div className="text-center mt-2 text-xs text-gray-700">
         <div className="inline-flex items-center gap-2 justify-center">
           <div
