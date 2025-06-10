@@ -1,4 +1,4 @@
-import { Plan } from "@/data/mockPlans";
+import { Plan } from "@/hooks/useGetRecommendedPlanQuery";
 
 export default function PlanCard({ rank, title, subtitle, detail }: Plan) {
   return (
