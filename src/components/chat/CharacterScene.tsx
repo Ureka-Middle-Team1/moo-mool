@@ -4,15 +4,10 @@ import { useTTS } from "@/hooks/useTTS";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import CharacterModel from "./CharacterModel";
-
-function ShadowRing() {
-  return (
-    <div className="absolute bottom-[28%] h-10 w-50 rounded-full bg-pink-400 opacity-90 blur-2xl" />
-  );
-}
+import ShadowRing from "./ShadowRing";
 
 export default function CharacterScene() {
-  const { speak } = useTTS("Google 한국의 여성");
+  const { speak, isSpeaking } = useTTS("Google 한국의 여성");
 
   const handleSpeak = () => {
     speak("돌고 돌아 시간 속에 널 만나러 왔어");
@@ -32,7 +27,7 @@ export default function CharacterScene() {
           enableRotate={false}
         />
       </Canvas>
-      <ShadowRing />
+      <ShadowRing isSpeaking={isSpeaking} />
     </div>
   );
 }
