@@ -1,28 +1,9 @@
 "use client";
 
 import { useTTS } from "@/hooks/useTTS";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
-import { useRef } from "react";
-import * as THREE from "three";
-
-function CharacterModel({ onClick }: { onClick: () => void }) {
-  const { scene } = useGLTF("/character/3d-octopus.glb");
-  const ref = useRef<THREE.Group>(null);
-
-  useFrame(({ clock }) => {
-    if (ref.current) {
-      const t = clock.getElapsedTime();
-      ref.current.position.y = Math.sin(t * 2.5) * 0.08;
-    }
-  });
-
-  return (
-    <group ref={ref} scale={0.8} onClick={onClick}>
-      <primitive object={scene} />
-    </group>
-  );
-}
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import CharacterModel from "./CharacterModel";
 
 function ShadowRing() {
   return (
