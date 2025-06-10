@@ -3,5 +3,11 @@ export default function LayoutWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="min-h-screen w-full max-w-[420px]">{children}</div>;
+  return (
+    <div className="flex justify-center">
+      <div className="relative min-h-[852px] w-full max-w-[393px] bg-white">
+        {children}
+      </div>
+    </div>
+  );
 }
