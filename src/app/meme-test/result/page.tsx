@@ -5,36 +5,19 @@ import { ChevronLeft } from "lucide-react";
 import ShareSection from "@/components/meme/shareSection";
 import TrendBar from "@/components/chart/TrendBar";
 import PlanCard from "@/components/plan/planCard";
-import {
-  mockPlans,
-  descriptionText,
-  hashtagText,
-  Plan,
-} from "@/data/mockPlans";
+import { descriptionText, hashtagText } from "@/data/mockPlans";
 
 import {
   parseSentences,
   parseHashtags,
   renderHighlightedText,
 } from "@/utils/textUtils";
+import { useGetRecommendedPlanQuery } from "@/hooks/useGetRecommendedPlanQuery";
 
 export default function TestPage() {
   const splitSentences = parseSentences(descriptionText);
   const hashtags = parseHashtags(hashtagText);
-  const [plans, setPlans] = useState<Plan[]>([]);
-
-  useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        const res = await fetch("/api/plan/recommend");
-        const data = await res.json();
-        setPlans(data);
-      } catch (error) {
-        console.error("요금제 불러오기 실패:", error);
-      }
-    };
-    fetchPlans();
-  }, []);
+  const { data: plans, isLoading, isError } = useGetRecommendedPlanQuery();
 
   return (
     <div className="relative w-full max-w-[393px] bg-pink-200">
@@ -117,7 +100,11 @@ export default function TestPage() {
         <div className="mt-5 text-2xl font-bold">추천 요금제</div>
 
         <div className="flex w-full flex-col gap-4">
-          {mockPlans.map((plan) => (
+          {isLoading && <p className="text-center">요금제를 불러오는 중...</p>}
+          {isError && (
+            <p className="text-center text-red-500">요금제 불러오기 실패</p>
+          )}
+          {plans?.map((plan) => (
             <PlanCard
               key={plan.rank}
               rank={plan.rank}

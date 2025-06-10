@@ -1,31 +1,3 @@
-export interface Plan {
-  rank: number;
-  title: string;
-  subtitle: string;
-  detail: string;
-}
-
-export const mockPlans: Plan[] = [
-  {
-    rank: 1,
-    title: "5G 프리미엄 플러스",
-    subtitle: "데이터 무제한",
-    detail: "테더링 + 쉐어링 1000GB",
-  },
-  {
-    rank: 2,
-    title: "5G 프리미엄 플러스",
-    subtitle: "데이터 무제한",
-    detail: "테더링 + 쉐어링 2000GB",
-  },
-  {
-    rank: 3,
-    title: "5G 프리미엄 플러스",
-    subtitle: "데이터 무제한",
-    detail: "테더링 + 쉐어링 3000GB",
-  },
-];
-
 export const trendData = [
   { label: "SNS", value: 60 },
   { label: "Youtube", value: 85 },

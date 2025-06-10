@@ -1,45 +1,28 @@
 "use client";
 
 import ShareSection from "@/components/meme/shareSection";
-import { useEffect, useState } from "react";
-
-type Moono = {
-  label: string;
-  image: string;
-  score: number;
-};
+import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 
 export default function TestHomePage() {
-  const [participantCount, setParticipantCount] = useState<number>(0);
-  const [topMoonos, setTopMoonos] = useState<Moono[]>([]);
+  const { data, isLoading, isError } = useGetTypeRankQuery();
+  if (isLoading)
+    return <div className="mt-10 text-center font-medium">로딩 중...</div>;
+  if (isError || !data)
+    return <div className="mt-10 text-center">데이터 불러오기 실패</div>;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("/api/test/get-type-rank");
-      console.log("응답 상태:", res.status);
-      const data = await res.json();
-
-      setParticipantCount(data.participantCount);
-
-      const top = data.moonos
-        .sort((a: Moono, b: Moono) => b.score - a.score)
-        .slice(0, 2);
-
-      setTopMoonos(top);
-    };
-
-    fetchData();
-  }, []);
+  const topMoonos = (data?.moonos ?? [])
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 2);
 
   return (
-    <div className="h-full min-h-screen bg-pink-200 px-0">
+    <div className="w-full bg-pink-200 px-0">
       {/* 상단 로고 영역 */}
       <div className="flex items-start px-3 py-4">
         <img src="/assets/icons/logo.png" alt="logo" className="w-24" />
       </div>
 
       {/* 중앙 콘텐츠 */}
-      <div className="flex flex-col items-center justify-center gap-3">
+      <div className="flex flex-col items-center justify-center gap-1">
         <img
           src="/assets/icons/meme-test-home.png"
           alt="home"
@@ -52,14 +35,16 @@ export default function TestHomePage() {
 
         <div className="text-center">
           <p className="text-lg font-medium text-black">참여자 수</p>
-          <p className="text-lg font-medium text-black">{participantCount}</p>
+          <p className="text-lg font-medium text-black">
+            {data.participantCount}
+          </p>
         </div>
 
         <hr className="my-3 w-[90%] border border-pink-500" />
 
         <ShareSection title="테스트 공유하기" count={150} />
 
-        <div className="flex w-[90%] flex-col gap-4 rounded-[10px] bg-white p-4 shadow-md">
+        <div className="mb-8 flex w-[90%] flex-col gap-4 rounded-[10px] bg-white p-4 shadow-md">
           {topMoonos.map((moono, index) => (
             <div key={index} className="flex w-full">
               <div className="flex w-1/2 items-center justify-between">
