@@ -10,8 +10,6 @@ export function mapTendencyData(
 ): Partial<SmartChoiceApiInput> {
   const patch: Partial<SmartChoiceApiInput> = { ...prevState };
 
-  console.log("현재 questionId: ", questionId, "normalized: ", normalized);
-
   switch (questionId) {
     case 2:
       if (normalized === "YES") patch.data = "60000";

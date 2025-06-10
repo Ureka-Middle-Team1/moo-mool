@@ -1,7 +1,7 @@
 // 사용자 응답을 Normalize(정규화) 하는 함수
 import { NextResponse } from "next/server";
 import { client } from "@app/lib/axiosInstance";
-import { getPrompt } from "@/lib/chatbot/getPrompt";
+import { getPrompt } from "@/lib/chat/getPrompt";
 
 export async function POST(req: Request) {
   const { message, questionId } = await req.json();
@@ -41,7 +41,6 @@ export async function POST(req: Request) {
 
     const normalizedValue =
       response.data?.choices?.[0]?.message?.content?.trim() ?? "INVALID";
-    console.log("결과?: ", normalizedValue);
 
     return NextResponse.json({ normalizedValue });
   } catch (error) {

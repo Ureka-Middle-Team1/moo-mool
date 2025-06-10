@@ -1,5 +1,5 @@
 // src/lib/getNextQuestionId.ts
-import { questionFlow } from "@/lib/chatbot/chatBotQuestionFlow";
+import { questionFlow } from "@/lib/chat/chatBotQuestionFlow";
 
 // 다음 질문이 무엇인지 questionId를 가져오는 function
 export function getNextQuestionId(

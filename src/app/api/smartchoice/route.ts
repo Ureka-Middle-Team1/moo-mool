@@ -26,8 +26,6 @@ export async function POST(req: NextRequest) {
     const xmlData = response.data;
     const result = parseSmartChoiceXml(xmlData); // 파싱
 
-    console.log("응답 결과?: ", result);
-
     return NextResponse.json({ success: true, result });
   } catch (error) {
     const msg = error instanceof Error ? error.message : "알 수 없는 오류";

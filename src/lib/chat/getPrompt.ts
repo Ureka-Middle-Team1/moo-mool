@@ -8,7 +8,7 @@ export async function getPrompt(questionId: number): Promise<string> {
     process.cwd(),
     "src",
     "lib",
-    "chatbot",
+    "chat",
     "prompts",
     `question_${questionId}.txt`
   );

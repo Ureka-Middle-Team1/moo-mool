@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TextPageProps } from "@type/textPageProps";
-import { questionTextMap } from "@/lib/chatbot/chatBotQuestionFlow";
+import { questionTextMap } from "@/lib/chat/chatBotQuestionFlow";
 
 // "텍스트"로 챗봇 기능을 사용하는 페이지
 export default function TextPage({
@@ -40,7 +40,6 @@ export default function TextPage({
   }, []);
 
   const handleSubmit = async (e?: React.FormEvent | React.KeyboardEvent) => {
-    console.log("넌 한번만 수행되어야 해....");
     e?.preventDefault();
     if (!input.trim() || isSubmittingRef.current) return;
 
