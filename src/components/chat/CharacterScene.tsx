@@ -20,7 +20,7 @@ export default function CharacterScene() {
         camera={{ position: [0, 2, 4], fov: 35 }}>
         <ambientLight intensity={0.9} />
         <directionalLight position={[2, 2, 5]} intensity={1.2} />
-        <CharacterModel onClick={handleSpeak} />
+        <CharacterModel onClick={handleSpeak} isSpeaking={isSpeaking} />
         <OrbitControls
           enablePan={false}
           enableZoom={false}
