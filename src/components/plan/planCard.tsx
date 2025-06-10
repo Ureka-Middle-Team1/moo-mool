@@ -1,30 +1,18 @@
-interface PlanCardProps {
-  rank: number;
-  title: string;
-  subtitle: string;
-  detail: string;
-}
+import { Plan } from "@/data/mockPlans";
 
-export default function PlanCard({
-  rank,
-  title,
-  subtitle,
-  detail,
-}: PlanCardProps) {
+export default function PlanCard({ rank, title, subtitle, detail }: Plan) {
   return (
-    <div className="flex w-full items-center gap-4 rounded-2xl border-1 border-pink-500 bg-white p-3">
-      {/* 순위 */}
-      <div className="flex items-center justify-center rounded-full bg-pink-400 p-5 text-xl font-bold text-white">
+    <div className="flex items-center gap-5 rounded-2xl border border-pink-400 bg-white p-3">
+      {/* 순위: 동그란 핑크 배지 */}
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-pink-400 text-lg font-semibold text-white">
         {rank}위
       </div>
 
-      {/* 텍스트 영역 */}
-      <div className="flex flex-col">
-        <p className="font-bold text-black underline decoration-pink-400 decoration-4 underline-offset-4">
-          {title}
-        </p>
-        <p className="text-sm font-bold text-black">{subtitle}</p>
-        <p className="text-sm font-light text-black">{detail}</p>
+      {/* 텍스트: 왼쪽 정렬 */}
+      <div className="flex flex-col items-start gap-1 font-bold text-black">
+        <p className="underline-pink-bg text-xl underline-offset-4">{title}</p>
+        <p className="text-lg">{subtitle}</p>
+        <p className="text-sm font-light">{detail}</p>
       </div>
     </div>
   );

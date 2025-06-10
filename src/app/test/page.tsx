@@ -37,11 +37,11 @@ export default function TestHomePage() {
       <img
         src="/assets/icons/logo.png"
         alt="logo"
-        className="absolute top-4 left-4 h-auto w-24"
+        className="absolute left-2 h-auto w-24"
       />
 
       {/* 중앙 콘텐츠 */}
-      <div className="flex h-full flex-col items-center justify-center gap-3 px-0">
+      <div className="flex h-full flex-col items-center justify-center gap-3 bg-pink-200 px-0">
         {/* 메인 이미지 */}
         <img
           src="/assets/icons/meme-test-home.png"
@@ -81,7 +81,7 @@ export default function TestHomePage() {
                   className="ml-3 h-12 w-12"
                 />
               </div>
-              <div className="flex w-1/2 items-center justify-end pr-3">
+              <div className="flex w-1/2 items-center justify-center pr-3">
                 <p className="text-sm font-medium text-black">{moono.label}</p>
               </div>
             </div>
