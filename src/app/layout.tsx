@@ -1,4 +1,5 @@
 "use client";
+
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import "./fonts.css";
@@ -11,8 +12,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <body className="flex justify-center bg-gray-500 antialiased">
+    <html lang="ko" className="h-full">
+      <body className="m-0 h-full bg-gray-500 p-0">
         <SessionProvider>
           <Providers>
             <LayoutWrapper>{children}</LayoutWrapper>
