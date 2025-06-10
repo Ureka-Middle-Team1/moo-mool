@@ -1,15 +1,15 @@
 "use client";
 
+import { useTTS } from "@/hooks/useTTS";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 
-function CharacterModel() {
+function CharacterModel({ onClick }: { onClick: () => void }) {
   const { scene } = useGLTF("/character/3d-octopus.glb");
   const ref = useRef<THREE.Group>(null);
 
-  // 둥둥 떠다니는 모션 추가
   useFrame(({ clock }) => {
     if (ref.current) {
       const t = clock.getElapsedTime();
@@ -18,8 +18,7 @@ function CharacterModel() {
   });
 
   return (
-    <group ref={ref} scale={0.8}>
-      {/* 문어 모델 */}
+    <group ref={ref} scale={0.8} onClick={onClick}>
       <primitive object={scene} />
     </group>
   );
@@ -32,6 +31,12 @@ function ShadowRing() {
 }
 
 export default function CharacterScene() {
+  const { speak } = useTTS("Google 한국의 여성");
+
+  const handleSpeak = () => {
+    speak("돌고 돌아 시간 속에 널 만나러 왔어");
+  };
+
   return (
     <div className="relative flex h-[80%] w-full items-center justify-center">
       <Canvas
@@ -39,7 +44,7 @@ export default function CharacterScene() {
         camera={{ position: [0, 2, 4], fov: 35 }}>
         <ambientLight intensity={0.9} />
         <directionalLight position={[2, 2, 5]} intensity={1.2} />
-        <CharacterModel />
+        <CharacterModel onClick={handleSpeak} />
         <OrbitControls
           enablePan={false}
           enableZoom={false}
