@@ -38,11 +38,12 @@ export default function TestPage() {
 
   return (
     <div className="relative w-full max-w-[393px] bg-pink-200">
-      <header className="sticky top-0 z-10 flex h-12 w-full items-center bg-yellow-200 px-4 font-bold">
-        <div className="absolute left-4">
-          <ChevronLeft />
+      <header className="sticky top-0 z-10 flex h-12 w-full items-center justify-between bg-yellow-200 px-4 font-bold">
+        <div className="flex items-center">
+          <ChevronLeft className="h-5 w-5" />
         </div>
-        <div className="w-full text-center">콘텐츠 과몰입 테스트</div>
+        <div className="flex-1 text-center">콘텐츠 과몰입 테스트</div>
+        <div className="h-5 w-5" /> {/* 아이콘 자리를 맞추기 위한 빈 div */}
       </header>
 
       <main className="flex flex-col items-center gap-5 px-4 pt-6 pb-10 text-center">
@@ -63,9 +64,13 @@ export default function TestPage() {
             {/* 해시태그 영역 */}
             <div className="mb-2 flex flex-col items-center">
               {hashtags.map((tag, idx) => (
-                <p key={idx} className="underline-pink-bg relative font-bold">
+                <span key={idx} className="relative inline-block font-bold">
+                  <span
+                    className="absolute bottom-[0.1em] left-0 -z-10 h-[0.4em] w-full bg-pink-400"
+                    aria-hidden="true"
+                  />
                   {tag}
-                </p>
+                </span>
               ))}
             </div>
 
@@ -85,9 +90,14 @@ export default function TestPage() {
         </div>
 
         <div className="w-[90%] rounded-lg border-2 border-pink-400 bg-white p-4">
-          <p className="underline-pink-bg mb-4 text-base font-bold">
+          <p className="relative mb-4 inline-block text-base font-bold">
+            <span
+              className="absolute bottom-[0.1em] left-0 -z-10 h-[0.4em] w-full bg-pink-400"
+              aria-hidden="true"
+            />
             영역별 트렌드 능력치
           </p>
+
           <div className="flex flex-col gap-3">
             <TrendBar label="SNS" value={60} />
             <TrendBar label="Youtube" value={85} />
