@@ -96,7 +96,11 @@ export default function TestQuestionPage() {
         const data: QuestionsResponse = await res.json();
 
         if (data.success) {
-          const arr = flattenQuestions(data.questions);
+          // 객체를 배열로 바꾸고 choices JSON 문자열 -> 배열로 변환
+          const arr = flattenQuestions(data.questions).map((q) => ({
+            ...q,
+            choices: JSON.parse(q.choices as unknown as string),
+          }));
           if (arr.length === 0) {
             setError("문제가 없습니다.");
           } else {

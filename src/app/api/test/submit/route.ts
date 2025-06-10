@@ -81,7 +81,46 @@ export async function POST(request: Request) {
         Math.round((rawScore / STAGE_MAX_SCORE) * 10000) / 100; // 소수점 둘째자리까지
     }
 
-    return NextResponse.json({ success: true, result });
+    // 동점일 경우의 타입 지정 우선순위 (데이터 많이 쓰는 순 정렬)
+    const priority = ["Youtube", "SNS", "Calling", "Chat", "Books", "Saving"];
+
+    // 최고 점수와 모든 점수 10 이하 여부 확인
+    let maxScore = -1;
+    let allScoresLow = true; // 모든 점수가 10 이하인지 체크
+
+    for (const stage in result) {
+      const score = result[stage].score;
+      if (score > maxScore) {
+        maxScore = score;
+      }
+      if (score > 10) {
+        allScoresLow = false;
+      }
+    }
+
+    let topStages = [];
+
+    if (allScoresLow) {
+      // 모든 점수가 10 이하이면 무조건 Saving 선택
+      topStages = ["Saving"];
+    } else if (maxScore > 0) {
+      // 최고 점수와 같은 점수를 가진 스테이지들
+      for (const stage in result) {
+        if (result[stage].score === maxScore) {
+          topStages.push(stage);
+        }
+      }
+    } else {
+      // 점수가 모두 0 이거나 의미없으면 Saving 선택
+      topStages = ["Saving"];
+    }
+
+    // 우선순위에 맞게 정렬 후 첫 번째 선택
+    topStages.sort((a, b) => priority.indexOf(a) - priority.indexOf(b));
+
+    const topStage = topStages[0];
+
+    return NextResponse.json({ success: true, result, topStage });
   } catch (error) {
     console.error("POST /api/test/submit error:", error);
     return NextResponse.json(

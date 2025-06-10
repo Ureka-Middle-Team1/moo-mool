@@ -53,3 +53,14 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model TypeQuestion {
+  id              Int     @id @default(autoincrement())
+  stage           String
+  difficulty      String?
+  is_bonus        Boolean
+  question_text   String
+  example_type    String?
+  example_content String?
+  choices         Json
+}
