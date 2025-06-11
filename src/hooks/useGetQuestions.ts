@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { QuestionsResponse } from "@/types/question";
-import { client } from "@/app/lib/axiosInstance";
+import { client } from "@/lib/axiosInstance";
 
 export const useGetQuestions = () => {
   return useQuery<QuestionsResponse>({

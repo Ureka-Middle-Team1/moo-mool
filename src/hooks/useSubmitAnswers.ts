@@ -1,7 +1,7 @@
 // src/hooks/useSubmitAnswers.ts
+import { client } from "@/lib/axiosInstance";
+import { Answer } from "@/types/answer";
 import { useMutation } from "@tanstack/react-query";
-import { Answer } from "@/types/question";
-import { client } from "@/app/lib/axiosInstance";
 
 type SubmitAnswersBody = {
   userId: string;
@@ -12,7 +12,7 @@ type SubmitAnswersBody = {
 export const useSubmitAnswers = () => {
   return useMutation({
     mutationFn: async (body: SubmitAnswersBody) => {
-      const res = await client.post("/meme-test/submit", body);
+      const res = await client.post("/meme-test/results", body);
       return res.data;
     },
   });

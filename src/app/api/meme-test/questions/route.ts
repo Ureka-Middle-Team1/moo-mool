@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 const STAGES = ["SNS", "Youtube", "Chat", "Calling", "Books", "Saving"];
 const DIFFICULTIES = ["low", "medium", "high"];
