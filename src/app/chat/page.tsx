@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Message } from "@/types/Message";
 import { SmartChoiceApiInput } from "@type/smartChoiceApiInput";
 import Header from "@/components/common/Header";
 import TextPage from "./TextPage";
