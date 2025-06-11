@@ -60,7 +60,7 @@ export const questionFlow: Record<number, Record<string, number>> = {
     INVALID: 11,
   },
   12: {
-    VALID: 13, // 해당하는 단어를 추출했을 경우, VALID 값으로 정규화
+    __DEFAULT__: 13, // 해당하는 단어를 추출했을 경우... getNextQuestionId() 메소드에서 이걸로 변환해 올 것임
     INVALID: 12,
   },
 };

@@ -13,5 +13,9 @@ export function getNextQuestionId(
     return flow["__NUMERIC__"] ?? flow["INVALID"];
   }
 
-  return flow[normalized] ?? flow["__DEFAULT__"]; // 12번 질문에 대해서 이것이 유용히 사용될 것임
+  console.log("다음 질문 흐름 찾기: ", flow[normalized]);
+  if (flow[normalized] === undefined) {
+    console.log("여긴 언제 들어옴?");
+    return flow["__DEFAULT__"]; // 12번 질문에 대해서 이것이 유용히 사용될 것임
+  }
 }
