@@ -7,7 +7,7 @@ import {
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 
@@ -16,13 +16,15 @@ ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, 
 interface TendencyRadarChartProps {
   isRounded: boolean;
   data: number[] | [number[], number[]];
+  name: string;
   labels?: string[];
 }
 
 const TendencyRadarChart = ({
   isRounded,
   data,
-  labels = ['SNS', 'Youtube', 'Chat', 'Calling', 'Books', 'Saving']
+  name,
+  labels = ['월정액', '데이터', '속도', '음성통화', '문자'],
 }: TendencyRadarChartProps) => {
 
 
@@ -124,7 +126,7 @@ const TendencyRadarChart = ({
   };
 
   return (
-    <div className="w-full h-[400px]">
+    <div className="w-full h-[320px]">
       <Radar data={chartData} options={options} />
     </div>
   );
