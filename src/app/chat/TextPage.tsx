@@ -3,21 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TextPageProps } from "@type/textPageProps";
+import { questionTextMap } from "@/lib/chat/chatBotQuestionFlow";
 
-type Message = {
-  role: "user" | "bot";
-  content: string;
-};
-
-interface TextPageProps {
-  messages: Message[];
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-}
-
-export default function TextPage({ messages, setMessages }: TextPageProps) {
+// "텍스트"로 챗봇 기능을 사용하는 페이지
+export default function TextPage({
+  messages,
+  onUserSubmit,
+  setMessages,
+}: TextPageProps) {
   const [input, setInput] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null); // 엔터키 중복 방지를 위한 ref
   const isSubmittingRef = useRef(false);
 
   // 스크롤 아래로 이동
@@ -33,22 +31,36 @@ export default function TextPage({ messages, setMessages }: TextPageProps) {
     }
   }, [input]);
 
-  const handleSubmit = (e?: React.FormEvent | React.KeyboardEvent) => {
+  // 컴포넌트 마운트 시 1회 실행 (첫 질문은 자동으로 나와야 하기 때문에)
+  useEffect(() => {
+    const firstQuestion = questionTextMap[1];
+    if (firstQuestion) {
+      setMessages([{ role: "bot", content: firstQuestion }]);
+    }
+  }, []);
+
+  const handleSubmit = async (e?: React.FormEvent | React.KeyboardEvent) => {
     e?.preventDefault();
     if (!input.trim() || isSubmittingRef.current) return;
 
+    const userMessage = input.trim();
     isSubmittingRef.current = true;
-    setMessages((prev) => [...prev, { role: "user", content: input.trim() }]);
 
-    // 입력 비우기
+    // 1. 입력 비우기
     setTimeout(() => {
       setInput("");
     }, 0);
 
-    // 중복 제출 방지 해제
-    setTimeout(() => {
+    try {
+      // 2. 외부 처리 로직 실행 (정규화, 업데이트, 다음 질문 등)
+      await onUserSubmit(userMessage);
+    } catch (error) {
+      // 3. 필요 시 에러 핸들링 (옵션)
+      console.error("onUserSubmit 처리 실패:", error);
+    } finally {
+      // 4. 중복 제출 방지 해제
       isSubmittingRef.current = false;
-    }, 500);
+    }
   };
 
   return (
@@ -88,6 +100,7 @@ export default function TextPage({ messages, setMessages }: TextPageProps) {
 
       {/* 입력창 */}
       <form
+        ref={formRef}
         onSubmit={handleSubmit}
         className="rounded-t-2xl bg-[#FFEBAF] px-4 pt-3 pb-2">
         <textarea
@@ -95,10 +108,13 @@ export default function TextPage({ messages, setMessages }: TextPageProps) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="무너에게 물어봐!"
-          onKeyDown={(e) => {
+          onKeyUp={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              handleSubmit(e);
+              // 중복 호출 방지
+              if (!isSubmittingRef.current) {
+                handleSubmit();
+              }
             }
           }}
           className="w-full resize-none bg-[#FFEBAF] text-sm placeholder-[#94A3B8] focus:outline-none"
