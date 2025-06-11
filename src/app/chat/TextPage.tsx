@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowUp, Mic } from "lucide-react";
+import ChatMessageList from "@/components/chat/ChatMessageList";
+import ChatInputBox from "@/components/chat/ChatInputBox";
 import { useChatStore } from "@/store/useChatStore";
 import { useHandleAnswer } from "@/hooks/useHandleAnswer";
 
