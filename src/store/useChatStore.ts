@@ -14,11 +14,12 @@ interface ChatStore {
   setMessages: (messages: Message[]) => void;
   appendMessage: (message: Message) => void;
   clearMessages: () => void;
+  getLastBotMessage: () => Message | undefined;
 }
 
 export const useChatStore = create<ChatStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       messages: initialMessage,
       currentQuestionId: 1,
       setCurrentQuestionId: (id) => set({ currentQuestionId: id }),
@@ -26,6 +27,13 @@ export const useChatStore = create<ChatStore>()(
       appendMessage: (message) =>
         set((state) => ({ messages: [...state.messages, message] })),
       clearMessages: () => set({ messages: initialMessage }),
+      getLastBotMessage: () => {
+        const messages = get().messages;
+        for (let i = messages.length - 1; i >= 0; i--) {
+          if (messages[i].role === "bot") return messages[i];
+        }
+        return undefined;
+      },
     }),
     {
       name: "chat-storage", // localStorage key 이름
