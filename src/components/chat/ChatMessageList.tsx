@@ -11,7 +11,7 @@ export default function ChatMessageList({
   bottomRef,
 }: ChatMessageListProps) {
   return (
-    <div className="flex-1 space-y-2 overflow-y-auto px-4 py-2">
+    <div className="scrollbar-hide flex-1 space-y-2 overflow-y-auto px-4 py-2">
       {messages.map((msg, idx) => (
         <ChatMessage key={idx} message={msg} />
       ))}
