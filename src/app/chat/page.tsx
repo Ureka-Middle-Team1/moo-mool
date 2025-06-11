@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Message } from "@/types/Chat";
+import { Message, ParsedPlan, parsePlans } from "@/types/Chat";
 import { SmartChoiceApiInput } from "@type/smartChoiceApiInput";
 import Header from "@/components/common/Header";
 import TextPage from "./TextPage";
@@ -44,14 +44,33 @@ export default function ChatbotPage() {
     setMessages,
   });
 
+  const [recommendedPlan, setRecommendedPlan] = useState<ParsedPlan | null>(
+    null
+  );
+
   // 최종 질문 단계가 끝났을 경우를 탐지해서 smartchoice api 호출
   useEffect(() => {
     if (currentQuestionId === 11) {
       // 현재는 currentQuestionId가 11인 경우에 수행, 최종 요약 기능 추가 시 변경 필요
-      recommendPlan(userTendencyInfo);
+      recommendPlan(userTendencyInfo, {
+        onSuccess: (data) => {
+          const parsed = parsePlans(data);
+          if (parsed.length > 0) {
+            setRecommendedPlan(parsed[0]);
+            setMessages((prev) => [
+              ...prev,
+              {
+                role: "bot",
+                content: "이 요금제가 어울릴 것 같아요!",
+                type: "plan",
+                planData: parsed[0],
+              },
+            ]);
+          }
+        },
+      });
     }
   }, [currentQuestionId]);
-
   const handleNormalizedAnswer = (userMessage: string) => {
     // 1. 사용자 메시지 출력
     setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
