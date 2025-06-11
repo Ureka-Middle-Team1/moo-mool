@@ -4,19 +4,25 @@ import { Mic } from "lucide-react";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import ShadowRing from "./ShadowRing";
 import { useHandleAnswer } from "@/hooks/useHandleAnswer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTTSStore } from "@/store/useTTSStore";
 import { Button } from "../ui/button";
+import { useBotResponseGuard } from "@/hooks/useBotResponseGuard";
+import { useVoiceControlStore } from "@/store/useVoiceControlStore";
 
 export default function VoiceFooter() {
   const { recording, result, toggleRecording } = useVoiceRecorder();
   const { handleNormalizedAnswer } = useHandleAnswer();
+  const { setWaitingForBotResponse } = useVoiceControlStore();
   const isSpeaking = useTTSStore((state) => state.isSpeaking);
+  const [waitingTrigger, setWaitingTrigger] = useState(false);
+  useBotResponseGuard(waitingTrigger);
 
   // 음성 인식 결과가 나올 때 자동으로 handleAnswer 실행
   useEffect(() => {
     if (result) {
-      console.log(result);
+      setWaitingTrigger(true);
+      setWaitingForBotResponse(true); // 마이크 잠금 시작
       handleNormalizedAnswer(result);
     }
   }, [result]);
