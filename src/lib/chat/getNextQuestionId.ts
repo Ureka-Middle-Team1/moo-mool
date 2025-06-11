@@ -7,6 +7,7 @@ export function getNextQuestionId(
   normalized: string
 ): number | undefined {
   const flow = questionFlow[questionId];
+  console.log("다음 ID: ", questionId);
 
   // 수치형 답변인 경우
   if (/^[0-9]+$/.test(normalized)) {
@@ -15,7 +16,8 @@ export function getNextQuestionId(
 
   console.log("다음 질문 흐름 찾기: ", flow[normalized]);
   if (flow[normalized] === undefined) {
-    console.log("여긴 언제 들어옴?");
     return flow["__DEFAULT__"]; // 12번 질문에 대해서 이것이 유용히 사용될 것임
+  } else {
+    return flow[normalized];
   }
 }

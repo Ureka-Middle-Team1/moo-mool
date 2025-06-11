@@ -1,16 +1,14 @@
 // lib/chatbot/mapTendencyData.ts
 
-import { useTendencyStore } from "@/store/useTendencyStore";
-import { SmartChoiceApiInput } from "@/types/smartChoiceApiInput";
+import { UserTendencyInfo } from "@/types/userTendencyInfo";
 
 // 특정 질문에 대해서 어떤 어떤 데이터로 변환할 지 mapTendencyData()로 결정
 export function mapTendencyData(
   questionId: number,
   normalized: string,
-  prevState: SmartChoiceApiInput
-): Partial<SmartChoiceApiInput> {
-  const patch: Partial<SmartChoiceApiInput> = { ...prevState };
-  const setSubscription = useTendencyStore((state) => state.setSubscription); // 구독 서비스 관련 정보는 바로 전역 상태에 업데이트
+  prevState: UserTendencyInfo
+): Partial<UserTendencyInfo> {
+  const patch: Partial<UserTendencyInfo> = { ...prevState };
 
   switch (questionId) {
     case 2:
@@ -59,7 +57,7 @@ export function mapTendencyData(
       if (!isNaN(Number(normalized))) patch.dis = normalized;
       break;
     case 12:
-      if (normalized !== "INVALID") setSubscription(normalized);
+      if (normalized !== "INVALID") patch.subscribe = normalized;
     default:
       break;
   }
