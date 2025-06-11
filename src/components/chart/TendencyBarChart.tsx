@@ -14,7 +14,7 @@ import { Bar } from 'react-chartjs-2';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 interface TendencyBarChartProps {
-  data: number[];
+  data: number[] | [number[], number[]];
   name: string;
   labels?: string[];
 }
@@ -24,18 +24,42 @@ const TendencyBarChart = ({
   name,
   labels = ['월정액', '데이터', '속도', '음성통화', '문자'],
 }: TendencyBarChartProps) => {
+  
+  
+  const datasets =
+    Array.isArray(data[0])
+      ? [
+          {
+            label: name,
+            data: (data as [number[], number[]])[0],
+            backgroundColor: 'rgba(253, 140, 0, 0.6)',
+            borderWidth: 0,
+            categoryPercentage: 0.4,
+            barPercentage: 0.6,
+          },
+          {
+            label: '내 요금제',
+            data: (data as [number[], number[]])[1],
+            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            borderWidth: 0,
+            categoryPercentage: 0.4,
+            barPercentage: 0.6,
+          },
+        ]
+      : [
+          {
+            label: name,
+            data: data as number[],
+            backgroundColor: 'rgba(253, 140, 0, 0.6)',
+            borderWidth: 0,
+            categoryPercentage: 0.4,
+            barPercentage: 0.6,
+          },
+        ];
+
   const chartData = {
     labels,
-    datasets: [
-      {
-        label: name,
-        data,
-        backgroundColor: 'rgba(253, 140, 0, 0.6)',
-        borderWidth: 0,
-        categoryPercentage: 0.4,
-        barPercentage: 0.6,
-      },
-    ],
+    datasets,
   };
 
   const options = {
@@ -77,7 +101,16 @@ const TendencyBarChart = ({
     },
     plugins: {
       legend: {
-        display: false,
+        display: true,
+        position: 'bottom' as const,
+        labels: {
+          font: {
+            size: 10,
+          },
+          boxWidth: 10,
+          boxHeight: 10,
+        },
+        onClick: () => {},
       },
       tooltip: {
         callbacks: {
@@ -93,22 +126,8 @@ const TendencyBarChart = ({
 
   return (
     <div className="w-full">
-      
       <div style={{ height: 320 }}>
         <Bar data={chartData} options={options} />
-      </div>
-
-      <div className="text-center mt-2 text-xs text-gray-700">
-        <div className="inline-flex items-center gap-2 justify-center">
-          <div
-            style={{
-              width: 8,
-              height: 8,
-              backgroundColor: 'rgba(253, 140, 0, 0.6)',
-            }}
-          />
-          <span style={{ fontSize: '10px' }}>{name}</span>
-        </div>
       </div>
     </div>
   );

@@ -6,7 +6,11 @@
   "tailwind": {
     "config": "tailwind.config.js",
     "css": "src/app/globals.css",
+<<<<<<< HEAD
     "baseColor": "zinc",
+=======
+    "baseColor": "neutral",
+>>>>>>> ea9bc83 (#56 feat: 요금제 상세 페이지 구현 완료)
     "cssVariables": true,
     "prefix": ""
   },
