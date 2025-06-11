@@ -21,18 +21,18 @@ interface NormalizeResponse {
 
 // 훅 외부에서 넘길 setter들 정의
 interface UseNormalizeAnswerArgs {
-  setCurrentQuestionId: (id: number) => void;
   userTendencyInfo: SmartChoiceApiInput;
   updateTendency: (patch: Partial<SmartChoiceApiInput>) => void;
 }
 
 // 커스텀 훅 정의
 export function useNormalizeAnswerFlow({
-  setCurrentQuestionId,
   userTendencyInfo,
   updateTendency,
 }: UseNormalizeAnswerArgs) {
-  const { appendMessage } = useChatStore();
+  const { appendMessage, currentQuestionId, setCurrentQuestionId } =
+    useChatStore();
+
   const { mutate } = useMutation<NormalizeResponse, Error, NormalizeParam>({
     mutationFn: (input) =>
       client.post("/normalized-prompts", input).then((res) => res.data),
