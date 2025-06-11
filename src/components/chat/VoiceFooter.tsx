@@ -5,10 +5,13 @@ import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import ShadowRing from "./ShadowRing";
 import { useHandleAnswer } from "@/hooks/useHandleAnswer";
 import { useEffect } from "react";
+import { useTTSStore } from "@/store/useTTSStore";
+import { Button } from "../ui/button";
 
 export default function VoiceFooter() {
   const { recording, result, toggleRecording } = useVoiceRecorder();
   const { handleNormalizedAnswer } = useHandleAnswer();
+  const isSpeaking = useTTSStore((state) => state.isSpeaking);
 
   // 음성 인식 결과가 나올 때 자동으로 handleAnswer 실행
   useEffect(() => {
@@ -30,14 +33,15 @@ export default function VoiceFooter() {
       />
 
       {/*  마이크 버튼 */}
-      <button
+      <Button
         onClick={toggleRecording}
+        disabled={isSpeaking}
         className="z-10 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 shadow-md">
         <Mic
-          size={28}
+          size={30}
           className={`text-gray-700 ${recording ? "animate-ping" : ""}`}
         />
-      </button>
+      </Button>
 
       {/*  인식된 텍스트 출력 */}
       {result && (

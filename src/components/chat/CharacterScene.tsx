@@ -6,9 +6,11 @@ import { OrbitControls } from "@react-three/drei";
 import CharacterModel from "./CharacterModel";
 import ShadowRing from "./ShadowRing";
 import { useChatStore } from "@/store/useChatStore";
+import { useTTSStore } from "@/store/useTTSStore";
 
 export default function CharacterScene() {
-  const { speak, isSpeaking } = useTTS("Google 한국의 여성");
+  const { speak } = useTTS("Google 한국의 여성");
+  const isSpeaking = useTTSStore((state) => state.isSpeaking);
   const getLastBotMessage = useChatStore((state) => state.getLastBotMessage);
 
   const handleSpeak = () => {
