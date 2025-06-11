@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { client } from "@/app/lib/axiosInstance";
+import { client } from "@/lib/axiosInstance";
 import { AxiosError } from "axios";
 
 export interface Plan {

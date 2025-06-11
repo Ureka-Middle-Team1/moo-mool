@@ -2,21 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Mic } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { TextPageProps } from "@type/textPageProps";
-import { questionTextMap } from "@/lib/chat/chatBotQuestionFlow";
+import { useChatStore } from "@/store/useChatStore";
+import { useHandleAnswer } from "@/hooks/useHandleAnswer";
 
 // "텍스트"로 챗봇 기능을 사용하는 페이지
-export default function TextPage({
-  messages,
-  onUserSubmit,
-  setMessages,
-}: TextPageProps) {
+export default function TextPage() {
   const [input, setInput] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null); // 엔터키 중복 방지를 위한 ref
   const isSubmittingRef = useRef(false);
+  const { handleNormalizedAnswer } = useHandleAnswer();
+
+  const { messages } = useChatStore();
 
   // 스크롤 아래로 이동
   useEffect(() => {
@@ -30,14 +28,6 @@ export default function TextPage({
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [input]);
-
-  // 컴포넌트 마운트 시 1회 실행 (첫 질문은 자동으로 나와야 하기 때문에)
-  useEffect(() => {
-    const firstQuestion = questionTextMap[1];
-    if (firstQuestion) {
-      setMessages([{ role: "bot", content: firstQuestion }]);
-    }
-  }, []);
 
   const handleSubmit = async (e?: React.FormEvent | React.KeyboardEvent) => {
     e?.preventDefault();
@@ -53,7 +43,7 @@ export default function TextPage({
 
     try {
       // 2. 외부 처리 로직 실행 (정규화, 업데이트, 다음 질문 등)
-      await onUserSubmit(userMessage);
+      await handleNormalizedAnswer(userMessage);
     } catch (error) {
       // 3. 필요 시 에러 핸들링 (옵션)
       console.error("onUserSubmit 처리 실패:", error);
