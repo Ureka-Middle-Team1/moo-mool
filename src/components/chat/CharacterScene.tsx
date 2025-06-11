@@ -5,12 +5,19 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import CharacterModel from "./CharacterModel";
 import ShadowRing from "./ShadowRing";
+import { useChatStore } from "@/store/useChatStore";
 
 export default function CharacterScene() {
   const { speak, isSpeaking } = useTTS("Google 한국의 여성");
+  const getLastBotMessage = useChatStore((state) => state.getLastBotMessage);
 
   const handleSpeak = () => {
-    speak("돌고 돌아 시간 속에 널 만나러 왔어");
+    const lastBotMessage = getLastBotMessage();
+    if (lastBotMessage) {
+      speak(lastBotMessage.content);
+    } else {
+      speak("지금은 대화가 준비되지 않았어요.");
+    }
   };
 
   return (

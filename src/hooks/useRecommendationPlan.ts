@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { client } from "@app/lib/axiosInstance";
+import { client } from "@/lib/axiosInstance";
 import { SmartChoiceApiInput } from "@/types/smartChoiceApiInput";
 import { PlanApiResponse } from "@/types/Chat";
 
