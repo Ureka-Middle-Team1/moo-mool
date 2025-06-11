@@ -1,12 +1,11 @@
 // src/hooks/useNormalizeAnswer.ts
 import { useMutation } from "@tanstack/react-query";
 import { client } from "@app/lib/axiosInstance";
-import { SmartChoiceApiInput } from "@type/smartChoiceApiInput";
-import { Message } from "@/types/Message";
 import { mapTendencyData } from "@/lib/chat/mapTendencyData";
 import { getNextQuestionId } from "@/lib/chat/getNextQuestionId";
 import { questionTextMap } from "@/lib/chat/chatBotQuestionFlow";
 import { useChatStore } from "@/store/useChatStore";
+import { useTendencyStore } from "@/store/useTendencyStore";
 
 // 요청 파라미터
 type NormalizeParam = {
@@ -19,19 +18,9 @@ interface NormalizeResponse {
   normalizedValue: string;
 }
 
-// 훅 외부에서 넘길 setter들 정의
-interface UseNormalizeAnswerArgs {
-  userTendencyInfo: SmartChoiceApiInput;
-  updateTendency: (patch: Partial<SmartChoiceApiInput>) => void;
-}
-
-// 커스텀 훅 정의
-export function useNormalizeAnswerFlow({
-  userTendencyInfo,
-  updateTendency,
-}: UseNormalizeAnswerArgs) {
-  const { appendMessage, currentQuestionId, setCurrentQuestionId } =
-    useChatStore();
+export function useNormalizeAnswerFlow() {
+  const { userTendencyInfo, updateTendency } = useTendencyStore();
+  const { appendMessage, setCurrentQuestionId } = useChatStore();
 
   const { mutate } = useMutation<NormalizeResponse, Error, NormalizeParam>({
     mutationFn: (input) =>
@@ -72,5 +61,5 @@ export function useNormalizeAnswerFlow({
     retry: 3,
   });
 
-  return { mutate };
+  return { normalizeAnswer: mutate };
 }

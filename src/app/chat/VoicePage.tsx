@@ -1,10 +1,8 @@
 import CharacterScene from "@/components/chat/CharacterScene";
 import VoiceFooter from "@/components/chat/VoiceFooter";
-import { questionTextMap } from "@/lib/chat/chatBotQuestionFlow";
-import { TextPageProps } from "@type/textPageProps";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export default function VoicePage({ onUserSubmit }: TextPageProps) {
+export default function VoicePage() {
   const [input, setInput] = useState("");
 
   return (

@@ -1,12 +1,11 @@
 import { useEffect, useRef } from "react";
 import { useChatStore } from "@/store/useChatStore";
+import { useTendencyStore } from "@/store/useTendencyStore";
 import { useRecommendationPlan } from "@/hooks/useRecommendationPlan";
-import { SmartChoiceApiInput } from "@type/smartChoiceApiInput";
 
-export function useWatchRecommendationTrigger(
-  userTendencyInfo: SmartChoiceApiInput
-) {
+export function useWatchRecommendationTrigger() {
   const currentQuestionId = useChatStore((state) => state.currentQuestionId);
+  const { userTendencyInfo } = useTendencyStore();
   const { mutate: recommendPlan } = useRecommendationPlan();
 
   const hasTriggeredRef = useRef(false); // 중복 방지
@@ -16,5 +15,5 @@ export function useWatchRecommendationTrigger(
       hasTriggeredRef.current = true;
       recommendPlan(userTendencyInfo);
     }
-  }, [currentQuestionId]);
+  }, [currentQuestionId, userTendencyInfo]);
 }
