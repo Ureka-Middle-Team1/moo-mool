@@ -2,21 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Mic } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { TextPageProps } from "@type/textPageProps";
 import { questionTextMap } from "@/lib/chat/chatBotQuestionFlow";
+import { useChatStore } from "@/store/useChatStore";
 
 // "텍스트"로 챗봇 기능을 사용하는 페이지
-export default function TextPage({
-  messages,
-  onUserSubmit,
-  setMessages,
-}: TextPageProps) {
+export default function TextPage({ onUserSubmit }: TextPageProps) {
   const [input, setInput] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null); // 엔터키 중복 방지를 위한 ref
   const isSubmittingRef = useRef(false);
+
+  const { messages, setMessages } = useChatStore();
 
   // 스크롤 아래로 이동
   useEffect(() => {

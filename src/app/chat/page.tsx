@@ -9,6 +9,7 @@ import TextPage from "./TextPage";
 import VoicePage from "./VoicePage";
 import { useRecommendationPlan } from "@/hooks/useRecommendationPlan";
 import { useNormalizeAnswerFlow } from "@/hooks/useNormalizeAnswerFlow";
+import { useChatStore } from "@/store/useChatStore";
 
 type Mode = "text" | "voice";
 
@@ -17,7 +18,8 @@ export default function ChatbotPage() {
   const searchParams = useSearchParams();
   const mode = (searchParams.get("mode") as Mode) || "text";
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  const { messages, appendMessage } = useChatStore();
+
   const [currentQuestionId, setCurrentQuestionId] = useState<number>(1); // 현재 질문 id
 
   const [userTendencyInfo, setUserTendencyInfo] = useState<SmartChoiceApiInput>(
@@ -41,7 +43,6 @@ export default function ChatbotPage() {
     setCurrentQuestionId,
     userTendencyInfo,
     updateTendency,
-    setMessages,
   });
 
   // 최종 질문 단계가 끝났을 경우를 탐지해서 smartchoice api 호출
@@ -54,7 +55,7 @@ export default function ChatbotPage() {
 
   const handleNormalizedAnswer = (userMessage: string) => {
     // 1. 사용자 메시지 출력
-    setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
+    appendMessage({ role: "user", content: userMessage });
 
     // 2. mutate 객체 활용해서 정규화 요청
     normalizeAnswer({ message: userMessage, questionId: currentQuestionId });
@@ -65,13 +66,9 @@ export default function ChatbotPage() {
       <Header />
       <div className="flex flex-1 flex-col overflow-hidden">
         {mode === "text" ? (
-          <TextPage
-            messages={messages}
-            setMessages={setMessages}
-            onUserSubmit={handleNormalizedAnswer}
-          />
+          <TextPage onUserSubmit={handleNormalizedAnswer} />
         ) : (
-          <VoicePage />
+          <VoicePage onUserSubmit={handleNormalizedAnswer} />
         )}
       </div>
     </div>
