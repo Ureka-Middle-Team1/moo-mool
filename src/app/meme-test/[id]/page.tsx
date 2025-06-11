@@ -5,43 +5,16 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuestionStore } from "@/store/questionStore";
+import { useSubmitAnswers } from "@/hooks/useSubmitAnswers";
+import { useGetQuestions } from "@/hooks/useGetQuestions";
+import {
+  Answer,
+  Choice,
+  Difficulty,
+  Question,
+  QuestionsResponse,
+} from "@/types/question";
 
-type Choice = {
-  id: string;
-  text: string;
-  isCorrect?: boolean;
-};
-
-type Difficulty = "low" | "medium" | "high" | "bonus";
-
-type Question = {
-  id: number;
-  stage: string;
-  difficulty: Difficulty;
-  is_bonus: boolean | number;
-  question_text: string;
-  example_type: string | null;
-  example_content: string | null;
-  choices: Choice[];
-};
-
-type Answer = {
-  questionId: number;
-  selectedChoiceId: string;
-  isCorrect: boolean | null;
-  stage: string;
-  difficulty: Difficulty;
-  isBonus: boolean;
-};
-
-type QuestionsResponse = {
-  success: boolean;
-  questions: {
-    [stage: string]: {
-      [difficulty in Difficulty]: Question;
-    };
-  };
-};
 const difficultyNumberMap: Record<Difficulty, number | null> = {
   low: 1,
   medium: 2,
@@ -70,11 +43,12 @@ const getStageNumber = (stage: string) => {
 };
 export default function TestQuestionPage() {
   const setAnswer = useQuestionStore((state) => state.setAnswer);
+  const answers = useQuestionStore((state) => state.answers);
+  const { mutate: submitAnswers } = useSubmitAnswers();
+  const { data, isLoading, error } = useGetQuestions();
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const flattenQuestions = (questionsObj: QuestionsResponse["questions"]) => {
     const arr: Question[] = [];
@@ -90,72 +64,17 @@ export default function TestQuestionPage() {
   };
 
   useEffect(() => {
-    async function fetchQuestions() {
-      try {
-        const res = await fetch("/api/test/questions");
-        const data: QuestionsResponse = await res.json();
-
-        if (data.success) {
-          // 객체를 배열로 바꾸고 choices JSON 문자열 -> 배열로 변환
-          const arr = flattenQuestions(data.questions).map((q) => ({
-            ...q,
-            choices: JSON.parse(q.choices as unknown as string),
-          }));
-          if (arr.length === 0) {
-            setError("문제가 없습니다.");
-          } else {
-            setQuestions(arr);
-          }
-        } else {
-          setError("문제를 불러오지 못했습니다.");
-        }
-      } catch {
-        setError("네트워크 오류");
-      } finally {
-        setLoading(false);
-      }
+    if (data?.success) {
+      const flat = flattenQuestions(data.questions as any).map((q) => ({
+        ...q,
+        choices:
+          typeof q.choices === "string"
+            ? (JSON.parse(q.choices) as Choice[])
+            : q.choices,
+      }));
+      setQuestions(flat);
     }
-    fetchQuestions();
-  }, []);
-
-  const onSubmit = async () => {
-    const answers = useQuestionStore.getState().answers;
-
-    // 💡 answers에서 각 스테이지별 최고 난이도 계산
-    const getMaxLevel = (stage: string) => {
-      const levels = answers
-        .filter((a) => a.stage === stage && a.difficulty !== "bonus")
-        .map((a) => {
-          if (a.difficulty === "low") return 1;
-          if (a.difficulty === "medium") return 2;
-          if (a.difficulty === "high") return 3;
-          return 0;
-        });
-      return levels.length ? Math.max(...levels) : 0;
-    };
-
-    const payload = {
-      userId: "cmbr9fdrc0000qussh91xmo29",
-      planId: 1,
-      call_level: getMaxLevel("Calling"),
-      sms_level: getMaxLevel("Chat"),
-      sns_level: getMaxLevel("SNS"),
-      youtube_level: getMaxLevel("Youtube"),
-      book_level: getMaxLevel("Books"),
-      saving_level: getMaxLevel("Saving"),
-      type: "Youtube",
-      answers,
-    };
-
-    const res = await fetch("/api/test/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const result = await res.json();
-    console.log("DB 저장 결과:", result);
-  };
+  }, [data]);
 
   const handleChoiceClick = (choice: Choice) => {
     const question = questions[currentIndex];
@@ -173,14 +92,18 @@ export default function TestQuestionPage() {
     setAnswer(answer);
 
     if (currentIndex === questions.length - 1) {
-      onSubmit(); // 마지막 문제면 제출
+      submitAnswers({
+        userId: "cmbr9fdrc0000qussh91xmo29",
+        planId: 1,
+        answers,
+      });
     } else {
       setCurrentIndex((prev) => prev + 1);
     }
   };
 
-  if (loading) return <p>로딩중...</p>;
-  if (error) return <p>{error}</p>;
+  if (isLoading) return <p>로딩중...</p>;
+  if (error) return <p>문제를 불러오는 중 오류 발생</p>;
   if (questions.length === 0) return <p>문제가 없습니다.</p>;
 
   const question = questions[currentIndex];
@@ -259,7 +182,10 @@ export default function TestQuestionPage() {
 
       {/* 선택지 */}
       <div className="mx-auto flex max-w-xs flex-col gap-3">
-        {question.choices.map((choice) => (
+        {(typeof question.choices === "string"
+          ? JSON.parse(question.choices)
+          : question.choices
+        ).map((choice: Choice) => (
           <Button
             key={choice.id}
             variant="outline"

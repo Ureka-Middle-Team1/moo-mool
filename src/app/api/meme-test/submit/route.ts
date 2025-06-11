@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 export async function POST(request: Request) {
   try {
@@ -119,7 +120,6 @@ export async function POST(request: Request) {
     topStages.sort((a, b) => priority.indexOf(a) - priority.indexOf(b));
 
     const topStage = topStages[0];
-
     await prisma.userCharacterProfile.upsert({
       where: { user_id: userId },
       update: {
@@ -147,7 +147,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, result, topStage });
   } catch (error) {
-    console.error("POST /api/test/submit error:", error);
     return NextResponse.json(
       {
         success: false,
