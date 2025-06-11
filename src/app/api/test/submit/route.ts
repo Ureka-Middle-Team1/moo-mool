@@ -3,10 +3,11 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-
     const answers = body.answers;
+    const userId = body.userId;
+    const planId = body.planId;
 
-    if (!answers || !Array.isArray(answers)) {
+    if (!answers || !Array.isArray(answers) || !userId || !planId) {
       return NextResponse.json(
         { success: false, message: "Invalid request body" },
         { status: 400 }
@@ -89,11 +90,10 @@ export async function POST(request: Request) {
     let allScoresLow = true; // 모든 점수가 10 이하인지 체크
 
     for (const stage in result) {
-      const score = result[stage].score;
-      if (score > maxScore) {
-        maxScore = score;
+      if (result[stage].score > maxScore) {
+        maxScore = result[stage].score;
       }
-      if (score > 10) {
+      if (result[stage].score > 10) {
         allScoresLow = false;
       }
     }
@@ -119,6 +119,31 @@ export async function POST(request: Request) {
     topStages.sort((a, b) => priority.indexOf(a) - priority.indexOf(b));
 
     const topStage = topStages[0];
+
+    await prisma.userCharacterProfile.upsert({
+      where: { user_id: userId },
+      update: {
+        plan_id: planId,
+        call_level: result["Calling"]?.score ?? 0,
+        sms_level: result["Chat"]?.score ?? 0,
+        sns_level: result["SNS"]?.score ?? 0,
+        youtube_level: result["Youtube"]?.score ?? 0,
+        book_level: result["Books"]?.score ?? 0,
+        saving_level: result["Saving"]?.score ?? 0,
+        type: topStage,
+      },
+      create: {
+        user_id: userId,
+        plan_id: planId,
+        call_level: result["Calling"]?.score ?? 0,
+        sms_level: result["Chat"]?.score ?? 0,
+        sns_level: result["SNS"]?.score ?? 0,
+        youtube_level: result["Youtube"]?.score ?? 0,
+        book_level: result["Books"]?.score ?? 0,
+        saving_level: result["Saving"]?.score ?? 0,
+        type: topStage,
+      },
+    });
 
     return NextResponse.json({ success: true, result, topStage });
   } catch (error) {

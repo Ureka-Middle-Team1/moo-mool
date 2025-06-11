@@ -121,15 +121,40 @@ export default function TestQuestionPage() {
   const onSubmit = async () => {
     const answers = useQuestionStore.getState().answers;
 
+    // 💡 answers에서 각 스테이지별 최고 난이도 계산
+    const getMaxLevel = (stage: string) => {
+      const levels = answers
+        .filter((a) => a.stage === stage && a.difficulty !== "bonus")
+        .map((a) => {
+          if (a.difficulty === "low") return 1;
+          if (a.difficulty === "medium") return 2;
+          if (a.difficulty === "high") return 3;
+          return 0;
+        });
+      return levels.length ? Math.max(...levels) : 0;
+    };
+
+    const payload = {
+      userId: "cmbr9fdrc0000qussh91xmo29",
+      planId: 1,
+      call_level: getMaxLevel("Calling"),
+      sms_level: getMaxLevel("Chat"),
+      sns_level: getMaxLevel("SNS"),
+      youtube_level: getMaxLevel("Youtube"),
+      book_level: getMaxLevel("Books"),
+      saving_level: getMaxLevel("Saving"),
+      type: "Youtube",
+      answers,
+    };
+
     const res = await fetch("/api/test/submit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ answers }),
+      body: JSON.stringify(payload),
     });
 
     const result = await res.json();
-    console.log("결과:", result);
-    // TODO: 결과 보여주기 처리
+    console.log("DB 저장 결과:", result);
   };
 
   const handleChoiceClick = (choice: Choice) => {
