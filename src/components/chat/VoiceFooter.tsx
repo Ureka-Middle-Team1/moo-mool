@@ -3,9 +3,20 @@
 import { Mic } from "lucide-react";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import ShadowRing from "./ShadowRing";
+import { useHandleAnswer } from "@/hooks/useHandleAnswer";
+import { useEffect } from "react";
 
 export default function VoiceFooter() {
   const { recording, result, toggleRecording } = useVoiceRecorder();
+  const { handleNormalizedAnswer } = useHandleAnswer();
+
+  // 음성 인식 결과가 나올 때 자동으로 handleAnswer 실행
+  useEffect(() => {
+    if (result) {
+      console.log(result);
+      handleNormalizedAnswer(result);
+    }
+  }, [result]);
 
   return (
     <div className="relative flex h-[20%] w-full flex-col items-center justify-center gap-4">

@@ -1,4 +1,4 @@
-import { client } from "@/app/lib/axiosInstance";
+import { client } from "@/lib/axiosInstance";
 import { useQuery } from "@tanstack/react-query";
 
 export type Moono = {
