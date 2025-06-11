@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { client } from "@app/lib/axiosInstance";
+import { client } from "@/lib/axiosInstance";
 import { SmartChoiceApiInput } from "@/types/smartChoiceApiInput";
 
 // post 요청에 대해서는 useMutation()을 사용하는 것이 적합

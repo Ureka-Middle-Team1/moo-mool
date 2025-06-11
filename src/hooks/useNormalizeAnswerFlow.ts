@@ -1,6 +1,6 @@
 // src/hooks/useNormalizeAnswer.ts
 import { useMutation } from "@tanstack/react-query";
-import { client } from "@app/lib/axiosInstance";
+import { client } from "@/lib/axiosInstance";
 import { mapTendencyData } from "@/lib/chat/mapTendencyData";
 import { getNextQuestionId } from "@/lib/chat/getNextQuestionId";
 import { questionTextMap } from "@/lib/chat/chatBotQuestionFlow";

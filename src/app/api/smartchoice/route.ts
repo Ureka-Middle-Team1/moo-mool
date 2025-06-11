@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { client } from "@app/lib/axiosInstance";
+import { client } from "@/lib/axiosInstance";
 import { parseSmartChoiceXml } from "@/app/lib/parseSmartChoiceXml";
 
 export async function POST(req: NextRequest) {

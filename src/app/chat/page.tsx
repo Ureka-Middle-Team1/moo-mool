@@ -5,7 +5,6 @@ import Header from "@/components/common/Header";
 import TextPage from "./TextPage";
 import VoicePage from "./VoicePage";
 import { useWatchRecommendationTrigger } from "@/hooks/useWatchRecommendationTrigger";
-import { useHandleAnswer } from "@/hooks/useHandleAnswer";
 
 type Mode = "text" | "voice";
 
