@@ -17,15 +17,6 @@ export type Question = {
   choices: string | Choice[];
 };
 
-export type Answer = {
-  questionId: number;
-  selectedChoiceId: string;
-  isCorrect: boolean | null;
-  stage: string;
-  difficulty: Difficulty;
-  isBonus: boolean;
-};
-
 export type QuestionsResponse = {
   success: boolean;
   questions: {

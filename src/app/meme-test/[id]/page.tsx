@@ -8,12 +8,12 @@ import { useQuestionStore } from "@/store/questionStore";
 import { useSubmitAnswers } from "@/hooks/useSubmitAnswers";
 import { useGetQuestions } from "@/hooks/useGetQuestions";
 import {
-  Answer,
   Choice,
   Difficulty,
   Question,
   QuestionsResponse,
 } from "@/types/question";
+import { Answer } from "@/types/answer";
 
 const difficultyNumberMap: Record<Difficulty, number | null> = {
   low: 1,

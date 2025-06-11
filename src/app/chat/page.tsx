@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Message } from "@/types/Message";
+import { Message } from "@/types/message";
 import Header from "@/components/common/Header";
 import TextPage from "./TextPage";
 import VoicePage from "./VoicePage";

@@ -16,7 +16,7 @@ export const useGetTypeRankQuery = () => {
   return useQuery<TypeRankResponse>({
     queryKey: ["type-rank"],
     queryFn: async () => {
-      const { data } = await client.get("/meme-test/get-type-rank");
+      const { data } = await client.get("/meme-test/ranklists");
       return data;
     },
     staleTime: 1000 * 60,
