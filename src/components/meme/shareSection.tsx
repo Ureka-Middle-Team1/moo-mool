@@ -12,26 +12,26 @@ import React from "react";
 export default function ShareSection({ title, count }: ShareSectionProps) {
   return (
     <>
-      <div className="mb-4 flex w-[90%] items-center justify-center gap-2">
-        <p className="text-lg text-black">{title}</p>
+      <div className="mb-2 flex w-[90%] items-center justify-center gap-2">
+        <p className="text-[15px] text-black">{title}</p>
         <div className="flex items-center gap-1">
-          <Share2 className="text-black" />
-          <p className="text-lg font-medium text-black">{count}</p>
+          <Share2 className="h-[15px] w-[15px] text-black" />
+          <p className="text-[15px] font-medium text-black">{count}</p>
         </div>
       </div>
-      <div className="mb-6 flex gap-4">
+      <div className="mb-3 flex gap-2">
         {/* 메시지 버튼 */}
-        <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-pink-400 shadow-xl hover:bg-yellow-500">
+        <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-pink-400 shadow-xl hover:bg-yellow-500">
           <img
             src="/assets/icons/message-circle.png"
-            className="h-6 w-6"
+            className="h-5 w-5"
             alt="message"
           />
         </div>
 
         {/* 링크 버튼 */}
-        <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-pink-400 shadow-xl hover:bg-yellow-500">
-          <Link className="h-6 w-6 text-white" />
+        <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-pink-400 shadow-xl hover:bg-yellow-500">
+          <Link className="h-5 w-5 text-white" />
         </div>
       </div>
     </>
