@@ -5,6 +5,7 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { userId: string } }
 ) {
+  console.log("params : id ", params);
   const { userId } = params;
 
   if (!params) {

@@ -1,4 +1,4 @@
-export interface Plan {
+export interface MemePlan {
   rank: number;
   title: string;
   subtitle: string;

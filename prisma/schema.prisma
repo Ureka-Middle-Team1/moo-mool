@@ -8,25 +8,30 @@ datasource db {
 }
 
 model User {
-  id                String   @id @default(cuid())              // 고유 ID (e.g. 카카오 ID)
-  name              String?
-  email             String? @unique
-  image             String?
-  emailVerified     DateTime?
-  age               Int?
+  id                String   @id  @default(cuid())                      // e.g. 카카오 ID 같은 고유 문자열 ID
+  name              String
+  email             String  @unique
+  image             String
+  emailVerified     String?
+  age               String?
+  tested_count      Int      @default(0)
   badge             Int?
-  invited_count     Int     @default(0)
+  invited_count     Int      @default(0)
   my_plan           Int?
   recommended_plan  Int?
   created_at        DateTime @default(now())
 
-  accounts          Account[]
-  sessions          Session[]
   characterProfile  UserCharacterProfile?
   chatMessages      ChatMessage[]
   tendencyInfo      UserTendencyInfo?
-}
 
+  badgeRef          Badge?   @relation("UserBadge", fields: [badge], references: [id]) 
+  myPlanRef         Plan?    @relation("MyPlan", fields: [my_plan], references: [id])
+  recommendedRef    Plan?    @relation("RecommendedPlan", fields: [recommended_plan], references: [id])
+
+  sessions Session[]
+  accounts Account[]
+}
 
 model Account {
   id                      String   @id @default(cuid())
@@ -88,15 +93,16 @@ model UserCharacterProfile {
   type          String
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  plan Plan @relation(fields: [plan_id], references: [id])
 }
+
 
 
 model Badge {
   id          Int    @id @default(autoincrement())         // 기본 키
   name        String                                       // 뱃지 이름
-  description String                                       // 뱃지 설명
-
-  @@map("Badge") 
+  
+  users User[] @relation("UserBadge")
 }
 
 
@@ -114,7 +120,10 @@ model Plan {
   recommend_rank      String   
   tags                Json
 
-  @@map("Plan")
+  myPlanUsers         User[] @relation("MyPlan")
+  recommendedUsers    User[] @relation("RecommendedPlan")
+
+  UserCharacterProfile UserCharacterProfile[]
 }
 
 model ChatMessage {
