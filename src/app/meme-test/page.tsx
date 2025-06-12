@@ -15,7 +15,7 @@ export default function TestHomePage() {
     .slice(0, 2);
 
   return (
-    <div className="w-full bg-pink-200 px-0">
+    <div className="flex h-full w-full flex-1 flex-col bg-pink-200 px-0">
       {/* 상단 로고 영역 */}
       <div className="flex items-start px-3 py-4">
         <img src="/assets/icons/logo.png" alt="logo" className="w-24" />

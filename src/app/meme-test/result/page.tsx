@@ -20,7 +20,7 @@ export default function TestPage() {
   const { data: plans, isLoading, isError } = useGetRecommendedPlanQuery();
 
   return (
-    <div className="relative w-full max-w-[393px] bg-pink-200">
+    <div className="relative flex min-h-screen w-full max-w-[430px] flex-col bg-pink-200">
       <header className="sticky top-0 z-10 flex h-12 w-full items-center justify-between bg-yellow-200 px-4 font-bold">
         <div className="flex items-center">
           <ChevronLeft className="h-5 w-5" />
