@@ -5,22 +5,62 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import CharacterModel from "./CharacterModel";
 import ShadowRing from "./ShadowRing";
+import { useChatStore } from "@/store/useChatStore";
+import { useTTSStore } from "@/store/useTTSStore";
+import { useEffect, useRef } from "react";
+import SpeechBubble from "./SpeechBubble";
 
 export default function CharacterScene() {
-  const { speak, isSpeaking } = useTTS("Google 한국의 여성");
+  const { speak } = useTTS("Google 한국의 여성");
+  const isSpeaking = useTTSStore((state) => state.isSpeaking);
 
+  const messages = useChatStore((state) => state.messages);
+  const getLastBotMessage = useChatStore((state) => state.getLastBotMessage);
+
+  const prevBotMessageRef = useRef<string | null>(null);
+  const latestBotMsg = getLastBotMessage();
+
+  const lastMessage = messages[messages.length - 1];
+  const isWaitingForBot = lastMessage?.role === "user" && !isSpeaking;
+
+  // 모델 클릭 시 수동 발화
   const handleSpeak = () => {
-    speak("돌고 돌아 시간 속에 널 만나러 왔어");
+    const lastBotMessage = getLastBotMessage();
+    if (lastBotMessage) {
+      speak(lastBotMessage.content);
+    } else {
+      speak("지금은 대화가 준비되지 않았어요.");
+    }
   };
+
+  // messages 변경 감지하여 자동 발화
+  useEffect(() => {
+    const latestBotMsg = getLastBotMessage();
+    if (!latestBotMsg) return;
+
+    // 중복 방지: 이미 읽은 메시지면 무시
+    if (latestBotMsg.content !== prevBotMessageRef.current) {
+      prevBotMessageRef.current = latestBotMsg.content;
+      speak(latestBotMsg.content);
+    }
+  }, [messages]);
 
   return (
     <div className="relative flex h-[80%] w-full items-center justify-center">
+      {/* 💬 말풍선 표시 */}
+      {isSpeaking && latestBotMsg?.content && (
+        <SpeechBubble text={latestBotMsg.content} />
+      )}
       <Canvas
         style={{ width: "60%", height: "50%" }}
         camera={{ position: [0, 2, 4], fov: 35 }}>
         <ambientLight intensity={0.9} />
         <directionalLight position={[2, 2, 5]} intensity={1.2} />
-        <CharacterModel onClick={handleSpeak} isSpeaking={isSpeaking} />
+        <CharacterModel
+          onClick={handleSpeak}
+          isSpeaking={isSpeaking}
+          isThinking={isWaitingForBot}
+        />
         <OrbitControls
           enablePan={false}
           enableZoom={false}

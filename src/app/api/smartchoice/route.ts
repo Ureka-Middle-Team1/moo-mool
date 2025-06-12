@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { client } from "@app/lib/axiosInstance";
-import { parseSmartChoiceXml } from "@/app/lib/parseSmartChoiceXml";
+import { client } from "@/lib/axiosInstance";
+import { parseSmartChoiceXml } from "@/lib/parseSmartChoiceXml";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    console.log("요청하는 친구: ", body);
 
     const { voice, data, sms, age, type, dis } = body;
 

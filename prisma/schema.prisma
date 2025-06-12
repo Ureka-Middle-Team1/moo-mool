@@ -8,42 +8,44 @@ datasource db {
 }
 
 model User {
-  id             String     @id @default(cuid())
-  name           String?
-  email          String?    @unique
-  emailVerified  DateTime?
-  image          String?
-  accounts       Account[]
-  sessions       Session[]
+  id               String                @id @default(cuid())
+  name             String?
+  email            String?               @unique
+  emailVerified    DateTime?
+  image            String?
+  accounts         Account[]
+  sessions         Session[]
+  characterProfile UserCharacterProfile? @relation("UserToProfile")
 }
 
 model Account {
-  id                      String   @id @default(cuid())
-  userId                  String
-  type                    String
-  provider                String
-  providerAccountId       String
-  refresh_token           String?
-  access_token            String?
-  expires_at              Int?
-  token_type              String?
-  scope                   String?
-  id_token                String?
-  session_state           String?
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String?
+  access_token             String?
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String?
+  session_state            String?
   refresh_token_expires_in Int?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId], map: "Account_userId_fkey")
 }
 
 model Session {
-  id            String   @id @default(cuid())
-  sessionToken  String   @unique
-  userId        String
-  expires       DateTime
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId], map: "Session_userId_fkey")
 }
 
 model VerificationToken {
@@ -52,4 +54,54 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model TypeQuestion {
+  id              Int     @id @default(autoincrement())
+  stage           String
+  difficulty      String?
+  is_bonus        Boolean
+  question_text   String
+  example_type    String?
+  example_content String?
+  choices         Json
+}
+
+model UserCharacterProfile {
+  user_id       String @id
+  plan_id       Int
+  call_level    Int
+  sms_level     Int
+  sns_level     Int
+  youtube_level Int
+  book_level    Int
+  saving_level  Int
+  type          String
+  user          User   @relation("UserToProfile", fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Plan {
+  id                  Int            @id @default(autoincrement())
+  name                String         @unique @db.VarChar(100)
+  price               Int
+  discount_price      Int?
+  data_amount         String?        @db.VarChar(50)
+  voice_amount        String?        @db.VarChar(50)
+  sms_amount          String?        @db.VarChar(50)
+  overage_description String?        @db.Text
+  add_on_description  String?        @db.Text
+  network_type        NetworkType
+  recommend_rank      RecommendRank?
+  tags                Json?
+}
+
+enum NetworkType {
+  LTE
+  FIVE_G @map("5G")
+}
+
+enum RecommendRank {
+  BEST     @map("으뜸")
+  SAVER    @map("알뜰")
+  GENEROUS @map("넉넉")
 }
