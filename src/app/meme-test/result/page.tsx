@@ -13,11 +13,41 @@ import {
   renderHighlightedText,
 } from "@/utils/textUtils";
 import { useGetRecommendedPlanQuery } from "@/hooks/useGetRecommendedPlanQuery";
+import { useUser } from "@/hooks/useUser";
+import { memeTypeData } from "@/data/memeTypeData";
 
 export default function TestPage() {
+  const { data: plans, isLoading, isError } = useGetRecommendedPlanQuery();
+  const {
+    data: user,
+    isLoading: isUserLoading,
+    isError: isUserError,
+  } = useUser("cmbr9fdrc0000qussh91xmo29");
+
+  if (isUserLoading) {
+    return <p className="text-center">유저 정보를 불러오는 중입니다...</p>;
+  }
+
+  if (isUserError || !user) {
+    return (
+      <p className="text-center text-red-500">
+        유저 정보를 불러올 수 없습니다.
+      </p>
+    );
+  }
+
+  if (!user.characterProfile) {
+    return (
+      <p className="text-center">
+        아직 테스트 결과가 없습니다. 테스트를 먼저 진행해주세요.
+      </p>
+    );
+  }
+  const type = user?.characterProfile?.type || "Saving";
+  const profile = user?.characterProfile;
+  const { descriptionText, hashtagText, image } = memeTypeData[type];
   const splitSentences = parseSentences(descriptionText);
   const hashtags = parseHashtags(hashtagText);
-  const { data: plans, isLoading, isError } = useGetRecommendedPlanQuery();
 
   return (
     <div className="relative w-full max-w-[393px] bg-pink-200">
@@ -82,12 +112,12 @@ export default function TestPage() {
           </p>
 
           <div className="flex flex-col gap-3">
-            <TrendBar label="SNS" value={60} />
-            <TrendBar label="Youtube" value={85} />
-            <TrendBar label="Chat" value={45} />
-            <TrendBar label="Calling" value={70} />
-            <TrendBar label="Books" value={30} />
-            <TrendBar label="Saving" value={15} />
+            <TrendBar label="SNS" value={profile!.sns_level} />
+            <TrendBar label="Youtube" value={profile!.youtube_level} />
+            <TrendBar label="Chat" value={profile!.sms_level} />
+            <TrendBar label="Calling" value={profile!.call_level} />
+            <TrendBar label="Books" value={profile!.book_level} />
+            <TrendBar label="Saving" value={profile!.saving_level} />
           </div>
         </div>
 
