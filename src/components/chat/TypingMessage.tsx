@@ -33,7 +33,7 @@ export default function TypingMessage({
     } else {
       onDone?.();
     }
-  }, [wordIndex, words, speed, onDone]);
+  }, [wordIndex, words]);
 
   return (
     <>
