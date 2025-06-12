@@ -1,4 +1,4 @@
-import { Plan } from "@/data/mockPlans";
+import { Plan } from "@/types/Plan";
 
 export default function PlanCard({ rank, title, subtitle, detail }: Plan) {
   return (

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Chart as ChartJS,
@@ -7,9 +7,10 @@ import {
   LineElement,
   Filler,
   Tooltip,
-  Legend
-} from 'chart.js';
-import { Radar } from 'react-chartjs-2';
+  Legend,
+} from "chart.js";
+import { Radar } from "react-chartjs-2";
+import { getRadarChartOptions } from "./options/radarChartOptions";
 
 ChartJS.register(
   RadialLinearScale,
@@ -22,88 +23,67 @@ ChartJS.register(
 
 interface TendencyRadarChartProps {
   isRounded: boolean;
-  data: number[];
+  data: number[] | [number[], number[]];
+  name: string;
   labels?: string[];
 }
 
 const TendencyRadarChart = ({
   isRounded,
   data,
-  labels = ['SNS', 'Youtube', 'Chat', 'Calling', 'Books', 'Saving']
+  name,
+  labels = ["월정액", "데이터", "속도", "음성통화", "문자"],
 }: TendencyRadarChartProps) => {
-  const chartData = {
-    labels,
-    datasets: [
-      {
-        label: '나의 선호도',
-        data,
-        fill: true,
-        backgroundColor: 'rgba(253, 207, 86, 0.2)',
-        borderColor: 'rgb(253, 207, 86)',
-        pointBackgroundColor: 'rgb(253, 207, 86)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgb(253, 207, 86)'
-      }
-    ]
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      r: {
-        beginAtZero: true,
-        min: 0,
-        max: 100,
-        pointLabels: {
-          font: {
-            family: 'Pretendard-Regular',
-            size: 15,
-            weight: 'bold' as const
+  const datasets = [
+    {
+      label: "기준값",
+      data: [100, 100, 100, 100, 100],
+      fill: true,
+      backgroundColor: "rgba(200, 200, 255, 0.2)",
+      borderColor: "rgba(200, 200, 255, 0.3)",
+      borderWidth: 1,
+      pointRadius: 0,
+    },
+    ...(Array.isArray(data[0])
+      ? [
+          {
+            label: name,
+            data: (data as [number[], number[]])[0],
+            fill: true,
+            backgroundColor: "rgba(255, 188, 31, 0.2)",
+            borderColor: "rgba(255, 188, 31, 0.8)",
+            borderWidth: 1.5,
+            pointRadius: 0,
           },
-          color: '#EB453F'
-        },
-        grid: {
-          color: 'rgba(241, 145, 187, 0.2)',
-          lineWidth: 10
-        },
-        angleLines: {
-          color: 'rgba(241, 145, 187, 0.4)'
-        },
-        ticks: {
-          stepSize: 20,
-          backdropColor: 'transparent',
-          color: '#F191BB'
-        }
-      }
-    },
-    elements: {
-      line: {
-        borderWidth: 4,
-        tension: isRounded ? 0.4 : 0
-      },
-      point: {
-        radius: 6,
-        hoverRadius: 8
-      }
-    },
-    plugins: {
-      legend: {
-        display: false
-      }
-    },
-    animation: {
-      duration: 1500,
-      easing: 'easeOutBounce',
-      animateScale: true,
-      animateRotate: true
-    } as const
-  };
+          {
+            label: "내 요금제",
+            data: (data as [number[], number[]])[1],
+            fill: true,
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgba(255, 99, 132, 0.8)",
+            borderWidth: 1.5,
+            pointRadius: 0,
+          },
+        ]
+      : [
+          {
+            label: name,
+            data: data as number[],
+            fill: true,
+            backgroundColor: "rgba(255, 188, 31, 0.2)",
+            borderColor: "rgba(255, 188, 31, 0.8)",
+            borderWidth: 1.5,
+            pointRadius: 0,
+          },
+        ]),
+  ];
 
   return (
-    <div className="w-full h-[400px]">
-      <Radar data={chartData} options={options} />
+    <div className="h-[320px] w-full">
+      <Radar
+        data={{ labels, datasets }}
+        options={getRadarChartOptions(isRounded)}
+      />
     </div>
   );
 };

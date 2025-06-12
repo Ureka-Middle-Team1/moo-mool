@@ -30,9 +30,14 @@ export function useWatchRecommendationTrigger() {
   const hasTriggeredRef = useRef(false); // 중복 방지
 
   useEffect(() => {
-    if (currentQuestionId === 11 && !hasTriggeredRef.current) {
+    if (currentQuestionId === 13 && !hasTriggeredRef.current) {
       hasTriggeredRef.current = true;
-      recommendPlan(userTendencyInfo);
+
+      // subscribe만 제거한 나머지 필드 추출
+      const { subscribe, ...rest } = userTendencyInfo;
+
+      // subscription 제외한 값으로 recommendPlan 호출 (subscribe는 smart choice api 호출 시 필요없는 사안)
+      recommendPlan(rest);
     }
   }, [currentQuestionId, userTendencyInfo]);
 }
