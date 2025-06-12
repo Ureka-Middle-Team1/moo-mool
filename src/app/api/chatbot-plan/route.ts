@@ -1,6 +1,5 @@
 // DB에 저장되어 있는 plan 테이블에서 user로부터 입력 받은 정보를 바탕으로 구독제 요금 혜택이 포함된 요금제를 찾아보는 api
 import { NextRequest, NextResponse } from "next/server";
-import { client } from "@/lib/axiosInstance";
 import { selectPlanStrategy } from "@/lib/chat/selectPlanStrategy";
 import { queryBySubscribe } from "@/lib/chat/queryBySubscribe";
 
@@ -19,7 +18,7 @@ export async function POST(req: NextRequest) {
     case "FALLBACK":
     //TODO: 사용자들이 가장 많이 추천받은 요금제 top3 출력 (”홈화면”에서 사용하는 api 똑같이 사용해서 띄울 예정)
     case "SMART_CHOICE_ONLY":
-      return NextResponse.json(plans.slice(0, 2)); // smart choice api 요청 결과 중 최대 2개만 return
+      return NextResponse.json(plans.slice(0, 2)); // smart choice api 요청 결과 중 최대 2개만 return (여기는 RawPlan[]으로 리턴)
     case "SUBSCRIBE_MATCH":
       const results = await queryBySubscribe({
         smartChoicePlans: strategy.smartChoicePlans,
