@@ -1,14 +1,15 @@
 "use client";
 
-import TagBadge from "@/components/common/TagBadge";
+import TagBadge from "./TagBadge";
 import PlanModeToggle from "./PlanModeToggle";
-import { TendencyPlanData } from "@/types/planDetail";
 
 interface PlanInfoProps {
-  data: TendencyPlanData;
+  data: PlanDetailData;
   mode: "basic" | "compare";
   onChangeMode: (mode: "basic" | "compare") => void;
 }
+
+import { PlanDetailData } from "@/types/planDetail";
 
 export default function PlanInfo({ data, mode, onChangeMode }: PlanInfoProps) {
   return (
