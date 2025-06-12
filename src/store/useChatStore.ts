@@ -37,7 +37,10 @@ export const useChatStore = create<ChatStore>()(
     }),
     {
       name: "chat-storage", // localStorage key 이름
-      partialize: (state) => ({ messages: state.messages }), // 저장할 필드 제한
+      partialize: (state) => ({
+        messages: state.messages,
+        currentQuestionId: state.currentQuestionId,
+      }), // 저장할 필드 제한
     }
   )
 );
