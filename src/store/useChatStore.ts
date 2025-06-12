@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Message } from "@/types/Message";
+import { Message } from "@/types/Chat";
 import { questionTextMap } from "@/lib/chat/chatBotQuestionFlow";
 
 const initialMessage: Message[] = questionTextMap[1]
