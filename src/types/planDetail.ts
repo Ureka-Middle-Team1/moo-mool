@@ -4,7 +4,7 @@ export interface Benefit {
   description: string;
 }
 
-export interface TendencyPlanData {
+export interface PlanDetailData {
   name: string;
   price: string;
   tags: string[];
