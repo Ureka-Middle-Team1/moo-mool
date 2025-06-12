@@ -1,11 +1,11 @@
 "use client";
 
-import TendencyRadarChart from "@/components/chart/TendencyRadarChart";
-import TendencyBarChart from "@/components/chart/TendencyBarChart";
-import { TendencyPlanData } from "@/types/planDetail";
+import { PlanDetailData } from "@/types/planDetail";
+import TendencyRadarChart from "@/components/chart/PlanDetailRadarChart";
+import TendencyBarChart from "@/components/chart/PlanDetailBarChart";
 
 interface PlanChartsProps {
-  data: TendencyPlanData;
+  data: PlanDetailData;
   mode: "basic" | "compare";
 }
 
