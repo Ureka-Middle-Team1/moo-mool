@@ -94,6 +94,14 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
