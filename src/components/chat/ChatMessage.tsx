@@ -1,5 +1,4 @@
-import { Message } from "@/types/Chat";
-import PlanCard from "./PlanCard";
+import { Message } from "@/types/message";
 
 interface ChatMessageProps {
   message: Message;
