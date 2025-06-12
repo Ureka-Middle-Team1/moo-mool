@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { Card, CardContent } from '@/components/ui/card';
+import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface BenefitCardProps {
   imageSrc: string;
@@ -9,14 +9,24 @@ interface BenefitCardProps {
   description: string;
 }
 
-export default function BenefitCard({ imageSrc, title, description }: BenefitCardProps) {
+export default function BenefitCard({
+  imageSrc,
+  title,
+  description,
+}: BenefitCardProps) {
   return (
-    <Card className="w-[160px] h-[240px] rounded-xl shadow-md flex flex-col items-center justify-start p-4 bg-white">
-      <div className="w-24 h-24 rounded-full overflow-hidden mb-3">
-        <Image src={imageSrc} alt={title} width={96} height={96} className="object-cover" />
+    <Card className="flex h-[240px] w-[160px] flex-col items-center justify-start rounded-xl bg-white p-4 shadow-md">
+      <div className="mb-3 h-24 w-24 overflow-hidden rounded-full">
+        <Image
+          src={imageSrc}
+          alt={title}
+          width={96}
+          height={96}
+          className="object-cover"
+        />
       </div>
-      <h3 className="text-sm font-semibold text-center">{title}</h3>
-      <p className="text-xs text-gray-600 text-center mt-1">{description}</p>
+      <h3 className="text-center text-sm font-semibold">{title}</h3>
+      <p className="mt-1 text-center text-xs text-gray-600">{description}</p>
     </Card>
   );
 }
