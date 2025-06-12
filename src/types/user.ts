@@ -1,3 +1,5 @@
+import { DateTime } from "next-auth/providers/kakao";
+
 export type CharacterProfile = {
   user_id: string;
   plan_id: string;
@@ -16,4 +18,10 @@ export type User = {
   email: string | null;
   image: string | null;
   characterProfile: CharacterProfile | null;
+  age: string;
+  badge: number;
+  invited_count: number;
+  my_plan: number;
+  recommended_plan: number;
+  created_at: DateTime;
 };
