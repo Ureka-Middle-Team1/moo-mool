@@ -1,4 +1,5 @@
 import { ArrowUp, Mic } from "lucide-react";
+import { useRef } from "react";
 
 interface ChatInputBoxProps {
   input: string;
@@ -13,8 +14,12 @@ export default function ChatInputBox({
   onSubmit,
   textareaRef,
 }: ChatInputBoxProps) {
+  const formRef = useRef<HTMLFormElement>(null); // 엔터키 중복 방지를 위한 ref
+  const isSubmittingRef = useRef(false);
+
   return (
     <form
+      ref={formRef}
       onSubmit={onSubmit}
       className="rounded-t-2xl bg-[#FFEBAF] px-4 pt-3 pb-2">
       <textarea
@@ -22,10 +27,13 @@ export default function ChatInputBox({
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="무너에게 물어봐!"
-        onKeyDown={(e) => {
+        onKeyUp={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            onSubmit(e);
+            // 중복 호출 방지
+            if (!isSubmittingRef.current) {
+              onSubmit(e);
+            }
           }
         }}
         className="w-full resize-none bg-[#FFEBAF] text-sm placeholder-[#94A3B8] focus:outline-none"
