@@ -8,6 +8,7 @@ import ShadowRing from "./ShadowRing";
 import { useChatStore } from "@/store/useChatStore";
 import { useTTSStore } from "@/store/useTTSStore";
 import { useEffect, useRef } from "react";
+import SpeechBubble from "./SpeechBubble";
 
 export default function CharacterScene() {
   const { speak } = useTTS("Google 한국의 여성");
@@ -17,6 +18,7 @@ export default function CharacterScene() {
   const getLastBotMessage = useChatStore((state) => state.getLastBotMessage);
 
   const prevBotMessageRef = useRef<string | null>(null);
+  const latestBotMsg = [...messages].reverse().find((m) => m.role === "bot");
 
   // 모델 클릭 시 수동 발화
   const handleSpeak = () => {
@@ -30,7 +32,7 @@ export default function CharacterScene() {
 
   // messages 변경 감지하여 자동 발화
   useEffect(() => {
-    const latestBotMsg = [...messages].reverse().find((m) => m.role === "bot");
+    const latestBotMsg = getLastBotMessage();
     if (!latestBotMsg) return;
 
     // 중복 방지: 이미 읽은 메시지면 무시
@@ -42,6 +44,10 @@ export default function CharacterScene() {
 
   return (
     <div className="relative flex h-[80%] w-full items-center justify-center">
+      {/* 💬 말풍선 표시 */}
+      {isSpeaking && latestBotMsg?.content && (
+        <SpeechBubble text={latestBotMsg.content} />
+      )}
       <Canvas
         style={{ width: "60%", height: "50%" }}
         camera={{ position: [0, 2, 4], fov: 35 }}>
