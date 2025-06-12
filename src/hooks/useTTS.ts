@@ -1,8 +1,9 @@
+import { useTTSStore } from "@/store/useTTSStore";
 import { useEffect, useState } from "react";
 
 export function useTTS(voiceName = "Google 한국의 여성") {
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const { setIsSpeaking } = useTTSStore();
 
   useEffect(() => {
     const loadVoices = () => {
@@ -39,5 +40,5 @@ export function useTTS(voiceName = "Google 한국의 여성") {
     speechSynthesis.speak(utter);
   };
 
-  return { speak, voice, isSpeaking };
+  return { speak, voice };
 }
