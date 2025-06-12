@@ -15,7 +15,9 @@ model User {
   image          String?
   accounts       Account[]
   sessions       Session[]
+  characterProfile UserCharacterProfile? @relation("UserToProfile")
 }
+
 
 model Account {
   id                      String   @id @default(cuid())
@@ -52,4 +54,28 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model TypeQuestion {
+  id              Int     @id @default(autoincrement())
+  stage           String
+  difficulty      String?
+  is_bonus        Boolean
+  question_text   String
+  example_type    String?
+  example_content String?
+  choices         Json
+}
+
+model UserCharacterProfile {
+  user_id       String   @id
+  plan_id       Int
+  call_level    Int
+  sms_level     Int
+  sns_level     Int
+  youtube_level Int
+  book_level    Int
+  saving_level  Int
+  type          String
+  user User @relation("UserToProfile", fields: [user_id], references: [id],  onDelete: Cascade)
 }
