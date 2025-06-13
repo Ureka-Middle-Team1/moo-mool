@@ -1,4 +1,4 @@
-import { PlanSelectionInput, PlanSelectionOutput } from "@/types/Plan";
+import { PlanSelectionInput, PlanSelectionOutput } from "@type/Chat";
 
 // 구독 서비스 관련 선호도와 Smart Choice API 조회 결과에 대해 분기 처리를 진행하는 selectPlanStrategy
 export function selectPlanStrategy({

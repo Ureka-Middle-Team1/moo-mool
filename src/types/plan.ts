@@ -1,4 +1,4 @@
-// Smart Choice API 응답 시 받는 자료형
+// 밈 테스트에서 사용하는 Plan
 export interface Plan {
   rank: number;
   title: string;
