@@ -5,6 +5,7 @@ import { parsePlans, PlanApiResponse } from "@/types/Chat";
 import { useGetFinalPlanInChatbot } from "./useGetFinalPlanInChatbot";
 import { useChatStore } from "@/store/useChatStore";
 import { useTendencyStore } from "@/store/useTendencyStore";
+import { useFetchUserMemeTestResult } from "./useFetchUserMemeTestResult";
 
 type Options = {
   onSuccess?: (data: PlanApiResponse) => void;
@@ -20,10 +21,6 @@ export function useSmartChoiceRecommendation(options?: Options) {
     // 스마트 초이스로 가져온 거..
     onSuccess: (data) => {
       if (data.result.length > 0) {
-        client
-          .get("/smartchoice?=cmbuefdnp0000qu6sqzuk3v5g")
-          .then((res) => console.log(res.data));
-
         addMessage({
           role: "bot",
           content: "이 요금제가 어울릴 것 같아요!",
@@ -46,7 +43,6 @@ export function useSmartChoiceRecommendation(options?: Options) {
     retry: 3, // 최대 3회까지 재시도
     onSuccess: (data) => {
       const parsed = parsePlans(data);
-      console.log("parsed 데이타? :", parsed);
       // SmartChoice 결과를 이용해 chatbot 요청 진행
       getFinalPlanInChatbot({
         smartChoicePlans: parsed,

@@ -7,7 +7,8 @@ import {
 export function calculateSmartChoiceValues(
   userMemeTestResult: UserMemeTestResult
 ): SmartChoiceInput {
-  const { call, sms, sns, youtube, saving } = userMemeTestResult;
+  const { call_level, sms_level, sns_level, youtube_level, saving_level } =
+    userMemeTestResult;
 
   // 평균값 기준
   const avg_call = 300;
@@ -15,10 +16,12 @@ export function calculateSmartChoiceValues(
   const avg_data = 30000;
 
   // 통화량 계산
-  const finalCall = call >= 80 ? 999999 : Math.round((avg_call * call) / 50);
+  const finalCall =
+    call_level >= 80 ? 999999 : Math.round((avg_call * call_level) / 50);
 
   // 문자량 계산
-  const finalSms = sms >= 80 ? 999999 : Math.round((avg_sms * sms) / 50);
+  const finalSms =
+    sms_level >= 80 ? 999999 : Math.round((avg_sms * sms_level) / 50);
 
   // 데이터 사용량 계산 (가중 평균 + 무제한 조건)
   const sns_weight = 0.3;
@@ -26,7 +29,9 @@ export function calculateSmartChoiceValues(
   const saving_weight = -0.1;
 
   const data_score =
-    sns_weight * sns + youtube_weight * youtube + saving_weight * saving;
+    sns_weight * sns_level +
+    youtube_weight * youtube_level +
+    saving_weight * saving_level;
 
   const isUnlimitedData = data_score >= 54;
 
