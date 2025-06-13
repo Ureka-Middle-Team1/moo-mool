@@ -1,5 +1,28 @@
 export type TrendDatum = { label: string; value: number };
 
+export enum MemeTypeEnum {
+  Saving = "꽁돈 무너",
+  Youtube = "팝콘 무너",
+  SNS = "인싸 무너",
+  Chat = "투머니톡커 무너",
+  Call = "여보세무너",
+  Books = "꼬꼬무너",
+}
+
+export type MemeType = "Saving" | "Youtube" | "SNS" | "Chat" | "Call" | "Books";
+
+export const getMemeTypeLabel = (type: MemeType) => {
+  const labelMap: Record<MemeType, string> = {
+    Saving: "꽁돈 무너",
+    Youtube: "팝콘 무너",
+    SNS: "인싸 무너",
+    Chat: "투머니톡커 무너",
+    Call: "여보세무너",
+    Books: "꼬꼬무너",
+  };
+  return labelMap[type];
+};
+
 export const memeTypeData: Record<
   string,
   {

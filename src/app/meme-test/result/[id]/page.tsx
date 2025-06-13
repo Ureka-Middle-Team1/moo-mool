@@ -1,28 +1,43 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { ChevronLeft } from "lucide-react";
-import ShareSection from "@/components/meme/shareSection";
+export const dynamic = "force-dynamic";
+
+import React from "react";
+import { decrypt } from "@/utils/crypto";
+import { useUser } from "@/hooks/useUser";
+import { useGetRecommendedPlanQuery } from "@/hooks/useGetRecommendedPlanQuery";
+import { getMemeTypeLabel, MemeType, memeTypeData } from "@/store/memeTypeData";
 import TrendBar from "@/components/chart/TrendBar";
 import PlanCard from "@/components/plan/planCard";
-import { descriptionText, hashtagText } from "@/data/mockPlans";
-
+import ShareSection from "@/components/meme/shareSection";
+import { ChevronLeft } from "lucide-react";
 import {
   parseSentences,
   parseHashtags,
   renderHighlightedText,
 } from "@/utils/textUtils";
-import { useGetRecommendedPlanQuery } from "@/hooks/useGetRecommendedPlanQuery";
-import { useUser } from "@/hooks/useUser";
-import { memeTypeData } from "@/data/memeTypeData";
 
-export default function TestPage() {
+export default function ResultPage({ params }: { params: { id: string } }) {
+  const encryptedId = params.id;
+  console.log("결과 페이지 ==================", params);
+  console.log("결과 페이지 encryptedId ==================", encryptedId);
+
+  /* 복호화 */
+  const decryptedId = encryptedId
+    ? decrypt(decodeURIComponent(encryptedId))
+    : null;
+  console.log("복호화 resultPage ", decryptedId);
+
   const { data: plans, isLoading, isError } = useGetRecommendedPlanQuery();
   const {
     data: user,
     isLoading: isUserLoading,
     isError: isUserError,
-  } = useUser("cmbr9fdrc0000qussh91xmo29");
+  } = useUser(decryptedId || "");
+
+  if (!encryptedId || !decryptedId) {
+    return <p>잘못된 접근입니다.</p>;
+  }
 
   if (isUserLoading) {
     return <p className="text-center">유저 정보를 불러오는 중입니다...</p>;
@@ -43,9 +58,9 @@ export default function TestPage() {
       </p>
     );
   }
-  const type = user?.characterProfile?.type || "Saving";
-  const profile = user?.characterProfile;
-  const { descriptionText, hashtagText, image } = memeTypeData[type];
+  const type = user.characterProfile?.type || "Saving";
+  const profile = user.characterProfile;
+  const { descriptionText, hashtagText } = memeTypeData[type];
   const splitSentences = parseSentences(descriptionText);
   const hashtags = parseHashtags(hashtagText);
 
@@ -60,7 +75,9 @@ export default function TestPage() {
       </header>
 
       <main className="flex flex-col items-center gap-5 px-4 pt-6 pb-10 text-center">
-        <div className="text-2xl font-bold">팝콘 무너</div>
+        <div className="text-2xl font-bold">
+          {getMemeTypeLabel(type as MemeType)}
+        </div>
         <div>
           전체 테스트 참여자 중 <span className="font-bold">35.6%</span>가 같은
           유형입니다.
@@ -87,11 +104,6 @@ export default function TestPage() {
               ))}
             </div>
 
-            {/* 영역별 트렌드 타이틀 */}
-            <p className="underline-pink-bg mb-4 text-base font-bold">
-              영역별 트렌드 능력치
-            </p>
-
             <div className="mt-3 flex flex-col text-[12px] leading-relaxed">
               {splitSentences.map((line, idx) => (
                 <p key={idx} className="mb-2">
@@ -112,16 +124,29 @@ export default function TestPage() {
           </p>
 
           <div className="flex flex-col gap-3">
-            <TrendBar label="SNS" value={profile!.sns_level} />
-            <TrendBar label="Youtube" value={profile!.youtube_level} />
-            <TrendBar label="Chat" value={profile!.sms_level} />
-            <TrendBar label="Calling" value={profile!.call_level} />
-            <TrendBar label="Books" value={profile!.book_level} />
-            <TrendBar label="Saving" value={profile!.saving_level} />
+            <TrendBar label="SNS" value={user.characterProfile.sns_level} />
+            <TrendBar
+              label="Youtube"
+              value={user.characterProfile.youtube_level}
+            />
+            <TrendBar label="Chat" value={user.characterProfile.sms_level} />
+            <TrendBar
+              label="Calling"
+              value={user.characterProfile.call_level}
+            />
+            <TrendBar label="Books" value={user.characterProfile.book_level} />
+            <TrendBar
+              label="Saving"
+              value={user.characterProfile.saving_level}
+            />
           </div>
         </div>
 
-        <ShareSection title="내 결과 공유하기" count={150} />
+        <ShareSection
+          title="내 결과 공유하기"
+          count={150}
+          id={"cmbt5106o0000quwwoyml6jwg"}
+        />
 
         <button className="w-[90%] cursor-pointer rounded-lg bg-yellow-300/80 px-6 py-2 text-lg font-bold text-black shadow-md transition hover:bg-yellow-500">
           시작하기
@@ -134,15 +159,7 @@ export default function TestPage() {
           {isError && (
             <p className="text-center text-red-500">요금제 불러오기 실패</p>
           )}
-          {plans?.map((plan) => (
-            <PlanCard
-              key={plan.rank}
-              rank={plan.rank}
-              title={plan.title}
-              subtitle={plan.subtitle}
-              detail={plan.detail}
-            />
-          ))}
+          {plans?.map((plan) => <PlanCard key={plan.rank} {...plan} />)}
         </div>
       </main>
     </div>
