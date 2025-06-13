@@ -23,7 +23,7 @@ export async function GET(request: Request) {
     }
 
     // findUnique(..select..)를 통해, 필요한 필드만 효율적으로 조회함
-    const profile = await prisma.userCharactorProfile.findUnique({
+    const profile = await prisma.UserCharacterProfile.findUnique({
       where: { user_id },
       select: {
         call_level: true,

@@ -21,7 +21,9 @@ export async function queryBySubscribe({
   const perfectMatches = await prisma.plan.findMany({
     where: {
       name: { in: names },
-      subscribe,
+      subscriptionServices: {
+        array_contains: ["NETFLIX"], // JSON 배열 내 포함 여부
+      },
     },
     take: 2,
   });
@@ -33,7 +35,11 @@ export async function queryBySubscribe({
 
   // 경우 2 - 이름+구독 일치 요금제가 없을 때 => fallback 전략 수행 (DB 연동하면 주석 처리된 아래 코드로 활용 예정)
   const subscribeOnly = await prisma.plan.findMany({
-    where: { subscribe },
+    where: {
+      subscriptionServices: {
+        array_contains: [subscribe], // JSON 배열 내 포함 여부
+      },
+    },
     take: 2,
   });
 

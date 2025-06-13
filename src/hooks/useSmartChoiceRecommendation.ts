@@ -42,6 +42,7 @@ export function useSmartChoiceRecommendation(options?: Options) {
     retry: 3, // 최대 3회까지 재시도
     onSuccess: (data) => {
       const parsed = parsePlans(data);
+      console.log("parsed 데이타? :", parsed);
       // SmartChoice 결과를 이용해 chatbot 요청 진행
       getFinalPlanInChatbot({
         smartChoicePlans: parsed,

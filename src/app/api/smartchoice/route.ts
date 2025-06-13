@@ -7,7 +7,6 @@ import { RawPlan } from "@/types/Chat";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    console.log("요청하는 친구: ", body);
 
     const { voice, data, sms, age, type, dis } = body;
 

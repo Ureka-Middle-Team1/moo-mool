@@ -9,8 +9,8 @@ export interface Plan {
   v_add_name: { _text: string }; // 요금제 기본료, 부가서비스 기본료
   v_plan_name: { _text: string }; // 요금제명, 부가서비스명
   v_plan_display_voice: { _text: string }; // 음성 기본 제공량
-  v_display_data: { _text: string }; // 데이터 기본 제공량
-  v_plan_sms: { _text: string }; // 문자 기본 제공량
+  v_plan_display_data: { _text: string }; // 데이터 기본 제공량
+  v_plan_display_sms: { _text: string }; // 문자 기본 제공량
   rn: { _text: string }; // 요금제 추천 구분(으뜸: 1, 알뜰: 2, 넉넉: 3)
 }
 
@@ -29,9 +29,9 @@ export type PlanSelectionOutput = {
 export function extractRawPlan(plan: Plan): RawPlan {
   return {
     v_plan_name: plan.v_plan_name,
-    v_plan_display_data: plan.v_display_data,
+    v_plan_display_data: plan.v_plan_display_data,
     v_plan_display_voice: plan.v_plan_display_voice,
-    v_plan_display_sms: plan.v_plan_sms,
+    v_plan_display_sms: plan.v_plan_display_sms,
     v_add_name: plan.v_add_name,
     v_plan_price: plan.v_plan_price,
     v_tel: plan.v_tel,
@@ -67,7 +67,7 @@ export type ParsedPlan = {
 
 // 해당 내용은 Smart Choice API 요청 시에 리턴되는 값의 자료형
 export type PlanApiResponse = {
-  result: RawPlan[];
+  rawPlans: RawPlan[];
   success: boolean;
 };
 
@@ -79,9 +79,9 @@ export type ChatApiResponse = {
 };
 
 export function parsePlans(raw: PlanApiResponse): ParsedPlan[] {
-  if (!raw.result || !Array.isArray(raw.result)) return [];
+  if (!raw.rawPlans || !Array.isArray(raw.rawPlans)) return [];
 
-  return raw.result.map((item) => ({
+  return raw.rawPlans.map((item) => ({
     name: item.v_plan_name._text.trim(),
     data: item.v_plan_display_data._text.trim(),
     voice: item.v_plan_display_voice._text.trim(),
