@@ -26,15 +26,17 @@ export type PlanSelectionOutput = {
 };
 
 // 최초에 Smart Choice API를 받아올 때, 이처럼 필터링하는 과정이 필요 (불필요한 필드 제거 / smartchoice api에서 호출함)
-export function extractRawPlan(plan: Plan): RawPlan {
+export function extractRawPlan(plan: any): RawPlan {
+  const get = (key: string) => plan?.[key]?._text?.trim() ?? "";
+
   return {
-    v_plan_name: plan.v_plan_name,
-    v_plan_display_data: plan.v_display_data,
-    v_plan_display_voice: plan.v_plan_display_voice,
-    v_plan_display_sms: plan.v_plan_sms,
-    v_add_name: plan.v_add_name,
-    v_plan_price: plan.v_plan_price,
-    v_tel: plan.v_tel,
+    v_plan_name: { _text: get("v_plan_name") },
+    v_plan_display_data: { _text: get("v_plan_display_data") },
+    v_plan_display_voice: { _text: get("v_plan_display_voice") },
+    v_plan_display_sms: { _text: get("v_plan_display_sms") },
+    v_add_name: { _text: get("v_add_name") },
+    v_plan_price: { _text: get("v_plan_price") },
+    v_tel: { _text: get("v_tel") },
   };
 }
 
