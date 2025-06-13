@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import SpeechBubble from "./SpeechBubble";
 
 export default function CharacterScene() {
-  const { speak } = useTTS("Google 한국의 여성");
+  const { speak } = useTTS();
   const isSpeaking = useTTSStore((state) => state.isSpeaking);
 
   const messages = useChatStore((state) => state.messages);
