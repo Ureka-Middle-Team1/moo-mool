@@ -20,6 +20,10 @@ export function useSmartChoiceRecommendation(options?: Options) {
     // 스마트 초이스로 가져온 거..
     onSuccess: (data) => {
       if (data.result.length > 0) {
+        client
+          .get("/smartchoice?=cmbuefdnp0000qu6sqzuk3v5g")
+          .then((res) => console.log(res.data));
+
         addMessage({
           role: "bot",
           content: "이 요금제가 어울릴 것 같아요!",

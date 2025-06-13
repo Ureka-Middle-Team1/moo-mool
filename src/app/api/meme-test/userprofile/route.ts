@@ -34,6 +34,9 @@ export async function GET(request: Request) {
       },
     });
 
+    console.log("정보 불러온 것? ", profile);
+
+    // 가져온 프로필이 없는 경우
     if (!profile) {
       return NextResponse.json(
         { error: `Profile not found for user_id ${user_id}` },
