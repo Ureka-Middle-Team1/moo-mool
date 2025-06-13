@@ -7,7 +7,7 @@ type Options = {
 };
 
 // 스마트 초이스로 가져온 것을 바탕으로, 구독제 서비스까지 고려해서 추천을 진행하는 useChatbotRecommendationPlan
-export function useChatbotRecommendationPlan(options?: Options) {
+export function useGetFinalPlanInChatbot(options?: Options) {
   return useMutation({
     mutationFn: (input: {
       smartChoicePlans: ParsedPlan[];

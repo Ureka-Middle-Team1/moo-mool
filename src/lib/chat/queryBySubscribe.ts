@@ -3,8 +3,10 @@
 import { ParsedPlan } from "@/types/Chat";
 import { prisma } from "@/lib/prisma"; // Prisma 사용 시
 
-// 구독 요금제 관련한 정보를 DB로부터 검색해서 가져오는 queryBySubscribe
-// --> 현재는 구분 없이, 사용자에게 가장 맞아 보이는 요금제를 가져옴, 추후 확장 논의 가능
+/*
+  구독 요금제 관련한 정보를 DB로부터 검색해서 가져오는 queryBySubscribe
+  --> 현재는 구분 없이, 사용자에게 가장 맞아 보이는 요금제를 가져옴, 추후 확장 논의 가능
+*/
 export async function queryBySubscribe({
   smartChoicePlans,
   subscribe,
