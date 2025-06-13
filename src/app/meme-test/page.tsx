@@ -42,7 +42,12 @@ export default function TestHomePage() {
 
         <hr className="my-3 w-[90%] border border-pink-500" />
 
-        <ShareSection title="테스트 공유하기" count={150} />
+        <ShareSection
+          title="테스트 공유하기"
+          count={150}
+          id={"cmbt5106o0000quwwoyml6jwg"}
+          shareUrl="/meme-test"
+        />
 
         <div className="mb-8 flex w-[90%] flex-col gap-4 rounded-[10px] bg-white p-4 shadow-md">
           {topMoonos.map((moono, index) => (
