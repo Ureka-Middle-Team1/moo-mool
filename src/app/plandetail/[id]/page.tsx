@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  PlanInfo,
-  PlanCharts,
-  PlanBenefits,
-  PlanDetailHeader,
-  TopGradient,
-  BottomGradient,
-} from "@/components/planDetail";
+import PlanInfo from "@/components/planDetail/PlanInfo";
+import PlanCharts from "@/components/planDetail/PlanCharts";
+import PlanBenefits from "@/components/planDetail/PlanBenefits";
+import PlanDetailHeader from "@/components/planDetail/PlanDetailHeader";
+import TopGradient from "@/components/planDetail/TopGradient";
+import BottomGradient from "@/components/planDetail/BottomGradient";
+
 import { PlanDetailData } from "@/types/planDetail";
 import { useParams } from "next/navigation";
 import { useGetPlanById } from "@/hooks/useGetPlanById";
@@ -37,32 +36,17 @@ export default function PlanDetailPage() {
   const planData: PlanDetailData = mapPlanToDetailData(data);
 
   return (
-    <main className="relative flex flex-col items-center overflow-hidden bg-white">
-      <section className="relative z-10 w-full max-w-md">
-        <PlanDetailHeader />
-        {/* <TopGradient /> */}
-        <div
-          className="w-full pb-4"
-          style={{ background: "linear-gradient(#fff6d8 -50%, white)" }}>
+    <>
+      <PlanDetailHeader />
+      <main className="relative flex flex-col items-center space-y-8 overflow-hidden bg-gradient-to-b">
+        <TopGradient />
+        <section className="relative z-10 max-w-md">
           <PlanInfo data={planData} mode={mode} onChangeMode={setMode} />
           <PlanCharts data={planData} mode={mode} />
-        </div>
-
-        <div className="relative flex min-h-[30rem] w-full flex-col">
-          <div
-            className={`h-[30rem] w-full transition-opacity duration-700 ${
-              showGradient ? "opacity-50" : "opacity-0"
-            }`}
-            style={{
-              marginTop: "2.5rem",
-              background: "linear-gradient(to top, #ffe4e8 60%, transparent)",
-            }}
-          />
-          <div className="relative z-10 -mt-[22rem]">
-            <PlanBenefits benefits={planData.benefits} />
-          </div>
-        </div>
-      </section>
-    </main>
+          <PlanBenefits benefits={planData.benefits} />
+        </section>
+        <BottomGradient show={showGradient} />
+      </main>
+    </>
   );
 }

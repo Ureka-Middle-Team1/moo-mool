@@ -2,7 +2,6 @@ import { Message } from "@/types/Chat";
 import PlanCard from "./PlanCard";
 import TypingMessage from "./TypingMessage";
 
-
 interface ChatMessageProps {
   message: Message;
   isLastBotMessage?: boolean;

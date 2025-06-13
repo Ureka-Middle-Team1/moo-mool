@@ -15,7 +15,7 @@ export default function BenefitCard({
   description,
 }: BenefitCardProps) {
   return (
-    <Card className="flex h-[240px] w-[160px] flex-col items-center justify-start rounded-xl bg-white p-4 shadow-md">
+    <Card className="flex h-60 w-40 flex-col items-center justify-start rounded-xl bg-white p-4 shadow-md">
       <div className="mb-3 h-24 w-24 overflow-hidden rounded-full">
         <Image
           src={imageSrc}

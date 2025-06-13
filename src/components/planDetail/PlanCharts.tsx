@@ -14,7 +14,7 @@ export default function PlanCharts({ data, mode }: PlanChartsProps) {
 
   return (
     <div className="w-full max-w-md space-y-8">
-      <div className="h-[320px] w-full">
+      <div className="h-80 w-full">
         <TendencyRadarChart
           isRounded={isRounded}
           data={mode === "basic" ? data.radar : [data.radar, data.compare]}
@@ -22,7 +22,7 @@ export default function PlanCharts({ data, mode }: PlanChartsProps) {
         />
       </div>
 
-      <div className="h-[320px] w-full">
+      <div className="ml-[2rem] h-80 w-[85%]">
         <TendencyBarChart
           data={mode === "basic" ? data.bar : [data.bar, data.compare]}
           name={data.name}

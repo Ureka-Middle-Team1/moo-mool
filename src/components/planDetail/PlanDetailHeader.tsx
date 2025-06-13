@@ -11,7 +11,7 @@ export default function PlanDetailHeader() {
   };
 
   return (
-    <div className="relative flex h-12 items-center justify-center bg-white shadow-sm">
+    <div className="sticky top-0 z-50 flex h-12 items-center justify-center bg-white shadow-sm">
       <button className="absolute left-4" onClick={handleClick}>
         <ChevronLeft size={24} />
       </button>
