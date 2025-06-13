@@ -1,4 +1,4 @@
-import { PlanApiResponse } from "@/types/Plan";
+import { PlanDBApiResponse } from "@/types/PlanData";
 import { PlanDetailData } from "@/types/planDetail";
 
 const serviceMap: Record<string, PlanDetailData["benefits"][number]> = {
@@ -26,7 +26,7 @@ function getBenefits(services: string[]): PlanDetailData["benefits"] {
     .filter((b): b is PlanDetailData["benefits"][number] => b !== undefined);
 }
 
-export function mapPlanToDetailData(plan: PlanApiResponse): PlanDetailData {
+export function mapPlanToDetailData(plan: PlanDBApiResponse): PlanDetailData {
   return {
     name: plan.name,
     price: `월 ${plan.price.toLocaleString()} 원`,
