@@ -2,8 +2,10 @@
 
 import ShareSection from "@/components/meme/shareSection";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
+import { useRouter } from "next/navigation";
 
 export default function TestHomePage() {
+  const router = useRouter();
   const { data, isLoading, isError } = useGetTypeRankQuery();
   if (isLoading)
     return <div className="mt-10 text-center font-medium">로딩 중...</div>;
@@ -13,6 +15,11 @@ export default function TestHomePage() {
   const topMoonos = (data?.moonos ?? [])
     .sort((a, b) => b.score - a.score)
     .slice(0, 2);
+
+  const handleStart = () => {
+    const randomId = Math.random().toString(36).substring(2, 10); // 예: "a9x8k3lf"
+    router.push(`/meme-test/${randomId}`);
+  };
 
   return (
     <div className="flex h-full w-full flex-1 flex-col bg-pink-200 px-0">
@@ -29,7 +36,9 @@ export default function TestHomePage() {
           className="w-[80%]"
         />
 
-        <button className="mb-4 w-4/5 max-w-[250px] cursor-pointer rounded-lg bg-pink-500 px-6 py-2 text-lg text-white shadow-md transition hover:bg-yellow-500">
+        <button
+          onClick={handleStart}
+          className="mb-4 w-4/5 max-w-[250px] cursor-pointer rounded-lg bg-pink-400 px-6 py-2 text-lg text-white shadow-md transition hover:bg-yellow-500">
           시작하기
         </button>
 
@@ -40,12 +49,12 @@ export default function TestHomePage() {
           </p>
         </div>
 
-        <hr className="my-3 w-[90%] border border-pink-500" />
+        <hr className="my-3 w-[90%] border border-pink-400" />
 
         <ShareSection
           title="테스트 공유하기"
-          count={150}
-          id={"cmbt5106o0000quwwoyml6jwg"}
+          count={data.shareCount}
+          id={"cmbuefdnp0000qu6sqzuk3v5g"}
           shareUrl="/meme-test"
         />
 

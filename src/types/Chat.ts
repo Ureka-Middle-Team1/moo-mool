@@ -30,13 +30,13 @@ export function extractRawPlan(plan: any): RawPlan {
   const get = (key: string) => plan?.[key]?._text?.trim() ?? "";
 
   return {
-    v_plan_name: plan.v_plan_name,
-    v_plan_display_data: plan.v_plan_display_data,
-    v_plan_display_voice: plan.v_plan_display_voice,
-    v_plan_display_sms: plan.v_plan_display_sms,
-    v_add_name: plan.v_add_name,
-    v_plan_price: plan.v_plan_price,
-    v_tel: plan.v_tel,
+    v_plan_name: { _text: get("v_plan_name") },
+    v_plan_display_data: { _text: get("v_plan_display_data") },
+    v_plan_display_voice: { _text: get("v_plan_display_voice") },
+    v_plan_display_sms: { _text: get("v_plan_display_sms") },
+    v_add_name: { _text: get("v_add_name") },
+    v_plan_price: { _text: get("v_plan_price") },
+    v_tel: { _text: get("v_tel") },
   };
 }
 

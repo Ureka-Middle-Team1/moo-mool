@@ -14,6 +14,8 @@ import {
   QuestionsResponse,
 } from "@/types/question";
 import { Answer } from "@/types/answer";
+import { useRouter } from "next/navigation";
+import { encrypt } from "@/utils/crypto";
 
 const difficultyNumberMap: Record<Difficulty, number | null> = {
   low: 1,
@@ -42,6 +44,7 @@ const getStageNumber = (stage: string) => {
   return match ? parseInt(match[0], 10) : 1; // 기본 1
 };
 export default function TestQuestionPage() {
+  const router = useRouter();
   const setAnswer = useQuestionStore((state) => state.setAnswer);
   const answers = useQuestionStore((state) => state.answers);
   const { mutate: submitAnswers } = useSubmitAnswers();
@@ -92,11 +95,13 @@ export default function TestQuestionPage() {
     setAnswer(answer);
 
     if (currentIndex === questions.length - 1) {
+      const encrypted = encrypt("cmbuefdnp0000qu6sqzuk3v5g");
       submitAnswers({
-        userId: "cmbt5106o0000quwwoyml6jwg",
+        userId: "cmbuefdnp0000qu6sqzuk3v5g",
         planId: 1,
         answers,
       });
+      router.push(`/meme-test/result/${encrypted}`);
     } else {
       setCurrentIndex((prev) => prev + 1);
     }

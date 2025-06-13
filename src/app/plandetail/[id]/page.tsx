@@ -40,7 +40,7 @@ export default function PlanDetailPage() {
       <PlanDetailHeader />
       <main className="relative flex flex-col items-center space-y-8 overflow-hidden bg-gradient-to-b">
         <TopGradient />
-        <section className="relative z-10 max-w-md">
+        <section className="relative z-10 w-full space-y-[3rem]">
           <PlanInfo data={planData} mode={mode} onChangeMode={setMode} />
           <PlanCharts data={planData} mode={mode} />
           <PlanBenefits benefits={planData.benefits} />
