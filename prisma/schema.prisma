@@ -34,32 +34,33 @@ model User {
 }
 
 model Account {
-  id                      String   @id @default(cuid())
-  userId                  String
-  type                    String
-  provider                String
-  providerAccountId       String
-  refresh_token           String?
-  access_token            String?
-  expires_at              Int?
-  token_type              String?
-  scope                   String?
-  id_token                String?
-  session_state           String?
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String?
+  access_token             String?
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String?
+  session_state            String?
   refresh_token_expires_in Int?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId], map: "Account_userId_fkey")
 }
 
 model Session {
-  id            String   @id @default(cuid())
-  sessionToken  String   @unique
-  userId        String
-  expires       DateTime
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId], map: "Session_userId_fkey")
 }
 
 model VerificationToken {
@@ -82,7 +83,7 @@ model TypeQuestion {
 }
 
 model UserCharacterProfile {
-  user_id       String   @id
+  user_id       String @id
   plan_id       Int
   call_level    Int
   sms_level     Int
