@@ -145,7 +145,8 @@ export default function ResultPage({ params }: { params: { id: string } }) {
         <ShareSection
           title="내 결과 공유하기"
           count={150}
-          id={"cmbt5106o0000quwwoyml6jwg"}
+          id={decryptedId}
+          shareUrl={`/meme-test/result/[encryptedId]`}
         />
 
         <button className="w-[90%] cursor-pointer rounded-lg bg-yellow-300/80 px-6 py-2 text-lg font-bold text-black shadow-md transition hover:bg-yellow-500">

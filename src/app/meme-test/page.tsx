@@ -46,6 +46,7 @@ export default function TestHomePage() {
           title="테스트 공유하기"
           count={150}
           id={"cmbt5106o0000quwwoyml6jwg"}
+          shareUrl="/meme-test"
         />
 
         <div className="mb-8 flex w-[90%] flex-col gap-4 rounded-[10px] bg-white p-4 shadow-md">

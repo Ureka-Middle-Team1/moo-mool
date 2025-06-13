@@ -8,15 +8,23 @@ interface ShareSectionProps {
   title: string;
   count: number;
   id: string;
+  shareUrl: string;
 }
 
-export default function ShareSection({ title, count, id }: ShareSectionProps) {
+export default function ShareSection({
+  title,
+  count,
+  id,
+  shareUrl,
+}: ShareSectionProps) {
   const { data: encryptedId, isLoading } = useEncryptedUserId(id);
 
   const handleShare = () => {
-    console.log("encryt-================================= :  ", encryptedId);
     if (!encryptedId) return alert("링크를 불러오는 중입니다.");
-    const shareUrl = `${window.location.origin}/meme-test/result/${encryptedId}`;
+
+    const fullUrl = shareUrl.includes("[encryptedId]")
+      ? shareUrl.replace("[encryptedId]", encryptedId)
+      : shareUrl;
 
     if (window.Kakao && window.Kakao.Link) {
       if (!window.Kakao.isInitialized()) {
@@ -28,16 +36,31 @@ export default function ShareSection({ title, count, id }: ShareSectionProps) {
           title: "내 밈 테스트 결과 보기",
           description: "당신의 콘텐츠 소비 성향을 알아보세요!",
           imageUrl: "/assets/icons/moomool_banner.png",
-          link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
+          link: { mobileWebUrl: fullUrl, webUrl: fullUrl },
         },
         buttons: [
           {
             title: "결과 보러가기",
-            link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
+            link: { mobileWebUrl: fullUrl, webUrl: fullUrl },
           },
         ],
       });
     }
+  };
+
+  const handleCopy = () => {
+    if (!encryptedId) {
+      alert("링크를 불러오는 중입니다.");
+      return;
+    }
+
+    const fullUrl = (shareUrl || "/meme-test/result/[encryptedId]").replace(
+      "[encryptedId]",
+      encryptedId
+    );
+
+    navigator.clipboard.writeText(`${window.location.origin}${fullUrl}`);
+    alert("링크가 복사되었습니다!");
   };
 
   return (
@@ -61,14 +84,9 @@ export default function ShareSection({ title, count, id }: ShareSectionProps) {
           />
         </div>
 
-        {/* 링크 복사 버튼 (선택사항) */}
+        {/* 링크 복사 버튼 */}
         <div
-          onClick={() => {
-            navigator.clipboard.writeText(
-              `${window.location.origin}/meme-test/result/${encryptedId}`
-            );
-            alert("링크가 복사되었습니다!");
-          }}
+          onClick={handleCopy}
           className={`flex h-12 w-12 items-center justify-center rounded-full shadow-xl transition ${isLoading ? "cursor-not-allowed bg-gray-300" : "cursor-pointer bg-pink-400 hover:bg-yellow-500"}`}>
           <Link className="h-6 w-6 text-white" />
         </div>
