@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 export const useEncryptedUserId = (id: string) => {
-  console.log("훅에서의 id : ", id);
   return useQuery({
     queryKey: ["encryptedUserId", id],
     queryFn: async () => {

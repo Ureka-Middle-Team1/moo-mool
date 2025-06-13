@@ -9,8 +9,6 @@ import { encrypt } from "@/utils/crypto.server";
 
 export async function GET(req: NextRequest) {
   const id = req.nextUrl.searchParams.get("id");
-
-  console.log("encryt-GET~~~~~~~~~~", id);
   if (!id) {
     return NextResponse.json({ error: "이메일이 없습니다." }, { status: 400 });
   }
@@ -25,11 +23,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "사용자 없음" }, { status: 404 });
     }
     const encryptedId = encrypt(user.id.toString());
-    console.log("encrypt-id: " + encryptedId);
-
     return NextResponse.json({ encryptedId });
   } catch (error) {
-    console.error("암호화 중 오류 발생:", error);
     return NextResponse.json({ error: "서버 내부 오류" }, { status: 500 });
   }
 }

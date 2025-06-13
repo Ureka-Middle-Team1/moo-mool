@@ -19,15 +19,10 @@ import {
 
 export default function ResultPage({ params }: { params: { id: string } }) {
   const encryptedId = params.id;
-  console.log("결과 페이지 ==================", params);
-  console.log("결과 페이지 encryptedId ==================", encryptedId);
-
   /* 복호화 */
   const decryptedId = encryptedId
     ? decrypt(decodeURIComponent(encryptedId))
     : null;
-  console.log("복호화 resultPage ", decryptedId);
-
   const { data: plans, isLoading, isError } = useGetRecommendedPlanQuery();
   const {
     data: user,
