@@ -5,6 +5,8 @@ import Header from "@/components/chat/ChatbotHeader";
 import TextPage from "./TextPage";
 import VoicePage from "./VoicePage";
 import { useWatchRecommendationTrigger } from "@/hooks/useWatchRecommendationTrigger";
+import { useFetchUserMemeTestResult } from "@/hooks/useFetchUserMemeTestResult";
+import { useEffect } from "react";
 
 type Mode = "text" | "voice";
 
