@@ -6,6 +6,7 @@ import "./fonts.css";
 import LayoutWrapper from "@/components/common/LayoutWrapper";
 import Providers from "./providers";
 import { usePathname } from "next/navigation";
+import Script from "next/script";
 
 export default function RootLayout({
   children,
