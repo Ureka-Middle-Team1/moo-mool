@@ -17,7 +17,7 @@ export default function TagBadge({ text, index }: TagBadgeProps) {
 
   return (
     <Badge
-      className={`rounded-md px-2 py-1 text-[10px] font-medium ${colorClass}`}>
+      className={`rounded-md px-2 py-1 text-[0.6rem] font-medium ${colorClass}`}>
       {text}
     </Badge>
   );

@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  PlanInfo,
-  PlanCharts,
-  PlanBenefits,
-  PlanDetailHeader,
-  TopGradient,
-  BottomGradient,
-} from "@/components/planDetail";
+import PlanInfo from "@/components/planDetail/PlanInfo";
+import PlanCharts from "@/components/planDetail/PlanCharts";
+import PlanBenefits from "@/components/planDetail/PlanBenefits";
+import PlanDetailHeader from "@/components/planDetail/PlanDetailHeader";
+import TopGradient from "@/components/planDetail/TopGradient";
+import BottomGradient from "@/components/planDetail/BottomGradient";
+
 import { PlanDetailData } from "@/types/planDetail";
 import { useParams } from "next/navigation";
 import { useGetPlanById } from "@/hooks/useGetPlanById";
@@ -37,17 +36,17 @@ export default function PlanDetailPage() {
   const planData: PlanDetailData = mapPlanToDetailData(data);
 
   return (
-    <main className="relative flex flex-col items-center space-y-8 overflow-hidden bg-gradient-to-b">
-      <TopGradient />
-
-      <section className="relative z-10 max-w-md">
-        <PlanDetailHeader />
-        <PlanInfo data={planData} mode={mode} onChangeMode={setMode} />
-        <PlanCharts data={planData} mode={mode} />
-        <PlanBenefits benefits={planData.benefits} />
-      </section>
-
-      <BottomGradient show={showGradient} />
-    </main>
+    <>
+      <PlanDetailHeader />
+      <main className="relative flex flex-col items-center space-y-8 overflow-hidden bg-gradient-to-b">
+        <TopGradient />
+        <section className="relative z-10 max-w-md">
+          <PlanInfo data={planData} mode={mode} onChangeMode={setMode} />
+          <PlanCharts data={planData} mode={mode} />
+          <PlanBenefits benefits={planData.benefits} />
+        </section>
+        <BottomGradient show={showGradient} />
+      </main>
+    </>
   );
 }

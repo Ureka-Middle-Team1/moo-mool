@@ -16,10 +16,11 @@ export default function PlanBenefits({ benefits }: PlanBenefitsProps) {
       spacing: 20,
       origin: "center",
     },
+    mode: "free-snap",
   });
 
   return (
-    <div className="relative">
+    <div className="relative mt-15">
       <div ref={sliderRef} className="keen-slider px-4 py-2">
         {benefits.map((item, index) => (
           <div key={index} className="keen-slider__slide">

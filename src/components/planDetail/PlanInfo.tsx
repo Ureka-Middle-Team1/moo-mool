@@ -14,12 +14,12 @@ import { PlanDetailData } from "@/types/planDetail";
 export default function PlanInfo({ data, mode, onChangeMode }: PlanInfoProps) {
   return (
     <div className="px-8">
-      <h1 className="mt-[20px] text-[28px] leading-tight font-bold text-gray-900">
+      <h1 className="pt-5 text-[1.75rem] leading-tight font-bold text-gray-900">
         {data.name}
       </h1>
-      <p className="text-[17px] font-semibold text-gray-900">{data.price}</p>
+      <p className="text-[1rem] font-semibold text-gray-900">{data.price}</p>
 
-      <div className="my-1 mb-[20px] flex flex-wrap gap-1">
+      <div className="my-1 mb-5 flex flex-wrap gap-1">
         {data.tags.map((tag, index) => (
           <TagBadge key={index} text={tag} index={index} />
         ))}
