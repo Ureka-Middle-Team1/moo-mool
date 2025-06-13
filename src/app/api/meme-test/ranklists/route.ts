@@ -11,7 +11,6 @@ const typeNameMap: Record<string, string> = {
 };
 
 export async function GET() {
-  // 1. participantCount, shareCount 구하기
   const userAggregates = await prisma.user.aggregate({
     _sum: {
       tested_count: true,
@@ -22,10 +21,8 @@ export async function GET() {
   const participantCount = userAggregates._sum.tested_count || 0;
   const shareCount = userAggregates._sum.invited_count || 0;
 
-  // 2. UserCharacterProfile 타입별 개수 구하기
   const totalProfiles = await prisma.UserCharacterProfile.count();
 
-  // 3. 타입별 개수 그룹핑
   const countsByType = await prisma.UserCharacterProfile.groupBy({
     by: ["type"],
     _count: {
@@ -33,20 +30,31 @@ export async function GET() {
     },
   });
 
-  // 4. moonos 배열 만들기
-  const moonos = countsByType.map(({ type, _count }) => {
-    const score =
-      totalProfiles > 0 ? Math.round((_count.type / totalProfiles) * 100) : 0;
-    return {
-      label: typeNameMap[type] || type,
-      image: `${type.toLowerCase()}-moono`,
-      score,
-    };
+  const moonos = Object.keys(typeNameMap).map((type) => ({
+    label: typeNameMap[type],
+    image: `${type}-moono`,
+  }));
+
+  // percent 객체 초기화: 모든 타입 0으로 시작
+  const percent: Record<string, number> = {};
+  Object.keys(typeNameMap).forEach((type) => {
+    percent[type] = 0;
+  });
+
+  // 실제 데이터가 있으면 덮어쓰기
+  countsByType.forEach(({ type, _count }) => {
+    if (type in typeNameMap) {
+      percent[type] =
+        totalProfiles > 0
+          ? Number(((_count.type / totalProfiles) * 100).toFixed(1))
+          : 0;
+    }
   });
 
   return NextResponse.json({
     participantCount,
     shareCount,
     moonos,
+    percent,
   });
 }
