@@ -5,6 +5,7 @@ import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import { useRouter } from "next/navigation";
 
 export default function TestHomePage() {
+  const router = useRouter();
   const { data, isLoading, isError } = useGetTypeRankQuery();
   if (isLoading)
     return <div className="mt-10 text-center font-medium">로딩 중...</div>;
