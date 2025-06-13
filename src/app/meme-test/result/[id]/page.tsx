@@ -16,9 +16,11 @@ import {
   parseHashtags,
   renderHighlightedText,
 } from "@/utils/textUtils";
+import { useParams } from "next/navigation";
 
-export default function ResultPage({ params }: { params: { id: string } }) {
-  const encryptedId = params.id;
+export default function ResultPage() {
+  const params = useParams();
+  const encryptedId = params.id as string;
   /* 복호화 */
   const decryptedId = encryptedId
     ? decrypt(decodeURIComponent(encryptedId))
@@ -54,7 +56,6 @@ export default function ResultPage({ params }: { params: { id: string } }) {
     );
   }
   const type = user.characterProfile?.type || "Saving";
-  const profile = user.characterProfile;
   const { descriptionText, hashtagText } = memeTypeData[type];
   const splitSentences = parseSentences(descriptionText);
   const hashtags = parseHashtags(hashtagText);
@@ -66,7 +67,7 @@ export default function ResultPage({ params }: { params: { id: string } }) {
           <ChevronLeft className="h-5 w-5" />
         </div>
         <div className="flex-1 text-center">콘텐츠 과몰입 테스트</div>
-        <div className="h-5 w-5" /> {/* 아이콘 자리를 맞추기 위한 빈 div */}
+        <div className="h-5 w-5" />
       </header>
 
       <main className="flex flex-col items-center gap-5 px-4 pt-6 pb-10 text-center">
@@ -140,8 +141,9 @@ export default function ResultPage({ params }: { params: { id: string } }) {
         <ShareSection
           title="내 결과 공유하기"
           count={150}
-          id={decryptedId}
+          id={encryptedId}
           shareUrl={`/meme-test/result/[encryptedId]`}
+          isEncrypted={true}
         />
 
         <button className="w-[90%] cursor-pointer rounded-lg bg-yellow-300/80 px-6 py-2 text-lg font-bold text-black shadow-md transition hover:bg-yellow-500">

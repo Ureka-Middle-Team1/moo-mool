@@ -9,6 +9,7 @@ interface ShareSectionProps {
   count: number;
   id: string;
   shareUrl: string;
+  isEncrypted?: boolean;
 }
 
 export default function ShareSection({
@@ -16,8 +17,10 @@ export default function ShareSection({
   count,
   id,
   shareUrl,
+  isEncrypted = false,
 }: ShareSectionProps) {
-  const { data: encryptedId, isLoading } = useEncryptedUserId(id);
+  const { data: encryptedIdFromHook, isLoading } = useEncryptedUserId(id);
+  const encryptedId = isEncrypted ? id : encryptedIdFromHook;
 
   const getFullUrl = () => {
     const domain =
