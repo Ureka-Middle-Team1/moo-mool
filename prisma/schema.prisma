@@ -108,23 +108,15 @@ model Badge {
 
 
 model Plan {
-  id                  Int     @id @default(autoincrement())
-  name                String
-  price               Int
-  discount_price      Int
-  data_amount         String
-  voice_amount        String
-  sms_amount          String
-  overage_description String  @default("")
-  add_on_description  String
-  network_type        String   
-  recommend_rank      String   
-  tags                Json
-
-  myPlanUsers         User[] @relation("MyPlan")
-  recommendedUsers    User[] @relation("RecommendedPlan")
-
-  UserCharacterProfile UserCharacterProfile[]
+  id                   Int      @id @default(autoincrement())
+  name                 String   @unique @db.VarChar(100)
+  price                Int
+  dataAmountGb         Float    @default(0)
+  overageSpeedMbps     Float?   
+  voiceMinutes         Int      @default(-1)
+  smsIncluded          Boolean  @default(false)
+  networkType          NetworkType @default(LTE)
+  subscriptionServices Json     @default("[]")
 }
 
 model ChatMessage {
