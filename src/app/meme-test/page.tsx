@@ -45,7 +45,7 @@ export default function TestHomePage() {
         <ShareSection
           title="테스트 공유하기"
           count={150}
-          id={"cmbt5106o0000quwwoyml6jwg"}
+          id={"cmbuefdnp0000qu6sqzuk3v5g"}
           shareUrl="/meme-test"
         />
 

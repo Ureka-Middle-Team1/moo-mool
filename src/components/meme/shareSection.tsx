@@ -19,32 +19,37 @@ export default function ShareSection({
 }: ShareSectionProps) {
   const { data: encryptedId, isLoading } = useEncryptedUserId(id);
 
-  const handleShare = () => {
-    if (!encryptedId) return alert("링크를 불러오는 중입니다.");
+  const getFullUrl = () => {
+    const domain =
+      process.env.NEXT_PUBLIC_SHARE_DOMAIN || window.location.origin;
 
-    const fullUrl = shareUrl.includes("[encryptedId]")
-      ? shareUrl.replace("[encryptedId]", encryptedId)
-      : shareUrl;
+    return `${domain}${
+      shareUrl.includes("[encryptedId]") && encryptedId
+        ? shareUrl.replace("[encryptedId]", encryptedId)
+        : shareUrl
+    }`;
+  };
 
-    if (window.Kakao && window.Kakao.Link) {
-      if (!window.Kakao.isInitialized()) {
-        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID!);
-      }
-      window.Kakao.Link.sendDefault({
-        objectType: "feed",
-        content: {
+  const handleShare = async () => {
+    const fullUrl = getFullUrl();
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
           title: "내 밈 테스트 결과 보기",
-          description: "당신의 콘텐츠 소비 성향을 알아보세요!",
-          imageUrl: "/assets/icons/moomool_banner.png",
-          link: { mobileWebUrl: fullUrl, webUrl: fullUrl },
-        },
-        buttons: [
-          {
-            title: "결과 보러가기",
-            link: { mobileWebUrl: fullUrl, webUrl: fullUrl },
-          },
-        ],
-      });
+          text: "당신의 콘텐츠 소비 성향을 알아보세요!",
+          url: fullUrl,
+        });
+      } catch (error) {
+        alert("공유를 취소하거나 실패했습니다.");
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(fullUrl);
+        alert("공유를 지원하지 않는 브라우저입니다. 링크를 복사했어요!");
+      } catch {
+        alert("공유와 복사 모두 실패했습니다.");
+      }
     }
   };
 
@@ -54,12 +59,8 @@ export default function ShareSection({
       return;
     }
 
-    const fullUrl = (shareUrl || "/meme-test/result/[encryptedId]").replace(
-      "[encryptedId]",
-      encryptedId
-    );
-
-    navigator.clipboard.writeText(`${window.location.origin}${fullUrl}`);
+    const fullUrl = getFullUrl();
+    navigator.clipboard.writeText(fullUrl);
     alert("링크가 복사되었습니다!");
   };
 
