@@ -81,18 +81,15 @@ model UserCharacterProfile {
 }
 
 model Plan {
-  id                  Int            @id @default(autoincrement())
-  name                String         @unique @db.VarChar(100)
-  price               Int
-  discount_price      Int?
-  data_amount         String?        @db.VarChar(50)
-  voice_amount        String?        @db.VarChar(50)
-  sms_amount          String?        @db.VarChar(50)
-  overage_description String?        @db.Text
-  add_on_description  String?        @db.Text
-  network_type        NetworkType
-  recommend_rank      RecommendRank?
-  tags                Json?
+  id                   Int      @id @default(autoincrement())
+  name                 String   @unique @db.VarChar(100)
+  price                Int
+  dataAmountGb         Float    @default(0)
+  overageSpeedMbps     Float?   
+  voiceMinutes         Int      @default(-1)
+  smsIncluded          Boolean  @default(false)
+  networkType          NetworkType @default(LTE)
+  subscriptionServices Json     @default("[]")
 }
 
 enum NetworkType {

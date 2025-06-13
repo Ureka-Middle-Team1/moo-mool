@@ -12,6 +12,19 @@ export interface Plan {
   rn: string; // 요금제 추천 구분(으뜸: 1, 알뜰: 2, 넉넉: 3)
 }
 
+// PlanDB 조회 응답 구조
+export interface PlanApiResponse {
+  id: number;
+  name: string;
+  price: number;
+  dataAmountGb: number;
+  overageSpeedMbps: number | null;
+  voiceMinutes: number;
+  smsIncluded: boolean;
+  networkType: "LTE" | "5G";
+  subscriptionServices: string[];
+}
+
 export type PlanSelectionInput = {
   smartChoicePlans: Plan[];
   subscribe: string;

@@ -3,9 +3,10 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params?: { id?: string } }
 ) {
-  const id = Number(context.params.id);
+  const idStr = context.params?.id;
+  const id = idStr ? Number(idStr) : NaN;
 
   if (isNaN(id)) {
     return NextResponse.json(
@@ -24,7 +25,12 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(plan);
+    return NextResponse.json({
+      ...plan,
+      subscriptionServices: Array.isArray(plan.subscriptionServices)
+        ? plan.subscriptionServices
+        : [],
+    });
   } catch (error) {
     console.error("[PLAN_ID_GET_ERROR]", error);
     return NextResponse.json({ error: "서버 오류" }, { status: 500 });
