@@ -1,44 +1,46 @@
 import { useTTSStore } from "@/store/useTTSStore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { fetchTTSFromServer } from "@/lib/fetchTTS"; // 위 함수 위치에 따라 경로 조정
 
-export function useTTS(voiceName = "Google 한국의 여성") {
-  const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
+export function useTTS() {
   const { setIsSpeaking } = useTTSStore();
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const loadVoices = () => {
-      const voices = speechSynthesis.getVoices();
-      const koreanVoices = voices.filter((v) => v.lang.startsWith("ko"));
-      const selected = koreanVoices.find((v) => v.name === voiceName);
-      if (selected) setVoice(selected);
-    };
-
-    if (speechSynthesis.getVoices().length > 0) {
-      loadVoices();
-    } else {
-      speechSynthesis.onvoiceschanged = loadVoices;
-    }
-  }, [voiceName]);
-
-  const speak = (text: string) => {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "ko-KR";
-    if (voice) utter.voice = voice;
+  const speak = async (text: string) => {
+    if (!text) return;
 
     setIsSpeaking(true);
+    setIsLoading(true);
 
-    // 말 끝났을 때 상태 업데이트
-    utter.onend = () => {
+    try {
+      const audioContent = await fetchTTSFromServer(text); // ← axios로 호출
+      const audioBlob = base64ToBlob(audioContent, "mp3");
+      const audio = new Audio(URL.createObjectURL(audioBlob));
+
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => {
+        console.error("오디오 재생 실패");
+        setIsSpeaking(false);
+      };
+
+      audio.play();
+    } catch (error) {
+      console.error("TTS 요청 실패", error);
       setIsSpeaking(false);
-    };
-
-    // 혹시 에러로 말 못할 경우도 대비
-    utter.onerror = () => {
-      setIsSpeaking(false);
-    };
-
-    speechSynthesis.speak(utter);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  return { speak, voice };
+  return { speak, isLoading };
+}
+
+
+function base64ToBlob(base64: string, fileType: string): Blob {
+  const byteString = atob(base64);
+  const byteArray = new Uint8Array(byteString.length);
+  for (let i = 0; i < byteString.length; i++) {
+    byteArray[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([byteArray], { type: `audio/${fileType}` });
 }
