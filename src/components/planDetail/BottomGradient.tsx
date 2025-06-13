@@ -7,7 +7,7 @@ interface BottomGradientProps {
 export default function BottomGradient({ show }: BottomGradientProps) {
   return (
     <div
-      className={`h-[300px] w-full transition-opacity duration-700 ${
+      className={`absolute bottom-0 left-0 h-[30rem] w-full transition-opacity duration-700 ${
         show ? "opacity-100" : "opacity-0"
       }`}
       style={{

@@ -12,8 +12,9 @@ interface PlanBenefitsProps {
 export default function PlanBenefits({ benefits }: PlanBenefitsProps) {
   const [sliderRef] = useKeenSlider({
     slides: {
-      perView: 1.8,
-      spacing: 10,
+      perView: 2,
+      spacing: 20,
+      origin: "center",
     },
   });
 

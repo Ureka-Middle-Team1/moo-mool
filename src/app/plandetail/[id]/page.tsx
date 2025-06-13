@@ -37,10 +37,10 @@ export default function PlanDetailPage() {
   const planData: PlanDetailData = mapPlanToDetailData(data);
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center space-y-8 overflow-hidden bg-gradient-to-b from-[#fff6d8] to-white">
+    <main className="relative flex flex-col items-center space-y-8 overflow-hidden bg-gradient-to-b">
       <TopGradient />
 
-      <section className="relative z-10 w-full max-w-md">
+      <section className="relative z-10 max-w-md">
         <PlanDetailHeader />
         <PlanInfo data={planData} mode={mode} onChangeMode={setMode} />
         <PlanCharts data={planData} mode={mode} />
