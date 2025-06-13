@@ -1,5 +1,4 @@
 import { PlanDBApiResponse } from "@/types/PlanData";
-
 export interface ScoreContext {
   minData: number;
   maxData: number;
@@ -7,6 +6,8 @@ export interface ScoreContext {
   maxVoice: number;
   minPrice: number;
   maxPrice: number;
+  minSpeed: number;
+  maxSpeed: number;
 }
 
 export function getScoreContext(plans: PlanDBApiResponse[]): ScoreContext {
@@ -15,6 +16,7 @@ export function getScoreContext(plans: PlanDBApiResponse[]): ScoreContext {
     p.voiceMinutes < 0 ? 9999 : p.voiceMinutes || 0
   );
   const priceList = plans.map((p) => p.price);
+  const speeds = plans.map((p) => p.overageSpeedMbps ?? 0);
 
   return {
     minData: Math.min(...dataList),
@@ -23,5 +25,7 @@ export function getScoreContext(plans: PlanDBApiResponse[]): ScoreContext {
     maxVoice: Math.max(...voiceList),
     minPrice: Math.min(...priceList),
     maxPrice: Math.max(...priceList),
+    minSpeed: Math.min(...speeds),
+    maxSpeed: Math.max(...speeds),
   };
 }
