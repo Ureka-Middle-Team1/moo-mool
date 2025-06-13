@@ -6,7 +6,7 @@ export async function GET() {
     shareCount: 150,
     moonos: [
       { label: "팝콘 무너", image: "youtube-moono", score: 95 },
-      { label: "투머치 톡커 무너", image: "chat-moono", score: 88 },
+      { label: "투머치톡커 무너", image: "chat-moono", score: 88 },
       { label: "인싸 무너", image: "sns-moono", score: 70 },
       { label: "꽁돈 무너", image: "saving-moono", score: 50 },
       { label: "여보세무너", image: "calling-moono", score: 65 },

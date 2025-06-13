@@ -13,6 +13,15 @@ import {
 import { memeTypeData } from "@/data/memeTypeData";
 
 export default function TestPage() {
+  const typeNameMap: Record<string, string> = {
+    SNS: "인싸 무너",
+    Youtube: "팝콘 무너",
+    Chat: "투머치톡커 무너",
+    Calling: "여보세무너",
+    Books: "꼬꼬무너",
+    Saving: "꽁돈 무너",
+  };
+
   // 더미 데이터 설정
   const dummyUser = {
     characterProfile: {
@@ -37,6 +46,7 @@ export default function TestPage() {
 
   const user = dummyUser;
   const plans = dummyPlans;
+  const typeTitle = typeNameMap[user.characterProfile.type] || "";
 
   if (!user.characterProfile) {
     return (
@@ -63,14 +73,14 @@ export default function TestPage() {
       </header>
 
       <main className="flex flex-col items-center gap-5 px-4 pt-6 pb-10 text-center">
-        <div className="text-2xl font-bold">팝콘 무너</div>
+        <div className="text-2xl font-bold">{typeTitle}</div>
         <div>
           전체 테스트 참여자 중 <span className="font-bold">35.6%</span>가 같은
           유형입니다.
         </div>
 
         <img
-          src="/assets/moono/youtube-moono.png"
+          src={`/assets/moono/${user.characterProfile.type.toLowerCase()}-moono.png`}
           className="w-[40%]"
           alt="무너"
         />
@@ -92,7 +102,7 @@ export default function TestPage() {
                 </span>
               ))}
             </div>
-            <div className="mt-3 flex flex-col text-[9px] leading-relaxed">
+            <div className="mt-3 flex flex-col text-[11px] leading-relaxed">
               {splitSentences.map((line, idx) => (
                 <p key={idx} className="mb-[3px]">
                   {renderHighlightedText(line)}
@@ -161,16 +171,27 @@ export default function TestPage() {
             className="w-[80px]"
             alt="화살표"
           />
-          <button className="rounded-full bg-pink-400 px-4 py-2 font-bold text-black">
+          <button className="rounded-full bg-pink-400 px-9 py-4 font-bold text-black">
             무너에게 요금제 상담하기
           </button>
         </div>
 
         <div className="rounded-lgp-4 mt-10 flex w-[100%] flex-col items-center text-[14px]">
-          <p style={{ fontFamily: "kkubulim" }} className="mb-2 text-xl">
-            테스트 결과 공유하고, <br />
-            히든 프로필 획득하자!
-          </p>
+          <div className="mb-2 flex flex-col items-center">
+            <p
+              style={{ fontFamily: "kkubulim" }}
+              className="relative z-10 mb-2 inline-block text-xl">
+              <span className="relative z-10 inline-block text-xl">
+                <span
+                  className="absolute bottom-[0.3em] left-0 -z-10 h-[0.26em] w-full bg-pink-400"
+                  aria-hidden="true"
+                />
+                테스트 결과 공유
+              </span>
+              하고, <br />
+              히든 프로필 획득하자!
+            </p>
+          </div>
           <img
             src="\assets\icons\stamp_area.png"
             alt="도장 미션"
@@ -182,8 +203,8 @@ export default function TestPage() {
               <ul className="list-disc space-y-1 text-left">
                 <li>본 이벤트는 "무물"에 로그인한 회원에 한해 적용됩니다.</li>
                 <li>
-                  도장을 테스트를 공유받은 사용자가 해당 링크를 통해 테스트를
-                  완료한 경우에만 공유한 회원에게 1회 지급됩니다.
+                  테스트를 공유받은 사용자가 해당 링크를 통해 테스트를 완료한
+                  경우, 공유한 회원에게 도장이 1회 지급됩니다.
                 </li>
                 <li>
                   도장은 로그인된 계정에 자동으로 누적되며, 일정 개수 이상 모일
@@ -194,11 +215,13 @@ export default function TestPage() {
           </div>
         </div>
 
-        <div className="mt-6 flex w-[90%] flex-col gap-3">
-          <button className="rounded-lg bg-pink-300 py-3 font-bold text-black shadow-md">
-            온라인 단독 요금제 너겟
+        <div
+          style={{ fontFamily: "kkubulim" }}
+          className="mt-6 flex w-[90%] flex-col gap-3 text-2xl">
+          <button className="rounded-lg bg-pink-400 py-3 text-black shadow-md">
+            테스트 다시하기
           </button>
-          <button className="rounded-lg bg-yellow-300 py-3 font-bold text-black shadow-md">
+          <button className="rounded-lg bg-yellow-300 py-3 text-black shadow-md">
             전체 유형 확인하기
           </button>
         </div>
