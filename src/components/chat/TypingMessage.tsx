@@ -17,6 +17,16 @@ export default function TypingMessage({
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  // const estimatedWidth = Math.min(fullText.length * 8 + 24, 320);
+  function measureTextWidth(text: string, font = "14px Pretendard") {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return 100;
+    ctx.font = font;
+    return ctx.measureText(text).width + 24; // padding 고려
+  }
+  const estimatedWidth = Math.min(measureTextWidth(fullText), 322.5);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [displayedText]);
@@ -37,7 +47,9 @@ export default function TypingMessage({
 
   return (
     <>
-      <div className="max-w-[75%] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl bg-white px-3 py-2 text-sm shadow-md">
+      <div
+        className="max-w-[75%] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl bg-white px-3 py-2 text-sm shadow-md"
+        style={{ width: `${estimatedWidth}px` }}>
         {displayedText}
       </div>
       <div ref={bottomRef} />
