@@ -17,7 +17,6 @@ export default function TypingMessage({
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  // const estimatedWidth = Math.min(fullText.length * 8 + 24, 320);
   function measureTextWidth(text: string, font = "14px Pretendard") {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
