@@ -71,7 +71,6 @@ export default function ResultPage() {
   };
 
   return (
-    // <div className="relative w-full max-w-[393px] bg-pink-200">
     <div className="min-h-screen bg-pink-200">
       <header className="sticky top-0 z-100 flex h-12 w-full items-center justify-between bg-yellow-200 px-4 font-bold">
         <div className="flex items-center">
@@ -161,17 +160,6 @@ export default function ResultPage() {
             </p>
           </div>
           <div className="flex w-[90%] flex-col gap-4">
-            {/* {plans.map((plan) => (
-              <PlanCard
-                key={idx}
-                name={""}
-                data={""}
-                voice={""}
-                sms={""}
-                price={""}
-                tel={""}
-              />
-            ))} */}
             <p className="text-[11px] text-black">
               본 테스트는 LG유플러스와의 협업을 통해 제작되었으며, <br />
               테스트 결과에 기반한 추천 요금제는 모두 LG유플러스의 요금제입니다.
