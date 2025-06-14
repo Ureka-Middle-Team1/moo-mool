@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import 'keen-slider/keen-slider.min.css';
+@import "keen-slider/keen-slider.min.css";
 
 @custom-variant dark (&:is(.dark *));
 @import "tw-animate-css";
@@ -181,5 +181,11 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    overflow-y: scroll;
+  }
+  img {
+    -webkit-user-drag: noner;
+    user-drag: none;
+    pointer-events: none;
   }
 }

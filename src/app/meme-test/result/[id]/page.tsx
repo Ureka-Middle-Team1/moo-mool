@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, X } from "lucide-react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
 import TrendBar from "@/components/chart/TrendBar";
@@ -16,10 +16,12 @@ import {
   renderHighlightedText,
 } from "@/utils/textUtils";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function ResultPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useGetTypeRankQuery();
+
   const params = useParams();
   const encryptedId = params.id as string;
 
@@ -59,37 +61,52 @@ export default function ResultPage() {
   const { descriptionText, hashtagText } = memeTypeData[type];
   const splitSentences = parseSentences(descriptionText);
   const hashtags = parseHashtags(hashtagText);
+  const matchedMeme = data?.moonos.find((item) => item.type === type);
+  const percentValue = matchedMeme?.percent ?? 0;
 
   const handleClick = () => {
     router.push("/meme-test");
   };
   const handleClick_moomool = () => {
-    router.push("/");
+    window.open("/", "_blank");
   };
   const handelClick_rank = () => {
     router.push("/meme-test/rank");
   };
 
   return (
-    <div className="min-h-screen bg-pink-200">
-      <header className="sticky top-0 z-100 flex h-12 w-full items-center justify-between bg-yellow-200 px-4 font-bold">
+    <div className="flex w-full flex-col bg-pink-200 px-0">
+      <header className="sticky top-0 z-[100] mb-2 flex h-12 w-full items-center justify-between bg-yellow-200 px-4">
         <div className="flex items-center">
           <ChevronLeft onClick={handleClick} className="h-5 w-5" />
         </div>
-        <div className="flex-1 text-center">콘텐츠 과몰입 테스트</div>
+
+        <div
+          style={{ fontFamily: "kkubulim" }}
+          className="font-nomal flex flex-1 items-center justify-center space-x-1">
+          <span>콘텐츠 과몰입 테스트</span>
+          <X className="h-3 w-3" />
+          <Image
+            src="/assets/icons/U_plus.png"
+            alt="U+ 로고"
+            width={20}
+            height={16}
+            className="object-contain"
+          />
+        </div>
+
         <div className="h-5 w-5" />
       </header>
 
       <main className="flex flex-col items-center gap-5 px-4 pt-6 pb-10 text-center">
-        <div className="text-2xl font-bold">{getMemeTypeLabel(type)}</div>
-
-        {data && (
-          <div>
-            전체 테스트 참여자 중{" "}
-            <span className="font-bold">{data.percent[type] || 0}%</span>가 같은
-            유형입니다.
-          </div>
-        )}
+        <div className="text-2xl font-bold">
+          {getMemeTypeLabel(type as MemeType)}
+        </div>
+        <div>
+          전체 테스트 참여자 중{" "}
+          <span className="font-bold">{percentValue || 0}%</span>가 같은
+          유형입니다.
+        </div>
 
         <img
           src={`/assets/moono/${type.toLowerCase()}-moono.png`}
@@ -190,7 +207,7 @@ export default function ResultPage() {
           </button>
         </div>
 
-        <div className="rounded-lgp-4 mt-10 flex w-[100%] flex-col items-center text-[14px]">
+        <div className="mt-10 flex w-[100%] flex-col items-center rounded-lg p-4 text-[14px]">
           <div className="mb-2 flex flex-col items-center">
             <p
               style={{ fontFamily: "kkubulim" }}
