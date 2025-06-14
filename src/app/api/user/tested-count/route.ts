@@ -18,12 +18,27 @@ export async function POST(req: NextRequest) {
       where: { user_id: userId },
     });
 
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: {
-        tested_count: profile ? { increment: 1 } : 1,
-      },
-    });
+    let updatedUser;
+    if (profile) {
+      // 이미 사용자가 밈테스트를 진행했다면 기존 tested_count += 1
+      updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+          tested_count: {
+            increment: 1,
+          },
+        },
+      });
+    }
+    // 존재하지 않으면 tested_count = 1 (초기화)
+    else {
+      updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+          tested_count: 1,
+        },
+      });
+    }
 
     return NextResponse.json({
       success: true,
