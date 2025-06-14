@@ -22,10 +22,11 @@ export default function ResultPage() {
   const { data, isLoading, isError } = useGetTypeRankQuery();
   const params = useParams();
   const encryptedId = params.id as string;
-  /* 복호화 */
+
   const decryptedId = encryptedId
     ? decrypt(decodeURIComponent(encryptedId))
     : null;
+
   const {
     data: user,
     isLoading: isUserLoading,
@@ -45,16 +46,6 @@ export default function ResultPage() {
       <p className="text-center">사용자 정보를 불러오는 데 실패했습니다.</p>
     );
   }
-  const dummyPlans = [
-    {
-      rank: 1,
-      title: "요금제 A",
-      subtitle: "합리적인 선택",
-      detail: "월 33,000원 / 데이터 10GB",
-    },
-  ];
-
-  const plans = dummyPlans;
 
   if (!user.characterProfile) {
     return (
@@ -63,10 +54,21 @@ export default function ResultPage() {
       </p>
     );
   }
-  const type = user.characterProfile?.type || "Saving";
+
+  const type: MemeType = (user.characterProfile.type as MemeType) || "Saving";
   const { descriptionText, hashtagText } = memeTypeData[type];
   const splitSentences = parseSentences(descriptionText);
   const hashtags = parseHashtags(hashtagText);
+
+  const dummyPlans = [
+    {
+      rank: 1,
+      title: "요금제 A",
+      subtitle: "합리적인 선택",
+      detail: "월 33,000원 / 데이터 10GB",
+    },
+  ];
+  const plans = dummyPlans;
 
   return (
     <div className="relative w-full max-w-[393px] bg-pink-200">
@@ -79,17 +81,18 @@ export default function ResultPage() {
       </header>
 
       <main className="flex flex-col items-center gap-5 px-4 pt-6 pb-10 text-center">
-        <div className="text-2xl font-bold">
-          {getMemeTypeLabel(type as MemeType)}
-        </div>
-        <div>
-          전체 테스트 참여자 중{" "}
-          <span className="font-bold">{data.percent[type] || 0}%</span>가 같은
-          유형입니다.
-        </div>
+        <div className="text-2xl font-bold">{getMemeTypeLabel(type)}</div>
+
+        {data && (
+          <div>
+            전체 테스트 참여자 중{" "}
+            <span className="font-bold">{data.percent[type] || 0}%</span>가 같은
+            유형입니다.
+          </div>
+        )}
 
         <img
-          src={`/assets/moono/${user.characterProfile.type.toLowerCase()}-moono.png`}
+          src={`/assets/moono/${type.toLowerCase()}-moono.png`}
           className="w-[40%]"
           alt="무너"
         />
@@ -157,8 +160,9 @@ export default function ResultPage() {
             </p>
           </div>
           <div className="flex w-[90%] flex-col gap-4">
-            {plans.map((plan) => (
+            {plans.map((plan, idx) => (
               <PlanCard
+                key={idx}
                 name={""}
                 data={""}
                 voice={""}
@@ -219,7 +223,7 @@ export default function ResultPage() {
           <div className="mt-4 flex w-[90%] flex-col items-center justify-between">
             <ShareSection
               title="내 결과 공유하기"
-              count={data.shareCount || 0}
+              count={data?.shareCount || 0}
               id={decryptedId}
               shareUrl={`/meme-test/result/[encryptedId]`}
             />
