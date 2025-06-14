@@ -9,6 +9,8 @@ import { useChatStore } from "@/store/useChatStore";
 import { useTTSStore } from "@/store/useTTSStore";
 import { useEffect, useRef, useState } from "react";
 import SpeechBubble from "./SpeechBubble";
+import PlanCard from "./PlanCard";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function CharacterScene() {
   const { speak } = useTTS();
@@ -53,7 +55,7 @@ export default function CharacterScene() {
     const latestBotMsg = getLastBotMessage();
     if (!latestBotMsg) return;
 
-    // 중복 방지: 이미 읽은 메시지면 무시
+    // 중복 방지
     if (latestBotMsg.content !== prevBotMessageRef.current) {
       prevBotMessageRef.current = latestBotMsg.content;
       startStreaming(latestBotMsg.content);
@@ -61,12 +63,33 @@ export default function CharacterScene() {
     }
   }, [messages]);
 
+  // PlanCard를 보여줄 조건: 마지막 메시지가 plan type
+  const shouldShowPlanCard =
+    lastMessage?.role === "bot" &&
+    lastMessage?.type === "plan" &&
+    lastMessage?.planData;
+
   return (
-    <div className="relative flex h-[80%] w-full items-center justify-center">
-      {/* 💬 말풍선 표시 */}
+    <div className="relative flex h-[80%] w-full flex-col items-center justify-center">
+      {/* 말풍선 표시 */}
       {isSpeaking && latestBotMsg?.content && (
         <SpeechBubble text={streamingText} />
       )}
+
+      {/* 최종 요금제 추천 카드 UI */}
+      <AnimatePresence>
+        {shouldShowPlanCard && (
+          <motion.div
+            key="plan-card"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}>
+            <PlanCard {...lastMessage.planData!} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* 3D 문어 */}
       <Canvas
         style={{ width: "60%", height: "50%" }}
         camera={{ position: [0, 2, 4], fov: 35 }}>
@@ -83,6 +106,7 @@ export default function CharacterScene() {
           enableRotate={false}
         />
       </Canvas>
+
       <ShadowRing
         isActive={isSpeaking}
         color="bg-pink-400"
