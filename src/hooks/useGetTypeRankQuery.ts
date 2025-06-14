@@ -12,7 +12,9 @@ export type TypeRankResponse = {
   percent: Record<MemeType, number>;
   shareCount: number;
   participantCount: number;
+  sharedCount: number;
   moonos: Moono[];
+  percent: Record<string, number>;
 };
 
 export const useGetTypeRankQuery = () => {

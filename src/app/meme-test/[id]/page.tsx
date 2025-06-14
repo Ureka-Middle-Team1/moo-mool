@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ChevronLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -78,7 +79,9 @@ export default function TestQuestionPage() {
       setQuestions(flat);
     }
   }, [data]);
-
+  const handleClick = () => {
+    router.push("/meme-test");
+  };
   const handleChoiceClick = (choice: Choice) => {
     const question = questions[currentIndex];
     if (!question) return;
@@ -127,14 +130,15 @@ export default function TestQuestionPage() {
     }
   }
   return (
-    <div className="min-h-screen bg-pink-100 px-4 py-6">
+    <div className="min-h-screen bg-pink-100">
       {/* 헤더 */}
-      <div className="mb-4 flex items-center gap-2 rounded-md bg-yellow-200 px-4 py-2">
-        <button className="text-lg font-semibold">x</button>
-        <h1 className="flex-1 text-center text-sm font-semibold">
-          콘텐츠 과몰입 테스트
-        </h1>
-      </div>
+      <header className="sticky top-0 z-100 mb-10 flex h-12 w-full items-center justify-between bg-yellow-200 px-4 font-bold">
+        <div className="flex items-center">
+          <ChevronLeft onClick={handleClick} className="h-5 w-5" />
+        </div>
+        <div className="flex-1 text-center">콘텐츠 과몰입 테스트</div>
+        <div className="h-5 w-5" />
+      </header>
 
       {/* 스테이지 정보 */}
       <div className="mb-4 text-center text-sm text-gray-700">
