@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { selectPlanStrategy } from "@/lib/chat/selectPlanStrategy";
 import { queryBySubscribe } from "@/lib/chat/queryBySubscribe";
+import { findSmartChoiceResultInDB } from "@/lib/chat/findSmartChoiceResultInDB";
 
 export async function POST(req: NextRequest) {
   // 1. 받아온 req에 대해서 json으로 파싱
@@ -18,18 +19,22 @@ export async function POST(req: NextRequest) {
     case "FALLBACK":
     //TODO: 사용자들이 가장 많이 추천받은 요금제 top3 출력 (”홈화면”에서 사용하는 api 똑같이 사용해서 띄울 예정)
     case "SMART_CHOICE_ONLY":
-      return NextResponse.json({ result: smartChoicePlans.slice(0, 2) }); // smart choice api 요청 결과 중 최대 2개만 return (여기는 RawPlan[]으로 리턴)
+      return NextResponse.json({
+        result: await findSmartChoiceResultInDB(smartChoicePlans),
+      }); // smart choice api 요청 결과를 DB에서 찾아 Return (해당 프로세스는 findSmartChoiceResultInDB에서 수행)
     case "SUBSCRIBE_MATCH":
       const results = await queryBySubscribe({
         smartChoicePlans: strategy.smartChoicePlans,
-        subscribe: strategy.subscribe,
+        subscribe: strategy.subscribe!,
       });
       if (results.length > 0) {
         // results 값이 존재하는 경우
-        NextResponse.json({ result: results });
+        return NextResponse.json({ result: results });
       } else {
         if (smartChoicePlans.length > 0) {
-          return NextResponse.json({ result: smartChoicePlans.slice(0, 2) });
+          return NextResponse.json({
+            result: await findSmartChoiceResultInDB(smartChoicePlans),
+          }); // smart choice api 요청 결과를 DB에서 찾아 Return (해당 프로세스는 findSmartChoiceResultInDB에서 수행)
         } else {
           //TODO: 사용자들이 가장 많이 추천받은 요금제 top3 출력 (”홈화면”에서 사용하는 api 똑같이 사용해서 띄울 예정)
         }

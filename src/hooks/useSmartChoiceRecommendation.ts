@@ -5,7 +5,6 @@ import { parsePlans, PlanApiResponse } from "@/types/Chat";
 import { useGetFinalPlanInChatbot } from "./useGetFinalPlanInChatbot";
 import { useChatStore } from "@/store/useChatStore";
 import { useTendencyStore } from "@/store/useTendencyStore";
-import { useFetchUserMemeTestResult } from "./useFetchUserMemeTestResult";
 
 type Options = {
   onSuccess?: (data: PlanApiResponse) => void;

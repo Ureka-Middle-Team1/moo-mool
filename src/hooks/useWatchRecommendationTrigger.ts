@@ -19,7 +19,7 @@ export function useWatchRecommendationTrigger() {
       // subscribe만 제거한 나머지 필드 추출
       const { subscribe, ...rest } = userTendencyInfo;
 
-      // subscription 제외한 값으로 recommendPlan 호출 (subscribe는 smart choice api 호출 시 필요없는 사안)
+      // recommendPlan에는 subscribe 값 제외한 값만 호출, 해당 hook 안에서 구독 서비스까지 호출할 예정
       recommendPlan(rest);
     }
   }, [currentQuestionId, userTendencyInfo]);
