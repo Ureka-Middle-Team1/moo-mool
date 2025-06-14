@@ -5,7 +5,7 @@ export default function LayoutWrapper({
 }) {
   return (
     <div className="flex justify-center">
-      <div className="flex min-h-screen w-full max-w-[430px] flex-col bg-white">
+      <div className="flex min-h-screen w-full max-w-[430px] flex-col bg-gray-500">
         {children}
       </div>
     </div>
