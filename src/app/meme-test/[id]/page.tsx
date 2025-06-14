@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -98,9 +98,9 @@ export default function TestQuestionPage() {
     setAnswer(answer);
 
     if (currentIndex === questions.length - 1) {
-      const encrypted = encrypt("cmbuefdnp0000qu6sqzuk3v5g");
+      const encrypted = encrypt("cmbuegejd00008xasyblmrxq1");
       submitAnswers({
-        userId: "cmbuefdnp0000qu6sqzuk3v5g",
+        userId: "cmbuegejd00008xasyblmrxq1",
         planId: 1,
         answers,
       });
@@ -130,13 +130,27 @@ export default function TestQuestionPage() {
     }
   }
   return (
-    <div className="min-h-screen bg-pink-100">
+    <div className="h-[852px] bg-pink-100">
       {/* 헤더 */}
       <header className="sticky top-0 z-100 mb-10 flex h-12 w-full items-center justify-between bg-yellow-200 px-4 font-bold">
         <div className="flex items-center">
           <ChevronLeft onClick={handleClick} className="h-5 w-5" />
         </div>
-        <div className="flex-1 text-center">콘텐츠 과몰입 테스트</div>
+
+        <div
+          style={{ fontFamily: "kkubulim" }}
+          className="font-nomal flex flex-1 items-center justify-center space-x-1">
+          <span>콘텐츠 과몰입 테스트</span>
+          <X className="h-3 w-3" />
+          <Image
+            src="/assets/icons/U_plus.png"
+            alt="U+ 로고"
+            width={20}
+            height={16}
+            className="object-contain"
+          />
+        </div>
+
         <div className="h-5 w-5" />
       </header>
 

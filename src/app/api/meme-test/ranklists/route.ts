@@ -19,7 +19,7 @@ export async function GET() {
   });
 
   const participantCount = userAggregates._sum.tested_count || 0;
-  const shareCount = userAggregates._sum.invited_count || 0;
+  const sharedCount = userAggregates._sum.invited_count || 0;
 
   const totalProfiles = await prisma.userCharacterProfile.count();
 
@@ -30,18 +30,13 @@ export async function GET() {
     },
   });
 
-  const moonos = Object.keys(typeNameMap).map((type) => ({
-    label: typeNameMap[type],
-    image: `${type}-moono`,
-  }));
-
-  // percent 객체 초기화: 모든 타입 0으로 시작
+  // percent 객체 초기화
   const percent: Record<string, number> = {};
   Object.keys(typeNameMap).forEach((type) => {
     percent[type] = 0;
   });
 
-  // 실제 데이터가 있으면 덮어쓰기
+  // 실제 퍼센트 계산
   countsByType.forEach(({ type, _count }) => {
     if (type in typeNameMap) {
       percent[type] =
@@ -51,10 +46,25 @@ export async function GET() {
     }
   });
 
+  // moonos 배열 생성
+  const moonos = Object.keys(typeNameMap).map((type) => ({
+    type,
+    label: typeNameMap[type],
+    image: `${type}-moono`,
+    percent: percent[type],
+  }));
+
+  // percent 기준으로 정렬 후 score 부여
+  const rankedMoonos = [...moonos]
+    .sort((a, b) => b.percent - a.percent)
+    .map((moono, index) => ({
+      ...moono,
+      score: index + 1, // 1위부터 6위까지
+    }));
+
   return NextResponse.json({
     participantCount,
-    shareCount,
-    moonos,
-    percent,
+    sharedCount,
+    moonos: rankedMoonos,
   });
 }
