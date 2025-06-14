@@ -5,7 +5,7 @@ import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-// 💡 각 type별 설명과 해시태그 추가
+// 각 type별 설명과 해시태그 추가
 const moonoMeta: Record<string, { description: string; tags: string[] }> = {
   SNS: {
     description: '"좋아요 놀러줘~💓 필터는 진심이야!"',
@@ -94,9 +94,18 @@ export default function RankingPage() {
                     {moono.label}
                   </span>
                   <p className="mb-1 text-sm text-black">{meta.description}</p>
-                  <div className="flex gap-1 text-[11px] font-semibold whitespace-nowrap text-pink-400">
+                  <div className="flex gap-1 text-[11px] whitespace-nowrap text-black">
                     {meta.tags.map((tag, i) => (
-                      <span key={i}>{tag}</span>
+                      <span
+                        key={i}
+                        style={{ fontFamily: "kkubulim" }}
+                        className="relative z-10 inline-block">
+                        <span
+                          className="absolute bottom-[0.2em] left-0 -z-10 h-[0.3em] w-full bg-pink-400"
+                          aria-hidden="true"
+                        />
+                        {tag}
+                      </span>
                     ))}
                   </div>
                 </div>
