@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { SmartChoiceApiInput } from "@/types/smartChoiceApiInput";
 import { UserTendencyInfo } from "@/types/userTendencyInfo";
+import { persist } from "zustand/middleware";
 
 interface TendencyStore {
   userTendencyInfo: UserTendencyInfo;
@@ -19,18 +20,30 @@ const defaultState: UserTendencyInfo = {
   subscribe: "NONE", // 구독 서비스 관련
 };
 
-export const useTendencyStore = create<TendencyStore>((set) => ({
-  userTendencyInfo: defaultState,
-  updateTendency: (patch) =>
-    set((state) => ({
-      userTendencyInfo: { ...state.userTendencyInfo, ...patch },
-    })),
-  setSubscription: (value) =>
-    set((state) => ({
-      userTendencyInfo: {
-        ...state.userTendencyInfo,
-        subscription: value,
-      },
-    })),
-  resetTendency: () => set({ userTendencyInfo: defaultState }),
-}));
+// 새로 고침해도 userTendencyInfo가 저장 되도록 persist 옵션 추가
+export const useTendencyStore = create<TendencyStore>()(
+  persist(
+    (set) => ({
+      userTendencyInfo: defaultState,
+      updateTendency: (patch) =>
+        set((state) => ({
+          userTendencyInfo: { ...state.userTendencyInfo, ...patch },
+        })),
+      setSubscription: (value) =>
+        set((state) => ({
+          userTendencyInfo: {
+            ...state.userTendencyInfo,
+            subscribe: value,
+          },
+        })),
+      resetTendency: () =>
+        set(() => ({
+          userTendencyInfo: defaultState,
+        })),
+    }),
+    {
+      name: "user-tendency-storage", // localStorage key
+      partialize: (state) => ({ userTendencyInfo: state.userTendencyInfo }),
+    }
+  )
+);

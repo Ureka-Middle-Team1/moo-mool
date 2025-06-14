@@ -20,7 +20,7 @@ export default function PlanBenefits({ benefits }: PlanBenefitsProps) {
   });
 
   return (
-    <div className="relative mt-15">
+    <div className="relative mt-15 min-h-65">
       <div ref={sliderRef} className="keen-slider px-4 py-2">
         {benefits.map((item, index) => (
           <div key={index} className="keen-slider__slide">

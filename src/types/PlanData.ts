@@ -5,7 +5,7 @@ export interface PlanDBApiResponse {
   id: number;
   name: string;
   price: number;
-  dataAmountGb: number;
+  dataAmountMb: number;
   overageSpeedMbps: number | null;
   voiceMinutes: number;
   smsIncluded: boolean;

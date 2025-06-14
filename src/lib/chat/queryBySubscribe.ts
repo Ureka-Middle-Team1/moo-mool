@@ -17,11 +17,13 @@ export async function queryBySubscribe({
   // map 함수 사용해서, 이름 문자열 배열로 반환해야 한다
   const names = smartChoicePlans?.map((plan) => plan.name);
 
-  //경우 1 - 이름 + 구독 서비스가 모두 일치하는 DB 요금제 (DB 연동하면 주석 처리된 아래 코드로 활용 예정)
+  //경우 1 - 이름 + 구독 서비스가 모두 일치하는 DB 요금제
   const perfectMatches = await prisma.plan.findMany({
     where: {
       name: { in: names },
-      subscribe,
+      subscriptionServices: {
+        array_contains: [subscribe], // JSON 배열 내 포함 여부
+      },
     },
     take: 2,
   });
@@ -31,9 +33,13 @@ export async function queryBySubscribe({
     return perfectMatches;
   }
 
-  // 경우 2 - 이름+구독 일치 요금제가 없을 때 => fallback 전략 수행 (DB 연동하면 주석 처리된 아래 코드로 활용 예정)
+  // 경우 2 - 이름+구독 일치 요금제가 없을 때 => fallback 전략 수행
   const subscribeOnly = await prisma.plan.findMany({
-    where: { subscribe },
+    where: {
+      subscriptionServices: {
+        array_contains: [subscribe], // JSON 배열 내 포함 여부
+      },
+    },
     take: 2,
   });
 

@@ -69,11 +69,11 @@ export default function ShareSection({
 
   return (
     <>
-      <div className="mb-4 flex w-[90%] items-center justify-center gap-2">
-        <p className="text-lg text-black">{title}</p>
+      <div className="mb-2 flex w-[90%] items-center justify-center gap-2">
+        <p className="text-[15px] text-black">{title}</p>
         <div className="flex items-center gap-1">
-          <Share2 className="text-black" />
-          <p className="text-lg font-medium text-black">{count}</p>
+          <Share2 className="h-[15px] w-[15px] text-black" />
+          <p className="text-[15px] font-medium text-black">{count}</p>
         </div>
       </div>
       <div className="mb-6 flex gap-4">
@@ -83,7 +83,7 @@ export default function ShareSection({
           className={`flex h-12 w-12 items-center justify-center rounded-full shadow-xl transition ${isLoading ? "cursor-not-allowed bg-gray-300" : "cursor-pointer bg-pink-400 hover:bg-yellow-500"}`}>
           <img
             src="/assets/icons/message-circle.png"
-            className="h-6 w-6"
+            className="h-5 w-5"
             alt="message"
           />
         </div>

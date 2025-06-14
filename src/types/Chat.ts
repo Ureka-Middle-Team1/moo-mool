@@ -9,8 +9,8 @@ export interface Plan {
   v_add_name: { _text: string }; // 요금제 기본료, 부가서비스 기본료
   v_plan_name: { _text: string }; // 요금제명, 부가서비스명
   v_plan_display_voice: { _text: string }; // 음성 기본 제공량
-  v_display_data: { _text: string }; // 데이터 기본 제공량
-  v_plan_sms: { _text: string }; // 문자 기본 제공량
+  v_plan_display_data: { _text: string }; // 데이터 기본 제공량
+  v_plan_display_sms: { _text: string }; // 문자 기본 제공량
   rn: { _text: string }; // 요금제 추천 구분(으뜸: 1, 알뜰: 2, 넉넉: 3)
 }
 
@@ -26,15 +26,17 @@ export type PlanSelectionOutput = {
 };
 
 // 최초에 Smart Choice API를 받아올 때, 이처럼 필터링하는 과정이 필요 (불필요한 필드 제거 / smartchoice api에서 호출함)
-export function extractRawPlan(plan: Plan): RawPlan {
+export function extractRawPlan(plan: any): RawPlan {
+  const get = (key: string) => plan?.[key]?._text?.trim() ?? "";
+
   return {
-    v_plan_name: plan.v_plan_name,
-    v_plan_display_data: plan.v_display_data,
-    v_plan_display_voice: plan.v_plan_display_voice,
-    v_plan_display_sms: plan.v_plan_sms,
-    v_add_name: plan.v_add_name,
-    v_plan_price: plan.v_plan_price,
-    v_tel: plan.v_tel,
+    v_plan_name: { _text: get("v_plan_name") },
+    v_plan_display_data: { _text: get("v_plan_display_data") },
+    v_plan_display_voice: { _text: get("v_plan_display_voice") },
+    v_plan_display_sms: { _text: get("v_plan_display_sms") },
+    v_add_name: { _text: get("v_add_name") },
+    v_plan_price: { _text: get("v_plan_price") },
+    v_tel: { _text: get("v_tel") },
   };
 }
 
@@ -67,7 +69,7 @@ export type ParsedPlan = {
 
 // 해당 내용은 Smart Choice API 요청 시에 리턴되는 값의 자료형
 export type PlanApiResponse = {
-  result: RawPlan[];
+  rawPlans: RawPlan[];
   success: boolean;
 };
 
@@ -79,9 +81,9 @@ export type ChatApiResponse = {
 };
 
 export function parsePlans(raw: PlanApiResponse): ParsedPlan[] {
-  if (!raw.result || !Array.isArray(raw.result)) return [];
+  if (!raw.rawPlans || !Array.isArray(raw.rawPlans)) return [];
 
-  return raw.result.map((item) => ({
+  return raw.rawPlans.map((item) => ({
     name: item.v_plan_name._text.trim(),
     data: item.v_plan_display_data._text.trim(),
     voice: item.v_plan_display_voice._text.trim(),

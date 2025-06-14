@@ -14,17 +14,9 @@ export async function GET(request: Request) {
       );
     }
 
-    const user_id = parseInt(userIdParam, 10); // userId 값을 10진수로 변환해서 user_id에 저장
-    if (isNaN(user_id)) {
-      return NextResponse.json(
-        { error: "user_id must be a number" },
-        { status: 400 }
-      );
-    }
-
     // findUnique(..select..)를 통해, 필요한 필드만 효율적으로 조회함
-    const profile = await prisma.userCharactorProfile.findUnique({
-      where: { user_id },
+    const profile = await prisma.userCharacterProfile.findUnique({
+      where: { user_id: userIdParam },
       select: {
         call_level: true,
         sms_level: true,
@@ -34,14 +26,15 @@ export async function GET(request: Request) {
       },
     });
 
+    // 가져온 프로필이 없는 경우
     if (!profile) {
       return NextResponse.json(
-        { error: `Profile not found for user_id ${user_id}` },
+        { error: `Profile not found for user_id ${userIdParam}` },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ user_id, ...profile }, { status: 200 });
+    return NextResponse.json({ userIdParam, ...profile }, { status: 200 });
   } catch (err) {
     console.error("[GET /api/userprofile] error", err);
     return NextResponse.json(

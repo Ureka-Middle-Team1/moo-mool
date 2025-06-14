@@ -5,11 +5,11 @@ import { queryBySubscribe } from "@/lib/chat/queryBySubscribe";
 
 export async function POST(req: NextRequest) {
   // 1. 받아온 req에 대해서 json으로 파싱
-  const { plans, subscribe } = await req.json();
+  const { smartChoicePlans, subscribe } = await req.json();
 
   // 2. 분기 전략 고르기 (해당 로직은 selectPlanStrategy에서..)
   const strategy = selectPlanStrategy({
-    smartChoicePlans: plans,
+    smartChoicePlans,
     subscribe,
   });
 
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     case "FALLBACK":
     //TODO: 사용자들이 가장 많이 추천받은 요금제 top3 출력 (”홈화면”에서 사용하는 api 똑같이 사용해서 띄울 예정)
     case "SMART_CHOICE_ONLY":
-      return NextResponse.json(plans.slice(0, 2)); // smart choice api 요청 결과 중 최대 2개만 return (여기는 RawPlan[]으로 리턴)
+      return NextResponse.json({ result: smartChoicePlans.slice(0, 2) }); // smart choice api 요청 결과 중 최대 2개만 return (여기는 RawPlan[]으로 리턴)
     case "SUBSCRIBE_MATCH":
       const results = await queryBySubscribe({
         smartChoicePlans: strategy.smartChoicePlans,
@@ -26,9 +26,13 @@ export async function POST(req: NextRequest) {
       });
       if (results.length > 0) {
         // results 값이 존재하는 경우
-        NextResponse.json(results);
+        NextResponse.json({ result: results });
       } else {
-        //TODO: 사용자들이 가장 많이 추천받은 요금제 top3 출력 (”홈화면”에서 사용하는 api 똑같이 사용해서 띄울 예정)
+        if (smartChoicePlans.length > 0) {
+          return NextResponse.json({ result: smartChoicePlans.slice(0, 2) });
+        } else {
+          //TODO: 사용자들이 가장 많이 추천받은 요금제 top3 출력 (”홈화면”에서 사용하는 api 똑같이 사용해서 띄울 예정)
+        }
       }
   }
 }

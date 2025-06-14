@@ -48,7 +48,7 @@ model Plan {
   id                   Int         @id @default(autoincrement())
   name                 String      @unique @db.VarChar(100)
   price                Int
-  dataAmountGb         Float       @default(0)
+  dataAmountMb         Float       @default(0)
   overageSpeedMbps     Float?
   voiceMinutes         Int         @default(-1)
   smsIncluded          Boolean     @default(false)
