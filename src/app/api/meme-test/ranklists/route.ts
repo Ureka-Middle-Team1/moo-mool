@@ -21,9 +21,9 @@ export async function GET() {
   const participantCount = userAggregates._sum.tested_count || 0;
   const shareCount = userAggregates._sum.invited_count || 0;
 
-  const totalProfiles = await prisma.UserCharacterProfile.count();
+  const totalProfiles = await prisma.userCharacterProfile.count();
 
-  const countsByType = await prisma.UserCharacterProfile.groupBy({
+  const countsByType = await prisma.userCharacterProfile.groupBy({
     by: ["type"],
     _count: {
       type: true,

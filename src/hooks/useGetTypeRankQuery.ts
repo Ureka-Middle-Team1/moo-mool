@@ -9,7 +9,9 @@ export type Moono = {
 
 export type TypeRankResponse = {
   participantCount: number;
+  sharedCount: number;
   moonos: Moono[];
+  percent: Record<string, number>;
 };
 
 export const useGetTypeRankQuery = () => {

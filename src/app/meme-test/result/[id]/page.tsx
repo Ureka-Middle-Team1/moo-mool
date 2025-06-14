@@ -5,21 +5,22 @@ import { ChevronLeft } from "lucide-react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
 import TrendBar from "@/components/chart/TrendBar";
-import PlanCard from "@/components/plan/planCard";
+// import PlanCard from "@/components/plan/planCard";
 export const dynamic = "force-dynamic";
 
 import { decrypt } from "@/utils/crypto";
 import { useUser } from "@/hooks/useUser";
-import { useGetRecommendedPlanQuery } from "@/hooks/useGetRecommendedPlanQuery";
+// import { useGetRecommendedPlanQuery } from "@/hooks/useGetRecommendedPlanQuery";
 import { getMemeTypeLabel, MemeType, memeTypeData } from "@/store/memeTypeData";
 import {
   parseSentences,
   parseHashtags,
   renderHighlightedText,
 } from "@/utils/textUtils";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function ResultPage() {
+  const router = useRouter();
   const { data, isLoading, isError } = useGetTypeRankQuery();
   const params = useParams();
   const encryptedId = params.id as string;
@@ -69,12 +70,21 @@ export default function ResultPage() {
   const { descriptionText, hashtagText } = memeTypeData[type];
   const splitSentences = parseSentences(descriptionText);
   const hashtags = parseHashtags(hashtagText);
-
+  const handleClick = () => {
+    router.push("/meme-test");
+  };
+  const handleClick_moomool = () => {
+    router.push("/");
+  };
+  const handelClick_rank = () => {
+    router.push("/meme-test/rank");
+  };
   return (
-    <div className="relative w-full max-w-[393px] bg-pink-200">
+    // <div className="relative w-full max-w-[393px] bg-pink-200">
+    <div className="min-h-screen bg-pink-200">
       <header className="sticky top-0 z-100 flex h-12 w-full items-center justify-between bg-yellow-200 px-4 font-bold">
         <div className="flex items-center">
-          <ChevronLeft className="h-5 w-5" />
+          <ChevronLeft onClick={handleClick} className="h-5 w-5" />
         </div>
         <div className="flex-1 text-center">콘텐츠 과몰입 테스트</div>
         <div className="h-5 w-5" />
@@ -86,7 +96,7 @@ export default function ResultPage() {
         </div>
         <div>
           전체 테스트 참여자 중{" "}
-          <span className="font-bold">{data.percent[type] || 0}%</span>가 같은
+          <span className="font-bold">{data?.percent[type] || 0}%</span>가 같은
           유형입니다.
         </div>
 
@@ -159,7 +169,7 @@ export default function ResultPage() {
             </p>
           </div>
           <div className="flex w-[90%] flex-col gap-4">
-            {plans.map((plan) => (
+            {/* {plans.map((plan) => (
               <PlanCard
                 key={plan.rank}
                 rank={plan.rank}
@@ -167,7 +177,7 @@ export default function ResultPage() {
                 subtitle={plan.subtitle}
                 detail={plan.detail}
               />
-            ))}
+            ))} */}
             <p className="text-[11px] text-black">
               본 테스트는 LG유플러스와의 협업을 통해 제작되었으며, <br />
               테스트 결과에 기반한 추천 요금제는 모두 LG유플러스의 요금제입니다.
@@ -191,7 +201,9 @@ export default function ResultPage() {
             className="w-[80px]"
             alt="화살표"
           />
-          <button className="rounded-full bg-pink-400 px-9 py-4 font-bold text-black">
+          <button
+            onClick={handleClick_moomool}
+            className="rounded-full bg-pink-400 px-9 py-4 font-bold text-black">
             무너에게 요금제 상담하기
           </button>
         </div>
@@ -220,9 +232,9 @@ export default function ResultPage() {
           <div className="mt-4 flex w-[90%] flex-col items-center justify-between">
             <ShareSection
               title="내 결과 공유하기"
-              count={data.shareCount || 0}
+              count={data?.sharedCount || 0}
               id={decryptedId}
-              shareUrl={`/meme-test/result/[encryptedId]`}
+              shareUrl={`/meme-test/result/${encryptedId}`}
             />
             <div className="rounded-md p-3 text-[11px] leading-tight text-gray-800">
               <ul className="list-disc space-y-1 text-left">
@@ -243,10 +255,14 @@ export default function ResultPage() {
         <div
           style={{ fontFamily: "kkubulim" }}
           className="mt-6 flex w-[90%] flex-col gap-3 text-2xl">
-          <button className="rounded-lg bg-pink-400 py-3 text-black shadow-md">
+          <button
+            onClick={handleClick}
+            className="rounded-lg bg-pink-400 py-3 text-black shadow-md">
             테스트 다시하기
           </button>
-          <button className="rounded-lg bg-yellow-300 py-3 text-black shadow-md">
+          <button
+            onClick={handelClick_rank}
+            className="rounded-lg bg-yellow-300 py-3 text-black shadow-md">
             전체 유형 확인하기
           </button>
         </div>
