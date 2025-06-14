@@ -4,7 +4,12 @@ import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   const handleLogin = () => {
-    signIn("kakao", { callbackUrl: "/login/userinfo" });
+    const currentUrl = window.location.search.includes("callbackUrl=")
+      ? decodeURIComponent(
+          new URLSearchParams(window.location.search).get("callbackUrl")!
+        )
+      : "/";
+    signIn("kakao", { callbackUrl: currentUrl });
   };
 
   return (
