@@ -18,6 +18,7 @@ import { Answer } from "@/types/answer";
 import { useRouter } from "next/navigation";
 import { encrypt } from "@/utils/crypto";
 import { useSession } from "next-auth/react";
+import { useUpdateTestedCount } from "@/hooks/useUpdateTestedCount";
 
 const difficultyNumberMap: Record<Difficulty, number | null> = {
   low: 1,
@@ -50,6 +51,7 @@ export default function TestQuestionPage() {
   const setAnswer = useQuestionStore((state) => state.setAnswer);
   const answers = useQuestionStore((state) => state.answers);
   const { mutate: submitAnswers } = useSubmitAnswers();
+  const { mutate } = useUpdateTestedCount();
   const { data, isLoading, error } = useGetQuestions();
   const { data: session } = useSession();
 
@@ -112,6 +114,7 @@ export default function TestQuestionPage() {
         planId: 1,
         answers,
       });
+      mutate(session?.user.id);
       router.push(`/meme-test/result/${encrypted}`);
     } else {
       setCurrentIndex((prev) => prev + 1);
