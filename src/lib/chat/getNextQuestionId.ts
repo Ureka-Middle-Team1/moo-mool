@@ -6,8 +6,7 @@ export function getNextQuestionId(
   questionId: number,
   normalized: string
 ): number | undefined {
-  const flow = questionFlow[questionId];
-  console.log("다음 ID: ", questionId);
+  const flow = questionFlow[questionId]; // questionId에 대해서 flow 정보를 가져온다
 
   // 수치형 답변인 경우
   if (/^[0-9]+$/.test(normalized)) {

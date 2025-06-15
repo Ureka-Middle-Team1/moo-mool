@@ -9,22 +9,39 @@ import { useTTSStore } from "@/store/useTTSStore";
 import { Button } from "../ui/button";
 import { useBotResponseGuard } from "@/hooks/useBotResponseGuard";
 import { useVoiceControlStore } from "@/store/useVoiceControlStore";
+import { useChatStore } from "@/store/useChatStore";
+import { callGPTFreeTalk } from "@/lib/chat/callGPTFreeTalk";
+import { handleFreeTalkAnswer } from "@/lib/chat/handleFreeTalkAnswer";
 
 export default function VoiceFooter() {
   const { recording, result, toggleRecording } = useVoiceRecorder();
+  const { currentQuestionId, setCurrentQuestionId, appendMessage } =
+    useChatStore();
   const { handleNormalizedAnswer } = useHandleAnswer();
   const { setWaitingForBotResponse } = useVoiceControlStore();
   const isSpeaking = useTTSStore((state) => state.isSpeaking);
   const [waitingTrigger, setWaitingTrigger] = useState(false);
   useBotResponseGuard(waitingTrigger);
 
-  // 음성 인식 결과가 나올 때 자동으로 handleAnswer 실행
+  // 음성 인식 결과가 나올 때 자동으로 handleAnswer 실행 (자연스러운 대화 흐름일 경우엔 callGPTFreeTalk 호출)
   useEffect(() => {
-    if (result) {
+    if (!result) return; // result가 비어 있으면 그냥 return
+
+    // 분기 처리를 진행하는 메소드 processVoiceInput
+    const processVoiceInput = async () => {
       setWaitingTrigger(true);
-      setWaitingForBotResponse(true); // 마이크 잠금 시작
-      handleNormalizedAnswer(result);
-    }
+      setWaitingForBotResponse(true);
+
+      // "자연스러운 대화" 모드인 경우
+      if (currentQuestionId === -1) {
+        await handleFreeTalkAnswer(result);
+      } else {
+        // 아닌 경우
+        await handleNormalizedAnswer(result);
+      }
+    };
+
+    processVoiceInput();
   }, [result]);
 
   return (

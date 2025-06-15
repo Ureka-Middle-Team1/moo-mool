@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useStreamingText } from "@/hooks/useStreamingText";
 
 interface TypingMessageProps {
   fullText: string;
@@ -11,38 +12,32 @@ export default function TypingMessage({
   onDone,
   speed = 100,
 }: TypingMessageProps) {
-  const [displayedText, setDisplayedText] = useState("");
-  const words = fullText.split(" ");
-  const [wordIndex, setWordIndex] = useState(0);
-
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [estimatedWidth, setEstimatedWidth] = useState(100);
 
-  function measureTextWidth(text: string, font = "14px Pretendard") {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return 100;
-    ctx.font = font;
-    return ctx.measureText(text).width + 24; // padding 고려
-  }
-  const estimatedWidth = Math.min(measureTextWidth(fullText), 322.5);
+  const displayedText = useStreamingText({
+    fullText,
+    speed,
+    mode: "word",
+    onDone,
+  });
+
+  useEffect(() => {
+    function measureTextWidth(text: string, font = "14px Pretendard") {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return 100;
+      ctx.font = font;
+      return ctx.measureText(text).width + 24;
+    }
+
+    const width = Math.min(measureTextWidth(fullText), 330);
+    setEstimatedWidth(width);
+  }, [fullText]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [displayedText]);
-
-  useEffect(() => {
-    if (wordIndex < words.length) {
-      const timeout = setTimeout(() => {
-        setDisplayedText((prev) =>
-          prev.length === 0 ? words[wordIndex] : `${prev} ${words[wordIndex]}`
-        );
-        setWordIndex(wordIndex + 1);
-      }, speed);
-      return () => clearTimeout(timeout);
-    } else {
-      onDone?.();
-    }
-  }, [wordIndex, words]);
 
   return (
     <>

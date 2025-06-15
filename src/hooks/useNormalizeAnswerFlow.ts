@@ -37,17 +37,27 @@ export function useNormalizeAnswerFlow() {
       updateTendency(patch);
 
       const nextId = getNextQuestionId(questionId, data.normalizedValue);
-      const contentToAppend =
-        nextId !== undefined && data.normalizedValue !== "INVALID"
-          ? questionTextMap[nextId]
-          : questionTextMap[questionId];
+      if (nextId === -1) {
+        // "자연스러운 대화" 모드(nextQuestionId 값으로 -1 받음)로 진입 시엔 다른 로직 필요
+        appendMessage({
+          role: "bot",
+          content:
+            "자연스러운 대화 모드로 진입합니다. 요금제 추천 관련해서 자연스레 물어봐 주세요.",
+        });
+        setCurrentQuestionId(nextId); // 현재 questionID를 -1로 설정
+      } else {
+        const contentToAppend =
+          nextId !== undefined && data.normalizedValue !== "INVALID"
+            ? questionTextMap[nextId]
+            : questionTextMap[questionId];
 
-      if (contentToAppend) {
-        appendMessage({ role: "bot", content: contentToAppend });
-      }
+        if (contentToAppend) {
+          appendMessage({ role: "bot", content: contentToAppend });
+        }
 
-      if (nextId !== undefined && data.normalizedValue !== "INVALID") {
-        setCurrentQuestionId(nextId);
+        if (nextId !== undefined && data.normalizedValue !== "INVALID") {
+          setCurrentQuestionId(nextId);
+        }
       }
     },
 

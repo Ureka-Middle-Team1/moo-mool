@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import SpeechBubble from "./SpeechBubble";
 import PlanCard from "./PlanCard";
 import { AnimatePresence, motion } from "framer-motion";
+import { useStreamingText } from "@/hooks/useStreamingText";
 
 export default function CharacterScene() {
   const { speak } = useTTS();
@@ -26,19 +27,16 @@ export default function CharacterScene() {
   const lastMessage = messages[messages.length - 1];
   const isWaitingForBot = lastMessage?.role === "user" && !isSpeaking;
 
-  const [streamingText, setStreamingText] = useState("");
-  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [triggerCount, setTriggerCount] = useState(0);
 
-  const startStreaming = (text: string) => {
-    if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
-    setStreamingText("");
-    let i = 0;
-    typingIntervalRef.current = setInterval(() => {
-      i++;
-      setStreamingText(text.slice(0, i));
-      if (i >= text.length) clearInterval(typingIntervalRef.current!);
-    }, 50);
-  };
+  // useStreamingText 훅 사용
+  const streamingText = useStreamingText({
+    fullText: latestBotMsg?.content ?? "",
+    speed: 50,
+    mode: "char", // 음성 말풍선은 char 단위
+    onDone: undefined,
+    triggerKey: `${latestBotMsg?.content}-${triggerCount}`,
+  });
 
   // 최초 1회 사용자 클릭 시 TTS 허용
   useEffect(() => {
@@ -56,7 +54,7 @@ export default function CharacterScene() {
       speak("지금은 대화가 준비되지 않았어요.");
       return;
     }
-    startStreaming(lastBotMessage.content);
+    setTriggerCount((c) => c + 1); // 스트리밍 재시작
     speak(lastBotMessage.content);
   };
 
@@ -68,8 +66,7 @@ export default function CharacterScene() {
 
     if (latestBotMsg.content !== prevBotMessageRef.current) {
       prevBotMessageRef.current = latestBotMsg.content;
-      startStreaming(latestBotMsg.content);
-      speak(latestBotMsg.content);
+      speak(latestBotMsg.content); // 훅이 자동 스트리밍하므로 startStreaming 제거
     }
   }, [messages]);
 
