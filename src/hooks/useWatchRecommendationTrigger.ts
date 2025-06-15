@@ -13,6 +13,7 @@ export function useWatchRecommendationTrigger() {
   const hasTriggeredRef = useRef(false); // 중복 방지
 
   useEffect(() => {
+    // 정해진 질문 로직에서, 마지막 질문까지 모두 완료해서 끝에 도달했을 경우
     if (currentQuestionId === 13 && !hasTriggeredRef.current) {
       hasTriggeredRef.current = true;
 

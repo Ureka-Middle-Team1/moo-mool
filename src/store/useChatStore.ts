@@ -3,8 +3,9 @@ import { persist } from "zustand/middleware";
 import { Message } from "@/types/Chat";
 import { questionTextMap } from "@/lib/chat/chatBotQuestionFlow";
 
-const initialMessage: Message[] = questionTextMap[1]
-  ? [{ role: "bot", content: questionTextMap[1] }]
+// 챗봇은 우선 "자연스러운 대화" vs "정확한 답변" 질문부터 해야 한다
+const initialMessage: Message[] = questionTextMap[0]
+  ? [{ role: "bot", content: questionTextMap[0] }]
   : [];
 
 interface ChatStore {
@@ -17,11 +18,12 @@ interface ChatStore {
   getLastBotMessage: () => Message | undefined;
 }
 
+// 채팅 관련 내용을 localStorage(persist 옵션에 의거)에 저장하는 ChatStore
 export const useChatStore = create<ChatStore>()(
   persist(
     (set, get) => ({
       messages: initialMessage,
-      currentQuestionId: 1,
+      currentQuestionId: 0,
       setCurrentQuestionId: (id) => set({ currentQuestionId: id }),
       setMessages: (messages) => set({ messages }),
       appendMessage: (message) =>

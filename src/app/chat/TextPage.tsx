@@ -5,6 +5,9 @@ import ChatMessageList from "@/components/chat/ChatMessageList";
 import ChatInputBox from "@/components/chat/ChatInputBox";
 import { useChatStore } from "@/store/useChatStore";
 import { useHandleAnswer } from "@/hooks/useHandleAnswer";
+import { callGPTFreeTalk } from "@/lib/chat/callGPTFreeTalk";
+import { questionTextMap } from "@/lib/chat/chatBotQuestionFlow";
+import { handleFreeTalkAnswer } from "@/lib/chat/handleFreeTalkAnswer";
 
 // "텍스트"로 챗봇 기능을 사용하는 페이지
 export default function TextPage() {
@@ -14,7 +17,7 @@ export default function TextPage() {
   const isSubmittingRef = useRef(false);
   const { handleNormalizedAnswer } = useHandleAnswer();
 
-  const { messages } = useChatStore();
+  const { messages, appendMessage, currentQuestionId } = useChatStore();
 
   // 스크롤 아래로 이동
   useEffect(() => {
@@ -42,8 +45,18 @@ export default function TextPage() {
     }, 0);
 
     try {
-      // 2. 외부 처리 로직 실행 (정규화, 업데이트, 다음 질문 등)
-      await handleNormalizedAnswer(userMessage);
+      /* 
+        사용자 답변 정규화를 진행하기 전,
+        currentQuestionId === -1인 경우("자연스러운 대화" 흐름..)
+        해당 흐름으로 전환하도록 진행
+      */
+      if (currentQuestionId === -1) {
+        await handleFreeTalkAnswer(userMessage); // "자연스러운 질문"에 대한 응답처리하는 메소드 호출
+        return;
+      } else {
+        // 2. 외부 처리 로직 실행 (정규화, 업데이트, 다음 질문 등)
+        await handleNormalizedAnswer(userMessage);
+      }
     } catch (error) {
       // 3. 필요 시 에러 핸들링 (옵션)
       console.error("onUserSubmit 처리 실패:", error);
