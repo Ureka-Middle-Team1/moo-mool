@@ -11,7 +11,6 @@ export type Moono = {
 };
 
 export type TypeRankResponse = {
-  percent: Record<MemeType, number>;
   shareCount: number;
   participantCount: number;
   sharedCount: number;
