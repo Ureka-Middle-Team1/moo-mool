@@ -3,11 +3,12 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = Number(params.id);
+  const { id } = await params; //핵심 수정 (15.3.3 대응)
+  const idNum = Number(id);
 
-  if (isNaN(id)) {
+  if (isNaN(idNum)) {
     return NextResponse.json(
       { error: "유효한 숫자 ID가 아닙니다." },
       { status: 400 }
@@ -15,7 +16,7 @@ export async function GET(
   }
 
   try {
-    const plan = await prisma.plan.findUnique({ where: { id } });
+    const plan = await prisma.plan.findUnique({ where: { id: idNum } });
 
     if (!plan) {
       return NextResponse.json(
