@@ -3,9 +3,46 @@
 import { Mic } from "lucide-react";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import ShadowRing from "./ShadowRing";
+import { useHandleAnswer } from "@/hooks/useHandleAnswer";
+import { useEffect, useState } from "react";
+import { useTTSStore } from "@/store/useTTSStore";
+import { Button } from "../ui/button";
+import { useBotResponseGuard } from "@/hooks/useBotResponseGuard";
+import { useVoiceControlStore } from "@/store/useVoiceControlStore";
+import { useChatStore } from "@/store/useChatStore";
+import { callGPTFreeTalk } from "@/lib/chat/callGPTFreeTalk";
+import { handleFreeTalkAnswer } from "@/lib/chat/handleFreeTalkAnswer";
 
 export default function VoiceFooter() {
   const { recording, result, toggleRecording } = useVoiceRecorder();
+  const { currentQuestionId, setCurrentQuestionId, appendMessage } =
+    useChatStore();
+  const { handleNormalizedAnswer } = useHandleAnswer();
+  const { setWaitingForBotResponse } = useVoiceControlStore();
+  const isSpeaking = useTTSStore((state) => state.isSpeaking);
+  const [waitingTrigger, setWaitingTrigger] = useState(false);
+  useBotResponseGuard(waitingTrigger);
+
+  // 음성 인식 결과가 나올 때 자동으로 handleAnswer 실행 (자연스러운 대화 흐름일 경우엔 callGPTFreeTalk 호출)
+  useEffect(() => {
+    if (!result) return; // result가 비어 있으면 그냥 return
+
+    // 분기 처리를 진행하는 메소드 processVoiceInput
+    const processVoiceInput = async () => {
+      setWaitingTrigger(true);
+      setWaitingForBotResponse(true);
+
+      // "자연스러운 대화" 모드인 경우
+      if (currentQuestionId === -1) {
+        await handleFreeTalkAnswer(result);
+      } else {
+        // 아닌 경우
+        await handleNormalizedAnswer(result);
+      }
+    };
+
+    processVoiceInput();
+  }, [result]);
 
   return (
     <div className="relative flex h-[20%] w-full flex-col items-center justify-center gap-4">
@@ -19,14 +56,15 @@ export default function VoiceFooter() {
       />
 
       {/*  마이크 버튼 */}
-      <button
+      <Button
         onClick={toggleRecording}
+        disabled={isSpeaking}
         className="z-10 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 shadow-md">
         <Mic
-          size={28}
+          size={30}
           className={`text-gray-700 ${recording ? "animate-ping" : ""}`}
         />
-      </button>
+      </Button>
 
       {/*  인식된 텍스트 출력 */}
       {result && (

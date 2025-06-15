@@ -18,5 +18,10 @@ export default function PageContent({ spec }: Props) {
     });
   }, [spec]);
 
-  return <div className="swagger-ui-wrapper" ref={swaggerRef} />;
+  return (
+    <div
+      className="swagger-ui-wrapper m-0 min-h-screen w-full p-0"
+      ref={swaggerRef}
+    />
+  );
 }

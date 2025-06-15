@@ -8,10 +8,8 @@ export default function SwaggerGroupLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
-      <body className="w-full bg-white text-black">
-        <div className="min-h-screen w-full">{children}</div>
-      </body>
-    </html>
+    <div className="m-0 min-h-screen w-full bg-white p-0 text-black">
+      {children}
+    </div>
   );
 }
