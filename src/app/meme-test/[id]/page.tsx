@@ -125,7 +125,7 @@ export default function TestQuestionPage() {
   const questionNumber = diffNum !== null ? (stageNum - 1) * 3 + diffNum : null;
 
   return (
-    <div className="h-[852px] bg-pink-200">
+    <div className="h-full bg-pink-200">
       <Header onBack={handleBack} />
       <ProgressBar currentIndex={currentIndex} total={questions.length} />
       <StageInfo stage={question.stage} difficulty={question.difficulty} />
