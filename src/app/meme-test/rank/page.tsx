@@ -9,10 +9,6 @@ import type { MemeType } from "@/store/memeTypeData";
 export default function RankingPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useGetTypeRankQuery();
-  if (isLoading)
-    return <div className="mt-10 text-center font-medium">로딩 중...</div>;
-  if (isError || !data)
-    return <div className="mt-10 text-center">데이터 불러오기 실패</div>;
 
   const topMoonos = (data?.moonos ?? []).sort((a, b) => b.percent - a.percent);
   console.log("Top Moonos:", topMoonos);
