@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useStreamingText } from "@/hooks/useStreamingText";
 
 interface TypingMessageProps {
@@ -13,6 +13,7 @@ export default function TypingMessage({
   speed = 100,
 }: TypingMessageProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [estimatedWidth, setEstimatedWidth] = useState(100);
 
   const displayedText = useStreamingText({
     fullText,
@@ -21,14 +22,18 @@ export default function TypingMessage({
     onDone,
   });
 
-  function measureTextWidth(text: string, font = "14px Pretendard") {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return 100;
-    ctx.font = font;
-    return ctx.measureText(text).width + 24;
-  }
-  const estimatedWidth = Math.min(measureTextWidth(fullText), 330);
+  useEffect(() => {
+    function measureTextWidth(text: string, font = "14px Pretendard") {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return 100;
+      ctx.font = font;
+      return ctx.measureText(text).width + 24;
+    }
+
+    const width = Math.min(measureTextWidth(fullText), 330);
+    setEstimatedWidth(width);
+  }, [fullText]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
