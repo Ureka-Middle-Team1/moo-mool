@@ -1,32 +1,34 @@
 "use client";
 
 import React from "react";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, X } from "lucide-react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
 import TrendBar from "@/components/chart/TrendBar";
-import PlanCard from "@/components/plan/planCard";
 export const dynamic = "force-dynamic";
 
 import { decrypt } from "@/utils/crypto";
 import { useUser } from "@/hooks/useUser";
-import { useGetRecommendedPlanQuery } from "@/hooks/useGetRecommendedPlanQuery";
 import { getMemeTypeLabel, MemeType, memeTypeData } from "@/store/memeTypeData";
 import {
   parseSentences,
   parseHashtags,
   renderHighlightedText,
 } from "@/utils/textUtils";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import Header from "@/components/meme/Header";
 
 export default function ResultPage() {
+  const router = useRouter();
   const { data, isLoading, isError } = useGetTypeRankQuery();
+
   const params = useParams();
   const encryptedId = params.id as string;
-  /* 복호화 */
+
   const decryptedId = encryptedId
     ? decrypt(decodeURIComponent(encryptedId))
     : null;
+
   const {
     data: user,
     isLoading: isUserLoading,
@@ -46,16 +48,6 @@ export default function ResultPage() {
       <p className="text-center">사용자 정보를 불러오는 데 실패했습니다.</p>
     );
   }
-  const dummyPlans = [
-    {
-      rank: 1,
-      title: "요금제 A",
-      subtitle: "합리적인 선택",
-      detail: "월 33,000원 / 데이터 10GB",
-    },
-  ];
-
-  const plans = dummyPlans;
 
   if (!user.characterProfile) {
     return (
@@ -64,21 +56,27 @@ export default function ResultPage() {
       </p>
     );
   }
-  const type = user.characterProfile?.type || "Saving";
-  const profile = user.characterProfile;
+
+  const type: MemeType = (user.characterProfile.type as MemeType) || "Saving";
   const { descriptionText, hashtagText } = memeTypeData[type];
   const splitSentences = parseSentences(descriptionText);
   const hashtags = parseHashtags(hashtagText);
+  const matchedMeme = data?.moonos.find((item) => item.type === type);
+  const percentValue = matchedMeme?.percent ?? 0;
+
+  const handleNavigateToMemeTest = () => {
+    router.push("/meme-test");
+  };
+  const handleOpenHomeInNewTab = () => {
+    window.open("/", "_blank");
+  };
+  const handleNavigateToRankPage = () => {
+    router.push("/meme-test/rank");
+  };
 
   return (
-    <div className="relative w-full max-w-[393px] bg-pink-200">
-      <header className="sticky top-0 z-100 flex h-12 w-full items-center justify-between bg-yellow-200 px-4 font-bold">
-        <div className="flex items-center">
-          <ChevronLeft className="h-5 w-5" />
-        </div>
-        <div className="flex-1 text-center">콘텐츠 과몰입 테스트</div>
-        <div className="h-5 w-5" />
-      </header>
+    <div className="flex w-full flex-col bg-pink-200 px-0">
+      <Header onBack={() => router.push("/meme-test")} />
 
       <main className="flex flex-col items-center gap-5 px-4 pt-6 pb-10 text-center">
         <div className="text-2xl font-bold">
@@ -86,12 +84,12 @@ export default function ResultPage() {
         </div>
         <div>
           전체 테스트 참여자 중{" "}
-          <span className="font-bold">{data.percent[type] || 0}%</span>가 같은
+          <span className="font-bold">{percentValue || 0}%</span>가 같은
           유형입니다.
         </div>
 
         <img
-          src={`/assets/moono/${user.characterProfile.type.toLowerCase()}-moono.png`}
+          src={`/assets/moono/${type.toLowerCase()}-moono.png`}
           className="w-[40%]"
           alt="무너"
         />
@@ -159,15 +157,6 @@ export default function ResultPage() {
             </p>
           </div>
           <div className="flex w-[90%] flex-col gap-4">
-            {plans.map((plan) => (
-              <PlanCard
-                key={plan.rank}
-                rank={plan.rank}
-                title={plan.title}
-                subtitle={plan.subtitle}
-                detail={plan.detail}
-              />
-            ))}
             <p className="text-[11px] text-black">
               본 테스트는 LG유플러스와의 협업을 통해 제작되었으며, <br />
               테스트 결과에 기반한 추천 요금제는 모두 LG유플러스의 요금제입니다.
@@ -191,12 +180,14 @@ export default function ResultPage() {
             className="w-[80px]"
             alt="화살표"
           />
-          <button className="rounded-full bg-pink-400 px-9 py-4 font-bold text-black">
+          <button
+            onClick={handleOpenHomeInNewTab}
+            className="rounded-full bg-pink-400 px-9 py-4 font-bold text-black">
             무너에게 요금제 상담하기
           </button>
         </div>
 
-        <div className="rounded-lgp-4 mt-10 flex w-[100%] flex-col items-center text-[14px]">
+        <div className="mt-10 flex w-[100%] flex-col items-center rounded-lg p-4 text-[14px]">
           <div className="mb-2 flex flex-col items-center">
             <p
               style={{ fontFamily: "kkubulim" }}
@@ -220,9 +211,9 @@ export default function ResultPage() {
           <div className="mt-4 flex w-[90%] flex-col items-center justify-between">
             <ShareSection
               title="내 결과 공유하기"
-              count={data.shareCount || 0}
+              count={data?.shareCount || 0}
               id={decryptedId}
-              shareUrl={`/meme-test/result/[encryptedId]`}
+              shareUrl={`/meme-test/result/${encryptedId}`}
             />
             <div className="rounded-md p-3 text-[11px] leading-tight text-gray-800">
               <ul className="list-disc space-y-1 text-left">
@@ -243,10 +234,14 @@ export default function ResultPage() {
         <div
           style={{ fontFamily: "kkubulim" }}
           className="mt-6 flex w-[90%] flex-col gap-3 text-2xl">
-          <button className="rounded-lg bg-pink-400 py-3 text-black shadow-md">
+          <button
+            onClick={handleNavigateToMemeTest}
+            className="rounded-lg bg-pink-400 py-3 text-black shadow-md">
             테스트 다시하기
           </button>
-          <button className="rounded-lg bg-yellow-300 py-3 text-black shadow-md">
+          <button
+            onClick={handleNavigateToRankPage}
+            className="rounded-lg bg-yellow-300 py-3 text-black shadow-md">
             전체 유형 확인하기
           </button>
         </div>

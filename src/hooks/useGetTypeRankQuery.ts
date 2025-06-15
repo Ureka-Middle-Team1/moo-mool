@@ -1,15 +1,22 @@
 import { client } from "@/lib/axiosInstance";
+import { MemeType } from "@/store/memeTypeData";
 import { useQuery } from "@tanstack/react-query";
 
 export type Moono = {
+  type: string;
   label: string;
   image: string;
   score: number;
+  percent: number;
 };
 
 export type TypeRankResponse = {
+  percent: Record<MemeType, number>;
+  shareCount: number;
   participantCount: number;
+  sharedCount: number;
   moonos: Moono[];
+  percent: Record<string, number>;
 };
 
 export const useGetTypeRankQuery = () => {

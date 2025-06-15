@@ -27,8 +27,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, user }) {
       if (session.user) {
+        session.user.id = user.id;
         session.user.email = user.email;
-        session.user.name = user.name;
+        session.user.name = user.name ?? "홍길동";
       }
       return session;
     },

@@ -9,7 +9,13 @@ export enum MemeTypeEnum {
   Books = "꼬꼬무너",
 }
 
-export type MemeType = "Saving" | "Youtube" | "SNS" | "Chat" | "Call" | "Books";
+export type MemeType =
+  | "Saving"
+  | "Youtube"
+  | "SNS"
+  | "Chat"
+  | "Calling"
+  | "Books";
 
 export const getMemeTypeLabel = (type: MemeType) => {
   const labelMap: Record<MemeType, string> = {
@@ -17,7 +23,7 @@ export const getMemeTypeLabel = (type: MemeType) => {
     Youtube: "팝콘 무너",
     SNS: "인싸 무너",
     Chat: "투머니톡커 무너",
-    Call: "여보세무너",
+    Calling: "여보세무너",
     Books: "꼬꼬무너",
   };
   return labelMap[type];
