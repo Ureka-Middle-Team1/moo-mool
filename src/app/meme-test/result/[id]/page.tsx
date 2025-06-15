@@ -211,7 +211,7 @@ export default function ResultPage() {
           <div className="mt-4 flex w-[90%] flex-col items-center justify-between">
             <ShareSection
               title="내 결과 공유하기"
-              count={data?.shareCount || 0}
+              count={data?.sharedCount || 0}
               id={decryptedId}
               shareUrl={`/meme-test/result/${encryptedId}`}
             />

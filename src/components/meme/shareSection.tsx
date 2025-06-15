@@ -1,3 +1,4 @@
+// 링크 공유 시 invitedId를 localStorage에 저장
 "use client";
 
 import { Share2, Link } from "lucide-react";
@@ -7,7 +8,7 @@ import { useEncryptedUserId } from "@/hooks/useEncryptedUserId";
 interface ShareSectionProps {
   title: string;
   count: number;
-  id: string;
+  id: string; //현재 로그인한 사용자 id (inviter)
   shareUrl: string;
   isEncrypted?: boolean;
 }
@@ -25,7 +26,6 @@ export default function ShareSection({
   const getFullUrl = () => {
     const domain =
       process.env.NEXT_PUBLIC_SHARE_DOMAIN || window.location.origin;
-
     return `${domain}${
       shareUrl.includes("[encryptedId]") && encryptedId
         ? shareUrl.replace("[encryptedId]", encryptedId)
@@ -35,6 +35,11 @@ export default function ShareSection({
 
   const handleShare = async () => {
     const fullUrl = getFullUrl();
+
+    // 공유한 사람의 ID를 localStorage에 저장 -> 이후 테스트 완료 시 초대한 사람의 invited_count 증가
+    if (id) {
+      localStorage.setItem("inviterId", id);
+    }
 
     if (navigator.share) {
       try {
