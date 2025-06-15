@@ -120,7 +120,7 @@ export async function POST(request: Request) {
     topStages.sort((a, b) => priority.indexOf(a) - priority.indexOf(b));
 
     const topStage = topStages[0];
-    await prisma.userCharacterProfile.upsert({
+    await prisma.UserCharacterProfile.upsert({
       where: { user_id: userId },
       update: {
         plan_id: planId,
