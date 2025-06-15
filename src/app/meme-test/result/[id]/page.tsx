@@ -16,7 +16,7 @@ import {
   renderHighlightedText,
 } from "@/utils/textUtils";
 import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
+import Header from "@/components/meme/Header";
 
 export default function ResultPage() {
   const router = useRouter();
@@ -76,27 +76,7 @@ export default function ResultPage() {
 
   return (
     <div className="flex w-full flex-col bg-pink-200 px-0">
-      <header className="sticky top-0 z-[100] mb-2 flex h-12 w-full items-center justify-between bg-yellow-200 px-4">
-        <div className="flex items-center">
-          <ChevronLeft onClick={handleClick} className="h-5 w-5" />
-        </div>
-
-        <div
-          style={{ fontFamily: "kkubulim" }}
-          className="font-nomal flex flex-1 items-center justify-center space-x-1">
-          <span>콘텐츠 과몰입 테스트</span>
-          <X className="h-3 w-3" />
-          <Image
-            src="/assets/icons/U_plus.png"
-            alt="U+ 로고"
-            width={20}
-            height={16}
-            className="object-contain"
-          />
-        </div>
-
-        <div className="h-5 w-5" />
-      </header>
+      <Header onBack={() => router.push("/meme-test")} />
 
       <main className="flex flex-col items-center gap-5 px-4 pt-6 pb-10 text-center">
         <div className="text-2xl font-bold">
