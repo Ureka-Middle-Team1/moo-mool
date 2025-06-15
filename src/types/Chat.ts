@@ -45,7 +45,7 @@ export type Message = {
   role: "user" | "bot";
   content: string;
   type?: MessageType; // 기본 "text"
-  planData?: ParsedPlan;
+  planData?: ParsedPlanWithID;
 };
 
 export type RawPlan = {
@@ -58,14 +58,19 @@ export type RawPlan = {
   v_tel: { _text: string };
 };
 
-export type ParsedPlan = {
+export interface ParsedPlan {
   name: string;
   data: string;
   voice: string;
   sms: string;
   price: string;
   tel: string;
-};
+}
+
+// 요금제 정보를 DB로부터 받아올 때, id 또한 추가적으로 필요한 상황 -> 그럴 때 사용하는 ParsedPlanWithID
+export interface ParsedPlanWithID extends ParsedPlan {
+  id: number;
+}
 
 // 해당 내용은 Smart Choice API 요청 시에 리턴되는 값의 자료형
 export type PlanApiResponse = {
@@ -75,9 +80,9 @@ export type PlanApiResponse = {
 
 // 해당 내용은 챗봇에서 최종 결과를 낼 때 리턴되는 값의 자료형
 export type ChatApiResponse = {
-  result: ParsedPlan[];
-  subscribe: string;
-  success: boolean;
+  result?: ParsedPlanWithID[];
+  subscribe?: string;
+  success?: boolean;
 };
 
 export function parsePlans(raw: PlanApiResponse): ParsedPlan[] {

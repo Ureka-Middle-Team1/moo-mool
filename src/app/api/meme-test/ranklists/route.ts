@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { MemeType } from "@/store/memeTypeData";
 
 const typeNameMap: Record<string, string> = {
   SNS: "인싸 무너",
@@ -48,7 +49,7 @@ export async function GET() {
 
   // moonos 배열 생성
   const moonos = Object.keys(typeNameMap).map((type) => ({
-    type,
+    type: type as MemeType,
     label: typeNameMap[type],
     image: `${type}-moono`,
     percent: percent[type],

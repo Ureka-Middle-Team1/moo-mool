@@ -3,7 +3,7 @@ import { MemeType } from "@/store/memeTypeData";
 import { useQuery } from "@tanstack/react-query";
 
 export type Moono = {
-  type: string;
+  type: MemeType;
   label: string;
   image: string;
   score: number;
@@ -15,7 +15,6 @@ export type TypeRankResponse = {
   participantCount: number;
   sharedCount: number;
   moonos: Moono[];
-  percent: Record<string, number>;
 };
 
 export const useGetTypeRankQuery = () => {

@@ -15,8 +15,9 @@ export function useGetFinalPlanInChatbot(options?: Options) {
     }) => client.post("/chatbot-plan", input).then((res) => res.data),
     retry: 3,
     onSuccess: (data) => {
-      options?.onSuccess?.(data);
-      console.log("chatbot 요금제 추천 결과:", data);
+      if (options?.onSuccess) {
+        options.onSuccess(data); // 이 부분이 빠졌다면 의도대로 작동하지 않음!
+      }
     },
     onError: (error) => {
       console.error("chatbot 추천 실패:", error);

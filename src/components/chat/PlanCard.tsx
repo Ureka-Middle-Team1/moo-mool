@@ -5,17 +5,18 @@ import {
   CardAction,
   CardContent,
 } from "@/components/ui/card";
-import { ParsedPlan } from "@/types/Chat";
+import { ParsedPlanWithID } from "@/types/Chat";
 import { Badge } from "../ui/badge";
 
 export default function PlanCard({
+  id,
   name,
   data,
   voice,
   sms,
   price,
   tel,
-}: ParsedPlan) {
+}: ParsedPlanWithID) {
   return (
     <Card className="w-full max-w-xs border-0 shadow-lg">
       <CardHeader className="relative flex items-start justify-between px-4 pb-2">
