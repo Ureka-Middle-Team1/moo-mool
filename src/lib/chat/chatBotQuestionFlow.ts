@@ -1,5 +1,11 @@
 // chatBotQuestionFlow.ts (src/lib/questionFlowMap.ts로 분리 가능)
 export const questionFlow: Record<number, Record<string, number>> = {
+  0: {
+    // "정확한 추천 vs 자연스러운 대화 모드" 분기처리
+    FSM: 1, // 정확한 추천 모드 → 1번 질문으로
+    FREETALK: -1, // 자연스러운 대화 흐름 분기 신호
+    INVALID: 0, // 다시 물어보기
+  },
   1: {
     YES: 3,
     NO: 2,
@@ -67,6 +73,7 @@ export const questionFlow: Record<number, Record<string, number>> = {
 
 // 각 질문에 대해서 여기에다가 매핑해 놓을게
 export const questionTextMap: Record<number, string> = {
+  0: "넌 혹시 자연스러운 대화를 원해? 아니면 정확한 요금제 추천을 원해?",
   1: "혹시 넌 무제한 요금제 쓰는 중이야? 요금제를 실제로 쓸 사람 기준으로 얘기해줘!",
   2: "넌 그러면 휴대폰으로 영상이나 게임 서비스 같이 데이터 많이 쓰는 서비스들 자주 이용할 것 같아?",
   3: "무제한 요금제가 꼭 필요하다고 생각해?",
