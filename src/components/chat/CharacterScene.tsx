@@ -9,6 +9,8 @@ import { useChatStore } from "@/store/useChatStore";
 import { useTTSStore } from "@/store/useTTSStore";
 import { useEffect, useRef, useState } from "react";
 import SpeechBubble from "./SpeechBubble";
+import PlanCard from "./PlanCard";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function CharacterScene() {
   const { speak } = useTTS();
@@ -18,8 +20,9 @@ export default function CharacterScene() {
   const getLastBotMessage = useChatStore((state) => state.getLastBotMessage);
 
   const prevBotMessageRef = useRef<string | null>(null);
-  const latestBotMsg = getLastBotMessage();
+  const hasInteracted = useRef<boolean>(false);
 
+  const latestBotMsg = getLastBotMessage();
   const lastMessage = messages[messages.length - 1];
   const isWaitingForBot = lastMessage?.role === "user" && !isSpeaking;
 
@@ -37,6 +40,15 @@ export default function CharacterScene() {
     }, 50);
   };
 
+  // 최초 1회 사용자 클릭 시 TTS 허용
+  useEffect(() => {
+    const handleClick = () => {
+      hasInteracted.current = true;
+    };
+    window.addEventListener("click", handleClick, { once: true });
+    return () => window.removeEventListener("click", handleClick);
+  }, []);
+
   // 모델 클릭 시 수동 발화
   const handleSpeak = () => {
     const lastBotMessage = getLastBotMessage();
@@ -48,12 +60,12 @@ export default function CharacterScene() {
     speak(lastBotMessage.content);
   };
 
-  // messages 변경 감지하여 자동 발화
+  // messages 변경 감지하여 자동 발화 (상호작용 이후에만 허용)
   useEffect(() => {
     const latestBotMsg = getLastBotMessage();
     if (!latestBotMsg) return;
+    if (!hasInteracted.current) return; // 사용자 상호작용 없으면 skip
 
-    // 중복 방지: 이미 읽은 메시지면 무시
     if (latestBotMsg.content !== prevBotMessageRef.current) {
       prevBotMessageRef.current = latestBotMsg.content;
       startStreaming(latestBotMsg.content);
@@ -61,12 +73,33 @@ export default function CharacterScene() {
     }
   }, [messages]);
 
+  const shouldShowPlanCard =
+    lastMessage?.role === "bot" &&
+    lastMessage?.type === "plan" &&
+    lastMessage?.planData;
+
   return (
-    <div className="relative flex h-[80%] w-full items-center justify-center">
-      {/* 💬 말풍선 표시 */}
+    <div className="relative flex h-[80%] w-full flex-col items-center justify-center">
+      {/* 말풍선 */}
       {isSpeaking && latestBotMsg?.content && (
         <SpeechBubble text={streamingText} />
       )}
+
+      {/* 최종 요금제 카드 애니메이션 */}
+      <AnimatePresence>
+        {shouldShowPlanCard && (
+          <motion.div
+            key="plan-card"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}>
+            <PlanCard {...lastMessage.planData!} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 문어 3D */}
       <Canvas
         style={{ width: "60%", height: "50%" }}
         camera={{ position: [0, 2, 4], fov: 35 }}>
@@ -83,6 +116,20 @@ export default function CharacterScene() {
           enableRotate={false}
         />
       </Canvas>
+      <AnimatePresence>
+        {!hasInteracted.current && (
+          <motion.div
+            key="click-guide"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="mt-3 text-sm text-gray-500">
+            클릭해서 시작해보세요 👆
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <ShadowRing
         isActive={isSpeaking}
         color="bg-pink-400"
