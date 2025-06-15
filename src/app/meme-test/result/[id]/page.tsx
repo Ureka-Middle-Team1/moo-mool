@@ -64,13 +64,13 @@ export default function ResultPage() {
   const matchedMeme = data?.moonos.find((item) => item.type === type);
   const percentValue = matchedMeme?.percent ?? 0;
 
-  const handleClick = () => {
+  const handleNavigateToMemeTest = () => {
     router.push("/meme-test");
   };
-  const handleClick_moomool = () => {
+  const handleOpenHomeInNewTab = () => {
     window.open("/", "_blank");
   };
-  const handelClick_rank = () => {
+  const handleNavigateToRankPage = () => {
     router.push("/meme-test/rank");
   };
 
@@ -181,7 +181,7 @@ export default function ResultPage() {
             alt="화살표"
           />
           <button
-            onClick={handleClick_moomool}
+            onClick={handleOpenHomeInNewTab}
             className="rounded-full bg-pink-400 px-9 py-4 font-bold text-black">
             무너에게 요금제 상담하기
           </button>
@@ -235,12 +235,12 @@ export default function ResultPage() {
           style={{ fontFamily: "kkubulim" }}
           className="mt-6 flex w-[90%] flex-col gap-3 text-2xl">
           <button
-            onClick={handleClick}
+            onClick={handleNavigateToMemeTest}
             className="rounded-lg bg-pink-400 py-3 text-black shadow-md">
             테스트 다시하기
           </button>
           <button
-            onClick={handelClick_rank}
+            onClick={handleNavigateToRankPage}
             className="rounded-lg bg-yellow-300 py-3 text-black shadow-md">
             전체 유형 확인하기
           </button>
