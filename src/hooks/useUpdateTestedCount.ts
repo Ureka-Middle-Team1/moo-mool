@@ -1,5 +1,5 @@
+import { client } from "@/lib/axiosInstance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 
 // ✅ id를 mutate 함수에 전달하게 수정
 export const useUpdateTestedCount = () => {
@@ -7,7 +7,7 @@ export const useUpdateTestedCount = () => {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const res = await axios.post("/api/user/tested-count", { userId: id });
+      const res = await client.post("/user/tested-count", { userId: id });
       return res.data;
     },
     onSuccess: () => {
