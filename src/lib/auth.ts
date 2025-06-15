@@ -1,7 +1,7 @@
 import Kakao from "next-auth/providers/kakao";
-import { NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "./prisma";
+import { NextAuthOptions } from "next-auth";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -17,9 +17,9 @@ export const authOptions: NextAuthOptions = {
       profile(profile) {
         return {
           id: profile.id,
-          name: profile.properties?.nickname,
-          email: profile.kakao_account?.email,
-          image: profile.properties?.profile_image,
+          name: profile.properties?.nickname as string,
+          email: profile.kakao_account?.email as string,
+          image: profile.properties?.profile_image as string,
         };
       },
     }),
@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = user.id;
         session.user.email = user.email;
-        session.user.name = user.name ?? "홍길동";
+        session.user.name = user.name;
       }
       return session;
     },

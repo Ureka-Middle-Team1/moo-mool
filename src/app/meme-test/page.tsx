@@ -2,6 +2,7 @@
 
 import ShareSection from "@/components/meme/shareSection";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
+import { useUpdateTestedCount } from "@/hooks/useUpdateTestedCount";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -20,7 +21,7 @@ export default function TestHomePage() {
   console.log("Top Moonos:", topMoonos);
 
   const handleStart = () => {
-    const randomId = Math.random().toString(36).substring(2, 10); // 예: "a9x8k3lf"
+    const randomId = Math.random().toString(36).substring(2, 10);
     router.push(`/meme-test/${randomId}`);
   };
 
