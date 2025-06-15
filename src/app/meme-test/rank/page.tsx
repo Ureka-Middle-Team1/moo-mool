@@ -45,7 +45,7 @@ export default function RankingPage() {
   console.log("Top Moonos:", topMoonos);
 
   return (
-    <div className="flex w-full flex-col bg-pink-200 px-0">
+    <div className="flex h-full w-full flex-col bg-pink-200 px-0">
       <Header onBack={() => router.back()} />
 
       <div className="flex flex-col items-center gap-4 px-4 pt-6 pb-10">
