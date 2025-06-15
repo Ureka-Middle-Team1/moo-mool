@@ -3,39 +3,12 @@
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import { useRouter } from "next/navigation";
 import Header from "@/components/meme/Header";
-
-// 각 type별 설명과 해시태그 추가
-const moonoMeta: Record<string, { description: string; tags: string[] }> = {
-  SNS: {
-    description: '"좋아요 놀러줘~💓 필터는 진심이야!"',
-    tags: ["#오늘도_셀카한장", "#팔로우미플리즈", "#인스타중독러"],
-  },
-  Youtube: {
-    description: '"오늘도 넷플릭스와 유튜브가 날 부른다!"',
-    tags: ["#정주행은_못참지", "#하루종일_재생중", "#팝콘들고_출발"],
-  },
-  Chat: {
-    description: '"전화는 부담스러워... 톡은 언제든 환영!"',
-    tags: ["#카톡속도가빛의속도", "#문자한줄로끝내기", "#채팅마스터"],
-  },
-  Calling: {
-    description: '"톡 말고 전화해! 목소리가 국룰이야~"',
-    tags: ["#수다요정_등장", "#전화가_먼저야", "#하루통화5시간"],
-  },
-  Books: {
-    description: '"모르는 건 못 참아~ 바로 검색 각!"',
-    tags: ["#호기심천국", "#지식이최고의무기", "#검색은내운명"],
-  },
-  Saving: {
-    description: '"쓸 땐 쓰더라고, 아낄 땐 확실하게!"',
-    tags: ["#1원까지_관리함", "#가계부요정", "#알뜰살뜰짠돌이"],
-  },
-};
+import { memeTypeData } from "@/store/memeTypeData";
+import type { MemeType } from "@/store/memeTypeData";
 
 export default function RankingPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useGetTypeRankQuery();
-
   if (isLoading)
     return <div className="mt-10 text-center font-medium">로딩 중...</div>;
   if (isError || !data)
@@ -50,11 +23,11 @@ export default function RankingPage() {
 
       <div className="flex flex-col items-center gap-4 px-4 pt-6 pb-10">
         {topMoonos.map((moono, index) => {
-          const meta = moonoMeta[moono.type];
+          const meta = memeTypeData[moono.type as MemeType];
 
           return (
             <div
-              key={index}
+              key={moono.type}
               className="relative flex h-[105px] w-[95%] items-center gap-2 rounded-xl border-1 border-pink-400 bg-white px-4 py-3">
               {/* 좌측: 설명 + 태그 */}
               <div className="flex flex-1 flex-row items-center gap-4">
@@ -71,9 +44,11 @@ export default function RankingPage() {
                   <span className="mb-[3px] text-2xl font-bold">
                     {moono.label}
                   </span>
-                  <p className="mb-1 text-sm text-black">{meta.description}</p>
+                  <p className="mb-1 text-sm text-black">
+                    {meta.shortDescription}
+                  </p>
                   <div className="flex gap-1 text-[11px] whitespace-nowrap text-black">
-                    {meta.tags.map((tag, i) => (
+                    {meta.hashtagText.split(" ").map((tag, i) => (
                       <span
                         key={i}
                         style={{ fontFamily: "kkubulim" }}
@@ -82,7 +57,7 @@ export default function RankingPage() {
                           className="absolute bottom-[0.2em] left-0 -z-10 h-[0.3em] w-full bg-pink-400"
                           aria-hidden="true"
                         />
-                        {tag}
+                        #{tag}
                       </span>
                     ))}
                   </div>
