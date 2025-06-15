@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { client } from "@/lib/axiosInstance";
 import { AxiosError } from "axios";
-import { Plan } from "@/types/plan";
+import { Plan } from "@/types/Chat";
 
 export const useGetRecommendedPlanQuery = (): UseQueryResult<
   Plan[],
