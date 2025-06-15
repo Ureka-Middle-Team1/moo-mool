@@ -1,4 +1,4 @@
-import { Message } from "@/types/message";
+import { Message } from "@/types/Chat";
 import ChatMessage from "./ChatMessage";
 import { useChatStore } from "@/store/useChatStore";
 
