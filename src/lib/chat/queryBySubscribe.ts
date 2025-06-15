@@ -1,7 +1,8 @@
 // lib/chat/queryBySubscribe.ts
 
-import { ParsedPlan } from "@/types/Chat";
+import { ParsedPlan, ParsedPlanWithID } from "@/types/Chat";
 import { prisma } from "@/lib/prisma"; // Prisma 사용 시
+import { dbPlanToParsedPlanWithID } from "./dbPlanToParsedPlanWithID";
 
 /*
   구독 요금제 관련한 정보를 DB로부터 검색해서 가져오는 queryBySubscribe
@@ -12,8 +13,8 @@ export async function queryBySubscribe({
   subscribe,
 }: {
   smartChoicePlans: ParsedPlan[] | undefined;
-  subscribe: string | undefined;
-}): Promise<ParsedPlan[]> {
+  subscribe: string;
+}): Promise<ParsedPlanWithID[]> {
   // map 함수 사용해서, 이름 문자열 배열로 반환해야 한다
   const names = smartChoicePlans?.map((plan) => plan.name);
 
@@ -30,7 +31,7 @@ export async function queryBySubscribe({
 
   if (perfectMatches.length > 0) {
     // 경우 1에 대한 조회 결과가 존재하는 경우
-    return perfectMatches;
+    return perfectMatches.map(dbPlanToParsedPlanWithID);
   }
 
   // 경우 2 - 이름+구독 일치 요금제가 없을 때 => fallback 전략 수행
@@ -44,5 +45,5 @@ export async function queryBySubscribe({
   });
 
   // Smart Choice와는 관계 없는.. 오직 DB의 구독제 관련 정보를 보고 뽑아온 애들
-  return subscribeOnly;
+  return subscribeOnly.map(dbPlanToParsedPlanWithID);
 }
