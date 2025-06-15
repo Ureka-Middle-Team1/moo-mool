@@ -8,6 +8,13 @@ export async function POST(req: NextRequest) {
   // 1. 받아온 req에 대해서 json으로 파싱
   const { smartChoicePlans, subscribe } = await req.json();
 
+  // smartChoicePlans가 undefined로 넘어올 경우가 있을 수 있음, 간단한 방어 코드 추가
+  if (smartChoicePlans === undefined) {
+    return NextResponse.json({
+      success: false, // 이 경우에는 false를 반환
+    });
+  }
+
   // 2. 분기 전략 고르기 (해당 로직은 selectPlanStrategy에서..)
   const strategy = selectPlanStrategy({
     smartChoicePlans,

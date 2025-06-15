@@ -80,7 +80,7 @@ export type PlanApiResponse = {
 
 // 해당 내용은 챗봇에서 최종 결과를 낼 때 리턴되는 값의 자료형
 export type ChatApiResponse = {
-  result: ParsedPlanWithID[];
+  result?: ParsedPlanWithID[];
   subscribe?: string;
   success?: boolean;
 };
