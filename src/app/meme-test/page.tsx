@@ -26,7 +26,7 @@ export default function TestHomePage() {
   };
 
   return (
-    <div className="flex h-[852px] w-full flex-col bg-pink-200 px-0">
+    <div className="flex h-full w-full flex-col bg-pink-200 px-0">
       {/* 상단 로고 영역 */}
       <div className="flex items-start px-3">
         <img src="/assets/icons/logo.png" alt="logo" className="w-24" />
