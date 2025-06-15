@@ -2,10 +2,12 @@
 
 import ShareSection from "@/components/meme/shareSection";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function TestHomePage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const { data, isLoading, isError } = useGetTypeRankQuery();
   if (isLoading)
     return <div className="mt-10 text-center font-medium">로딩 중...</div>;
@@ -52,12 +54,14 @@ export default function TestHomePage() {
 
         <hr className="my-3 w-[90%] border border-pink-400" />
 
-        <ShareSection
-          title="테스트 공유하기"
-          count={data.sharedCount}
-          id={"cmbuegejd00008xasyblmrxq1"}
-          shareUrl="/meme-test"
-        />
+        {session?.user?.id && (
+          <ShareSection
+            title="테스트 공유하기"
+            count={data.sharedCount}
+            id={session.user.id}
+            shareUrl="/meme-test"
+          />
+        )}
 
         <div className="mb-8 flex w-[90%] flex-col gap-4 rounded-lg border-1 border-pink-400 bg-white p-4 shadow-md">
           {topMoonos.map((moono, index) => (

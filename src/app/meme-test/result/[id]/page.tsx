@@ -5,12 +5,10 @@ import { ChevronLeft, X } from "lucide-react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
 import TrendBar from "@/components/chart/TrendBar";
-// import PlanCard from "@/components/plan/planCard";
 export const dynamic = "force-dynamic";
 
 import { decrypt } from "@/utils/crypto";
 import { useUser } from "@/hooks/useUser";
-// import { useGetRecommendedPlanQuery } from "@/hooks/useGetRecommendedPlanQuery";
 import { getMemeTypeLabel, MemeType, memeTypeData } from "@/store/memeTypeData";
 import {
   parseSentences,
@@ -26,10 +24,11 @@ export default function ResultPage() {
 
   const params = useParams();
   const encryptedId = params.id as string;
-  /* 복호화 */
+
   const decryptedId = encryptedId
     ? decrypt(decodeURIComponent(encryptedId))
     : null;
+
   const {
     data: user,
     isLoading: isUserLoading,
@@ -49,16 +48,6 @@ export default function ResultPage() {
       <p className="text-center">사용자 정보를 불러오는 데 실패했습니다.</p>
     );
   }
-  const dummyPlans = [
-    {
-      rank: 1,
-      title: "요금제 A",
-      subtitle: "합리적인 선택",
-      detail: "월 33,000원 / 데이터 10GB",
-    },
-  ];
-
-  const plans = dummyPlans;
 
   if (!user.characterProfile) {
     return (
@@ -67,8 +56,8 @@ export default function ResultPage() {
       </p>
     );
   }
-  const type = user.characterProfile?.type || "Saving";
-  const profile = user.characterProfile;
+
+  const type: MemeType = (user.characterProfile.type as MemeType) || "Saving";
   const { descriptionText, hashtagText } = memeTypeData[type];
   const splitSentences = parseSentences(descriptionText);
   const hashtags = parseHashtags(hashtagText);
@@ -84,6 +73,7 @@ export default function ResultPage() {
   const handelClick_rank = () => {
     router.push("/meme-test/rank");
   };
+
   return (
     <div className="flex w-full flex-col bg-pink-200 px-0">
       <header className="sticky top-0 z-[100] mb-2 flex h-12 w-full items-center justify-between bg-yellow-200 px-4">
@@ -119,7 +109,7 @@ export default function ResultPage() {
         </div>
 
         <img
-          src={`/assets/moono/${user.characterProfile.type.toLowerCase()}-moono.png`}
+          src={`/assets/moono/${type.toLowerCase()}-moono.png`}
           className="w-[40%]"
           alt="무너"
         />
@@ -187,15 +177,6 @@ export default function ResultPage() {
             </p>
           </div>
           <div className="flex w-[90%] flex-col gap-4">
-            {/* {plans.map((plan) => (
-              <PlanCard
-                key={plan.rank}
-                rank={plan.rank}
-                title={plan.title}
-                subtitle={plan.subtitle}
-                detail={plan.detail}
-              />
-            ))} */}
             <p className="text-[11px] text-black">
               본 테스트는 LG유플러스와의 협업을 통해 제작되었으며, <br />
               테스트 결과에 기반한 추천 요금제는 모두 LG유플러스의 요금제입니다.
@@ -250,7 +231,7 @@ export default function ResultPage() {
           <div className="mt-4 flex w-[90%] flex-col items-center justify-between">
             <ShareSection
               title="내 결과 공유하기"
-              count={data?.sharedCount || 0}
+              count={data?.shareCount || 0}
               id={decryptedId}
               shareUrl={`/meme-test/result/${encryptedId}`}
             />

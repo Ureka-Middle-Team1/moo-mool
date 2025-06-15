@@ -17,6 +17,7 @@ import {
 import { Answer } from "@/types/answer";
 import { useRouter } from "next/navigation";
 import { encrypt } from "@/utils/crypto";
+import { useSession } from "next-auth/react";
 
 const difficultyNumberMap: Record<Difficulty, number | null> = {
   low: 1,
@@ -50,6 +51,7 @@ export default function TestQuestionPage() {
   const answers = useQuestionStore((state) => state.answers);
   const { mutate: submitAnswers } = useSubmitAnswers();
   const { data, isLoading, error } = useGetQuestions();
+  const { data: session } = useSession();
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -98,9 +100,15 @@ export default function TestQuestionPage() {
     setAnswer(answer);
 
     if (currentIndex === questions.length - 1) {
-      const encrypted = encrypt("cmbuegejd00008xasyblmrxq1");
+      console.log("세션 id ", session?.user.id);
+      if (!session?.user?.id) {
+        const callbackUrl = encodeURIComponent(window.location.href);
+        router.push(`login?callbackUrl=${callbackUrl}`);
+        return;
+      }
+      const encrypted = encrypt(session.user.id);
       submitAnswers({
-        userId: "cmbuegejd00008xasyblmrxq1",
+        userId: session.user.id,
         planId: 1,
         answers,
       });
