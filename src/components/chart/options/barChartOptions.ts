@@ -44,8 +44,32 @@ export const barChartOptions: ChartOptions<"bar"> = {
       callbacks: {
         label: (context: TooltipItem<"bar">) => {
           const label = context.dataset.label || "";
-          const value = context.parsed.x;
-          return `${label}: ${value}%`;
+          const value = context.raw as number;
+          const index = context.dataIndex;
+
+          let displayValue = "";
+
+          switch (index) {
+            case 0:
+              displayValue = `월 ${value} 원`;
+              break;
+            case 1:
+              displayValue = `월 ${value} MB`;
+              break;
+            case 2:
+              displayValue = `다 쓰면 ${value} Mbps`;
+              break;
+            case 3:
+              displayValue = `부가통화 ${value} 분`;
+              break;
+            case 4:
+              displayValue = value === 100 ? "기본제공 O" : "기본제공 X";
+              break;
+            default:
+              displayValue = `${value}`;
+          }
+
+          return `${label}: ${displayValue}`;
         },
       },
     },

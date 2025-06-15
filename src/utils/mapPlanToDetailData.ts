@@ -40,7 +40,7 @@ export function mapPlanToDetailData(
   const priceScore = 100 - normalize(plan.price, 10000, 105000);
   const dataScore = normalize(
     (plan.dataAmountMb ?? 0) > 999999 ? 300000 : (plan.dataAmountMb ?? 0),
-    0,
+    -100000,
     300000
   );
   const speedScore = normalize(plan.overageSpeedMbps ?? 0, 0, 5);
