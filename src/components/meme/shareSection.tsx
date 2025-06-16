@@ -74,7 +74,7 @@ export default function ShareSection({
 
   return (
     <>
-      <div className="mb-2 flex w-[90%] items-center justify-center gap-2">
+      <div className="mb-5 flex w-[90%] items-center justify-center gap-2 font-bold">
         <p className="text-[15px] text-black">{title}</p>
         <div className="flex items-center gap-1">
           <Share2 className="h-[15px] w-[15px] text-black" />

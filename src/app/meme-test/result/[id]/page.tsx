@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { ChevronLeft, X } from "lucide-react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
@@ -17,6 +17,7 @@ import {
 } from "@/utils/textUtils";
 import { useParams, useRouter } from "next/navigation";
 import Header from "@/components/meme/Header";
+import Spinner from "@/components/ui/spinner";
 
 export default function ResultPage() {
   const router = useRouter();
@@ -34,6 +35,10 @@ export default function ResultPage() {
     isLoading: isUserLoading,
     isError: isUserError,
   } = useUser(decryptedId || "");
+
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [bannerLoaded, setBannerLoaded] = useState(false);
+  const [stampLoaded, setStampLoaded] = useState(false);
 
   if (!encryptedId || !decryptedId) {
     return <p>잘못된 접근입니다.</p>;
@@ -88,11 +93,19 @@ export default function ResultPage() {
           유형입니다.
         </div>
 
-        <img
-          src={`/assets/moono/${type.toLowerCase()}-moono.png`}
-          className="w-[40%]"
-          alt="무너"
-        />
+        <div className="relative aspect-[300/160] w-[40%]">
+          {!imgLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Spinner />
+            </div>
+          )}
+          <img
+            src={`/assets/moono/${type.toLowerCase()}-moono.png`}
+            alt="무너"
+            className={`w-full object-contain ${imgLoaded ? "block" : "hidden"}`}
+            onLoad={() => setImgLoaded(true)}
+          />
+        </div>
 
         <div className="w-[90%] rounded-lg border-1 border-pink-400 bg-white p-4">
           <div className="flex flex-col items-center">
@@ -151,7 +164,7 @@ export default function ResultPage() {
 
         <div className="mt-3 flex w-[100%] flex-col items-center gap-2 rounded-lg">
           <div className="mt-5 flex gap-2 text-2xl">
-            <img src="\assets\icons\U_plus.png" className="h-[30px]" />
+            <img src="/assets/icons/U_plus.png" className="h-[30px]" />
             <p style={{ fontFamily: "kkubulim" }} className="text-[25px]">
               추천 요금제
             </p>
@@ -168,15 +181,25 @@ export default function ResultPage() {
           <p style={{ fontFamily: "kkubulim" }} className="text-[25px]">
             더 정확한 요금제 추천을 원한다면?
           </p>
-          <img
-            src="\assets\icons\moomool_banner.png"
-            className="w-[70%]"
-            alt="무물배너"
-          />
+
+          <div className="relative mt-4 aspect-[400/200] w-[70%]">
+            {!bannerLoaded && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Spinner />
+              </div>
+            )}
+            <img
+              src="/assets/icons/moomool_banner.png"
+              alt="무물배너"
+              className={`w-full object-contain ${bannerLoaded ? "block" : "hidden"}`}
+              onLoad={() => setBannerLoaded(true)}
+            />
+          </div>
+
           <p className="text-lg">무물에서</p>
           <p className="text-lg font-bold">진짜 나한테 맞는 요금제 찾기</p>
           <img
-            src="\assets\icons\arrow.png"
+            src="/assets/icons/arrow.png"
             className="w-[80px]"
             alt="화살표"
           />
@@ -203,11 +226,19 @@ export default function ResultPage() {
               히든 프로필 획득하자!
             </p>
           </div>
-          <img
-            src="\assets\icons\stamp_area.png"
-            alt="도장 미션"
-            className="mx-auto w-[100%]"
-          />
+          <div className="relative w-full">
+            {!stampLoaded && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white">
+                <Spinner />
+              </div>
+            )}
+            <img
+              src="/assets/icons/stamp_area.png"
+              alt="도장 미션"
+              className={`mx-auto w-full ${stampLoaded ? "block" : "hidden"}`}
+              onLoad={() => setStampLoaded(true)}
+            />
+          </div>
           <div className="mt-4 flex w-[90%] flex-col items-center justify-between">
             <ShareSection
               title="내 결과 공유하기"

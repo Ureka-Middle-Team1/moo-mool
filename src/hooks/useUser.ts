@@ -10,5 +10,8 @@ export const useUser = (id: string) => {
       return data.user;
     },
     enabled: !!id,
+    staleTime: 0, // 캐시를 바로 오래된 걸로 판단하고, 항상 서버 요청 시도
+    refetchOnMount: "always", // 컴포넌트 마운트 시 무조건 refetch
+    refetchOnWindowFocus: false,
   });
 };
