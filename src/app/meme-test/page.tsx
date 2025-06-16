@@ -1,15 +1,18 @@
 "use client";
 
 import ShareSection from "@/components/meme/shareSection";
+import { useAnimatedCount } from "@/hooks/useAnimatedCount";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
-import { useUpdateTestedCount } from "@/hooks/useUpdateTestedCount";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function TestHomePage() {
   const router = useRouter();
   const { data: session } = useSession();
   const { data, isLoading, isError } = useGetTypeRankQuery();
+  const animatedCount = useAnimatedCount(data?.participantCount);
+
   if (isLoading)
     return <div className="mt-10 text-center font-medium">로딩 중...</div>;
   if (isError || !data)
@@ -18,18 +21,22 @@ export default function TestHomePage() {
   const topMoonos = (data?.moonos ?? [])
     .sort((a, b) => b.percent - a.percent)
     .slice(0, 2);
-  console.log("Top Moonos:", topMoonos);
 
   const handleStart = () => {
     const randomId = Math.random().toString(36).substring(2, 10);
-    router.push(`/meme-test/${randomId}`);
+    if (!session) {
+      const callbackUrl = `/meme-test/${randomId}`;
+      router.push(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+    } else {
+      router.push(`/meme-test/${randomId}`);
+    }
   };
 
   return (
     <div className="flex h-full w-full flex-col bg-pink-200 px-0">
       {/* 상단 로고 영역 */}
       <div className="flex items-start px-3">
-        <img src="/assets/icons/logo.png" alt="logo" className="w-24" />
+        <img src="/assets/icons/logo.png" alt="logo" className="w-20" />
       </div>
 
       {/* 중앙 콘텐츠 */}
@@ -37,32 +44,38 @@ export default function TestHomePage() {
         <img
           src="/assets/icons/meme-test-home.png"
           alt="home"
-          className="w-[80%]"
+          className="w-[90%]"
         />
 
         <button
           onClick={handleStart}
-          className="mb-4 w-4/5 max-w-[250px] cursor-pointer rounded-lg bg-pink-400 px-6 py-2 text-lg text-white shadow-md transition hover:bg-yellow-500">
+          className="mb-5 w-[40%] cursor-pointer rounded-lg bg-pink-400 px-6 py-2 text-lg font-semibold text-white shadow-md transition hover:bg-yellow-500">
           시작하기
         </button>
 
         <div className="text-center">
-          <p className="text-lg font-medium text-black">참여자 수</p>
-          <p className="text-lg font-medium text-black">
-            {data.participantCount}
+          <p className="mb-2 text-xl font-bold text-black">
+            <span className="relative z-10 inline-block">
+              <span
+                className="absolute bottom-[0.3em] left-0 -z-10 h-[0.26em] w-full bg-yellow-500"
+                aria-hidden="true"
+              />
+              참여자 수
+            </span>
+          </p>
+          <p className="text-2xl font-bold text-black">
+            {animatedCount.toLocaleString("ko-KR")}
           </p>
         </div>
 
-        <hr className="my-3 w-[90%] border border-pink-400" />
+        <hr className="my-5 w-[90%] border border-pink-400" />
 
-        {session?.user?.id && (
-          <ShareSection
-            title="테스트 공유하기"
-            count={data.sharedCount}
-            id={session.user.id}
-            shareUrl="/meme-test"
-          />
-        )}
+        <ShareSection
+          title="테스트 공유하기"
+          count={data.sharedCount ?? 0}
+          id={session?.user.id ?? 0}
+          shareUrl="/meme-test"
+        />
 
         <div className="mb-8 flex w-[90%] flex-col gap-4 rounded-lg border-1 border-pink-400 bg-white p-4 shadow-md">
           {topMoonos.map((moono, index) => (
@@ -79,7 +92,9 @@ export default function TestHomePage() {
                 />
               </div>
               <div className="flex w-1/2 items-center justify-center pr-3">
-                <p className="text-sm font-medium text-black">{moono.label}</p>
+                <p className="text-sm font-semibold text-black">
+                  {moono.label}
+                </p>
               </div>
             </div>
           ))}

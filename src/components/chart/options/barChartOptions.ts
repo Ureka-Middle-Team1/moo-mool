@@ -8,10 +8,16 @@ export const barChartOptions: ChartOptions<"bar"> = {
   layout: {
     padding: { right: 24 },
   },
-  animation: {
-    duration: 1000,
-    easing: "easeOutQuart",
+  animations: {
+    x: {
+      duration: 1000,
+      easing: "easeOutQuart",
+    },
+    y: {
+      duration: 0,
+    },
   },
+
   scales: {
     x: {
       beginAtZero: true,
