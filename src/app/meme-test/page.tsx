@@ -59,7 +59,7 @@ export default function TestHomePage() {
     <div className="flex h-full w-full flex-col bg-pink-200 px-0">
       {/* 상단 로고 영역 */}
       <div className="flex items-start px-3">
-        <img src="/assets/icons/logo.png" alt="logo" className="w-24" />
+        <img src="/assets/icons/logo.png" alt="logo" className="w-20" />
       </div>
 
       {/* 중앙 콘텐츠 */}
@@ -67,23 +67,31 @@ export default function TestHomePage() {
         <img
           src="/assets/icons/meme-test-home.png"
           alt="home"
-          className="w-[80%]"
+          className="w-[90%]"
         />
 
         <button
           onClick={handleStart}
-          className="mb-4 w-4/5 max-w-[250px] cursor-pointer rounded-lg bg-pink-400 px-6 py-2 text-lg text-white shadow-md transition hover:bg-yellow-500">
+          className="mb-5 w-[40%] cursor-pointer rounded-lg bg-pink-400 px-6 py-2 text-lg font-semibold text-white shadow-md transition hover:bg-yellow-500">
           시작하기
         </button>
 
         <div className="text-center">
-          <p className="text-lg font-bold text-black">참여자 수</p>
+          <p className="mb-2 text-xl font-bold text-black">
+            <span className="relative z-10 inline-block">
+              <span
+                className="absolute bottom-[0.3em] left-0 -z-10 h-[0.26em] w-full bg-yellow-500"
+                aria-hidden="true"
+              />
+              참여자 수
+            </span>
+          </p>
           <p className="text-2xl font-bold text-black">
-            {animatedCount.toLocaleString()}
+            {animatedCount.toLocaleString("ko-KR")}
           </p>
         </div>
 
-        <hr className="my-3 w-[90%] border border-pink-400" />
+        <hr className="my-5 w-[90%] border border-pink-400" />
 
         <ShareSection
           title="테스트 공유하기"
@@ -107,7 +115,9 @@ export default function TestHomePage() {
                 />
               </div>
               <div className="flex w-1/2 items-center justify-center pr-3">
-                <p className="text-sm font-medium text-black">{moono.label}</p>
+                <p className="text-sm font-semibold text-black">
+                  {moono.label}
+                </p>
               </div>
             </div>
           ))}
