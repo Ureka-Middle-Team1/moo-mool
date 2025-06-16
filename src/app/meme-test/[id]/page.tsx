@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useQuestionStore } from "@/store/questionStore";
 import { useSubmitAnswers } from "@/hooks/useSubmitAnswers";
@@ -50,10 +50,10 @@ export default function TestQuestionPage() {
   const setAnswer = useQuestionStore((state) => state.setAnswer);
   const answers = useQuestionStore((state) => state.answers);
   const { mutate: submitAnswers } = useSubmitAnswers();
-  // const { mutate } = useUpdateTestedCount();
   const { data, isLoading, error } = useGetQuestions();
   const { data: session } = useSession();
   const queryClient = useQueryClient();
+  const pathname = usePathname();
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -105,7 +105,7 @@ export default function TestQuestionPage() {
 
     if (isLastQuestion) {
       if (!session?.user?.id) {
-        const callbackUrl = encodeURIComponent(window.location.pathname);
+        const callbackUrl = encodeURIComponent(pathname);
         router.push(`login?callbackUrl=${callbackUrl}`);
         return;
       }
