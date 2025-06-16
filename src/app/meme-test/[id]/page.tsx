@@ -99,7 +99,7 @@ export default function TestQuestionPage() {
 
     if (currentIndex === questions.length - 1) {
       if (!session?.user?.id) {
-        const callbackUrl = encodeURIComponent(window.location.href);
+        const callbackUrl = encodeURIComponent(window.location.pathname);
         router.push(`login?callbackUrl=${callbackUrl}`);
         return;
       }

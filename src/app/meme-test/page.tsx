@@ -2,7 +2,6 @@
 
 import ShareSection from "@/components/meme/shareSection";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
-import { useUpdateTestedCount } from "@/hooks/useUpdateTestedCount";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -18,11 +17,15 @@ export default function TestHomePage() {
   const topMoonos = (data?.moonos ?? [])
     .sort((a, b) => b.percent - a.percent)
     .slice(0, 2);
-  console.log("Top Moonos:", topMoonos);
 
   const handleStart = () => {
     const randomId = Math.random().toString(36).substring(2, 10);
-    router.push(`/meme-test/${randomId}`);
+    if (!session) {
+      const callbackUrl = `/meme-test/${randomId}`;
+      router.push(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+    } else {
+      router.push(`/meme-test/${randomId}`);
+    }
   };
 
   return (
@@ -55,14 +58,12 @@ export default function TestHomePage() {
 
         <hr className="my-3 w-[90%] border border-pink-400" />
 
-        {session?.user?.id && (
-          <ShareSection
-            title="테스트 공유하기"
-            count={data.sharedCount}
-            id={session.user.id}
-            shareUrl="/meme-test"
-          />
-        )}
+        <ShareSection
+          title="테스트 공유하기"
+          count={data.sharedCount ?? 0}
+          id={session?.user.id ?? 0}
+          shareUrl="/meme-test"
+        />
 
         <div className="mb-8 flex w-[90%] flex-col gap-4 rounded-lg border-1 border-pink-400 bg-white p-4 shadow-md">
           {topMoonos.map((moono, index) => (
