@@ -10,6 +10,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { barChartOptions } from "./options/barChartOptions";
+import { useState, useEffect } from "react";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
@@ -24,11 +25,23 @@ const TendencyBarChart = ({
   name,
   labels = ["월정액", "데이터", "속도", "음성통화", "문자"],
 }: TendencyBarChartProps) => {
+  const [chartKey, setChartKey] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (data) {
+      setChartKey(Date.now());
+    }
+  }, [data]);
+
+  if (chartKey === null) {
+    return null;
+  }
+
   const datasets = Array.isArray(data[0])
     ? [
         {
           label: name,
-          data: (data as [number[], number[]])[0],
+          data: [...(data as [number[], number[]])[0]],
           backgroundColor: "rgba(255, 188, 31, 0.6)",
           borderWidth: 0,
           categoryPercentage: 0.4,
@@ -36,7 +49,7 @@ const TendencyBarChart = ({
         },
         {
           label: "내 요금제",
-          data: (data as [number[], number[]])[1],
+          data: [...(data as [number[], number[]])[1]],
           backgroundColor: "rgba(255, 99, 132, 0.6)",
           borderWidth: 0,
           categoryPercentage: 0.4,
@@ -46,7 +59,7 @@ const TendencyBarChart = ({
     : [
         {
           label: name,
-          data: data as number[],
+          data: [...(data as number[])],
           backgroundColor: "rgba(255, 188, 31, 0.6)",
           borderWidth: 0,
           categoryPercentage: 0.4,
@@ -56,7 +69,11 @@ const TendencyBarChart = ({
 
   return (
     <div className="w-full" style={{ height: 320 }}>
-      <Bar data={{ labels, datasets }} options={barChartOptions} />
+      <Bar
+        key={chartKey}
+        data={{ labels, datasets }}
+        options={barChartOptions}
+      />
     </div>
   );
 };
