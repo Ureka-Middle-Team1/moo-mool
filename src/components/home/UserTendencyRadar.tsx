@@ -29,16 +29,15 @@ export default function UserTendencyRadar() {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
 
-  // 로그인 안 된 경우 → PlaceHolder 반환
-  if (!userId && status !== "loading") {
-    return <EmptyRadarPlaceholder />;
-  }
-
   const { data, isLoading } = useGetUserCharacterProfile(userId ?? "");
 
-  if (status === "loading" || isLoading) return <div>로딩 중...</div>;
-  if (!data) return <EmptyRadarPlaceholder />;
+  if (status === "loading" || isLoading) {
+    return <div>로딩 중...</div>;
+  }
 
+  if (!userId || !data) {
+    return <EmptyRadarPlaceholder />;
+  }
   const radarData = {
     labels: ["SNS", "Youtube", "Chat", "Calling", "Books", "Saving"],
     datasets: [
