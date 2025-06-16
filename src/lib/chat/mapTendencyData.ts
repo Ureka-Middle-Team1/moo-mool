@@ -56,8 +56,8 @@ export function mapTendencyData(
     case 10:
       if (!isNaN(Number(normalized))) patch.dis = normalized;
       break;
-    case 12:
-      if (normalized !== "INVALID") patch.subscribe = normalized;
+    case 11:
+      if (normalized !== "INVALID") patch.subscribe = normalized; // 정규화된 답변 자체가 구독 서비스 관련 정보
     default:
       break;
   }

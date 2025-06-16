@@ -15,7 +15,7 @@ export function getNextQuestionId(
 
   console.log("다음 질문 흐름 찾기: ", flow[normalized]);
   if (flow[normalized] === undefined) {
-    return flow["__DEFAULT__"]; // 12번 질문에 대해서 이것이 유용히 사용될 것임
+    return flow["__DEFAULT__"]; // 11번 질문에 대해서 이것이 유용히 사용될 것임
   } else {
     return flow[normalized];
   }
