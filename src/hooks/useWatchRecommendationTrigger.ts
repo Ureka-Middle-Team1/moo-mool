@@ -7,7 +7,8 @@ import { useFreeTalkStore } from "@/store/useFreeTalkStore";
 
 // 요금제 추천 로직과 관련해서 지속적으로 상태를 지켜 보고 있는 useWatchRecommendationTrigger
 export function useWatchRecommendationTrigger() {
-  const { currentQuestionId, clearMessages } = useChatStore();
+  const { currentQuestionId, clearMessages, setCurrentQuestionId } =
+    useChatStore();
   const { userTendencyInfo } = useTendencyStore();
   const { messages, shouldTriggerSummary, lastSummary } = useFreeTalkStore();
   const { hasRecommended, setHasRecommended } = useChatStore();
@@ -29,7 +30,9 @@ export function useWatchRecommendationTrigger() {
 
     if (hasRecommended) {
       // 이미 추천을 받았다면, 채팅창은 clear될 필요 있음 (chatStore에 저장되어 있는 내용 모두 삭제)
+      setCurrentQuestionId(0);
       clearMessages();
+      setHasRecommended(false);
     }
 
     // "자연스러운 대화" 모드에서 요약 트리거 조건
