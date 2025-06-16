@@ -15,7 +15,8 @@ export default function TextPage() {
   const isSubmittingRef = useRef(false);
   const { handleNormalizedAnswer } = useHandleAnswer();
 
-  const { messages, appendMessage, currentQuestionId } = useChatStore();
+  const { messages, appendMessage, currentQuestionId, setCurrentQuestionId } =
+    useChatStore();
 
   // 스크롤 아래로 이동
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function TextPage() {
         해당 흐름으로 전환하도록 진행
       */
       if (currentQuestionId === -1) {
-        await handleFreeTalkAnswer(userMessage); // "자연스러운 질문"에 대한 응답처리하는 메소드 호출
+        await handleFreeTalkAnswer(userMessage, setCurrentQuestionId); // "자연스러운 질문"에 대한 응답처리하는 메소드 호출
         return;
       } else {
         // 2. 외부 처리 로직 실행 (정규화, 업데이트, 다음 질문 등)
