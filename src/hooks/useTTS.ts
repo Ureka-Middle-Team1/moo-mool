@@ -1,10 +1,11 @@
 import { useTTSStore } from "@/store/useTTSStore";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { fetchTTSFromServer } from "@/lib/fetchTTS"; // 위 함수 위치에 따라 경로 조정
 
 export function useTTS() {
   const { setIsSpeaking } = useTTSStore();
   const [isLoading, setIsLoading] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const speak = async (text: string) => {
     if (!text) return;
@@ -15,8 +16,10 @@ export function useTTS() {
     try {
       const audioContent = await fetchTTSFromServer(text); // ← axios로 호출
       const audioBlob = base64ToBlob(audioContent, "mp3");
-      const audio = new Audio(URL.createObjectURL(audioBlob));
+      // const audio = new Audio(URL.createObjectURL(audioBlob));
 
+      const audio = audioRef.current!;
+      audio.src = URL.createObjectURL(audioBlob);
       audio.onended = () => setIsSpeaking(false);
       audio.onerror = () => {
         console.error("오디오 재생 실패");
@@ -32,9 +35,14 @@ export function useTTS() {
     }
   };
 
-  return { speak, isLoading };
-}
+  const initAudio = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+    }
+  };
 
+  return { speak, isLoading, initAudio };
+}
 
 function base64ToBlob(base64: string, fileType: string): Blob {
   const byteString = atob(base64);
