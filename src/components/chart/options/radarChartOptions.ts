@@ -1,6 +1,6 @@
 import { ChartOptions } from "chart.js";
 
-//Radar 차트 옵션 정의
+// Radar 차트 옵션 정의
 export const getRadarChartOptions = (
   isRounded: boolean
 ): ChartOptions<"radar"> => ({
@@ -22,7 +22,7 @@ export const getRadarChartOptions = (
       },
       grid: {
         color: "rgba(0, 0, 0, 0.1)",
-        circular: !isRounded, //옵션 파라미터에 따라 원형/다각형 결정
+        circular: !isRounded, // 옵션 파라미터에 따라 원형/다각형 결정
       },
       angleLines: { color: "rgba(0, 0, 0, 0.1)" },
       pointLabels: {
@@ -33,9 +33,5 @@ export const getRadarChartOptions = (
   },
   plugins: {
     legend: { display: false },
-  },
-  animation: {
-    duration: 1000,
-    easing: "easeOutQuart",
   },
 });
