@@ -42,22 +42,29 @@ export function useNormalizeAnswerFlow() {
         appendMessage({
           role: "bot",
           content:
-            "자연스러운 대화 모드로 진입합니다. 요금제 추천 관련해서 자연스레 물어봐 주세요.",
+            "나랑 자연스럽게 대화하고 싶구나! 요금제 추천 관련해서 자연스럽게 물어봐줘~",
         });
         setCurrentQuestionId(nextId); // 현재 questionID를 -1로 설정
+      }
+
+      let contentToAppend: string; // useChatStore에 append할 메시지
+
+      if (data.normalizedValue === "INVALID") {
+        // 유효하지 않은 답변("INVALID"일 경우에..)일 경우, 재질문 텍스트 추가
+        contentToAppend = `다시 물어볼게. ${questionTextMap[questionId]}`;
+      } else if (nextId !== undefined) {
+        contentToAppend = questionTextMap[nextId];
       } else {
-        const contentToAppend =
-          nextId !== undefined && data.normalizedValue !== "INVALID"
-            ? questionTextMap[nextId]
-            : questionTextMap[questionId];
+        contentToAppend = questionTextMap[questionId];
+      }
 
-        if (contentToAppend) {
-          appendMessage({ role: "bot", content: contentToAppend });
-        }
-
-        if (nextId !== undefined && data.normalizedValue !== "INVALID") {
-          setCurrentQuestionId(nextId);
-        }
+      if (contentToAppend !== undefined) {
+        // contentToAppend가 undefined가 아닌 경우에만.. (즉, 유효한 경우에만..)
+        appendMessage({ role: "bot", content: contentToAppend }); // appendMessage에 메시지 붙이기
+      }
+      if (data.normalizedValue !== "INVALID" && nextId !== undefined) {
+        // 유효하지 않은 답변이 아니고, nextId 또한 undefined가 아닐 경우, nextId로 currentQuestionId 갱신
+        setCurrentQuestionId(nextId);
       }
     },
 
