@@ -1,3 +1,5 @@
+"use client";
+
 import HomeBanner from "@/components/home/HomeBanner";
 import HomeHeader from "@/components/home/HomeHeader";
 import HomeRecommendedPlan from "@/components/home/HomeRecommendedPlan";
