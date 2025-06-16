@@ -1,4 +1,3 @@
-import PlanCard from "@/components/chat/PlanCard";
 import EmptyRadarPlaceholder from "@/components/home/EmptyRadarPlaceholder";
 import HomeBanner from "@/components/home/HomeBanner";
 import HomeHeader from "@/components/home/HomeHeader";
@@ -6,11 +5,8 @@ import HomeRecommendedPlan from "@/components/home/HomeRecommendedPlan";
 import PopularPlansList from "@/components/home/PopularPlansList";
 import UserTendencyRadar from "@/components/home/UserTendencyRadar";
 import TopGradient from "@/components/planDetail/TopGradient";
-import { useSession } from "next-auth/react";
 
 export default function HomePage() {
-  const isTested = true; // 테스트 완료 여부
-
   return (
     <div className="flex flex-col items-center">
       <TopGradient />
@@ -27,14 +23,9 @@ export default function HomePage() {
             <h2 className="text-zinc-900x text-lg font-semibold">
               나의 콘텐츠 성향
             </h2>
-            {isTested ? <UserTendencyRadar /> : <EmptyRadarPlaceholder />}
+            <UserTendencyRadar />
           </div>
-          <div className="flex w-full flex-col items-center justify-center gap-3">
-            <h2 className="text-zinc-900x flex w-full text-lg font-semibold">
-              나의 추천 요금제
-            </h2>
-            <HomeRecommendedPlan />
-          </div>
+          <HomeRecommendedPlan />
           <div className="flex w-full flex-col">
             <h2 className="text-lg font-semibold text-zinc-900">
               요즘 뜨는 요금제

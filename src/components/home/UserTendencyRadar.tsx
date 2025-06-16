@@ -13,8 +13,9 @@ import {
 import { useSession } from "next-auth/react";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import type { ChartOptions } from "chart.js";
+import EmptyRadarPlaceholder from "./EmptyRadarPlaceholder";
 
-// Chart.js 컴포넌트 등록
+// Chart.js 등록
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -27,10 +28,16 @@ ChartJS.register(
 export default function UserTendencyRadar() {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
+
+  // 로그인 안 된 경우 → PlaceHolder 반환
+  if (!userId && status !== "loading") {
+    return <EmptyRadarPlaceholder />;
+  }
+
   const { data, isLoading } = useGetUserCharacterProfile(userId ?? "");
 
   if (status === "loading" || isLoading) return <div>로딩 중...</div>;
-  if (!data) return <div>데이터가 없습니다</div>;
+  if (!data) return <EmptyRadarPlaceholder />;
 
   const radarData = {
     labels: ["SNS", "Youtube", "Chat", "Calling", "Books", "Saving"],
@@ -40,7 +47,7 @@ export default function UserTendencyRadar() {
         data: [
           data.sns_level,
           data.youtube_level,
-          data.sms_level, // Chat은 SMS 레벨로
+          data.sms_level,
           data.call_level,
           data.book_level,
           data.saving_level,

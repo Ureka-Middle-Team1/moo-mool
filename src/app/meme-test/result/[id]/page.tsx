@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronLeft, X } from "lucide-react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
 import TrendBar from "@/components/chart/TrendBar";
