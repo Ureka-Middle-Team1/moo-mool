@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { userId: string } }
-) {
-  const { userId } = params;
+export async function GET(req: NextRequest, context: any) {
+  const userId = context.params.userId;
 
   try {
     const profile = await prisma.userCharacterProfile.findUnique({
       where: { user_id: userId },
       include: {
-        plan: true, // 연결된 요금제 정보도 포함
+        plan: true,
       },
     });
 
