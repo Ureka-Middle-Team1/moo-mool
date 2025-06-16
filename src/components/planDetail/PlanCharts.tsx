@@ -25,6 +25,7 @@ export default function PlanCharts({ data, mode }: PlanChartsProps) {
       <div className="ml-[2rem] h-80 w-[85%]">
         <TendencyBarChart
           data={mode === "basic" ? data.bar : [data.bar, data.compare]}
+          rawData={mode === "basic" ? data.raw : [data.raw, data.compareRaw]}
           name={data.name}
         />
       </div>

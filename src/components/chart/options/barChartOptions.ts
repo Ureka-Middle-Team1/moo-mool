@@ -49,9 +49,29 @@ export const barChartOptions: ChartOptions<"bar"> = {
     tooltip: {
       callbacks: {
         label: (context: TooltipItem<"bar">) => {
-          const label = context.dataset.label || "";
-          const value = context.parsed.x;
-          return `${label}: ${value}%`;
+          const dataset = context.dataset as any;
+          const index = context.dataIndex;
+          const rawData = dataset.rawData?.[index];
+
+          //만약 rawData가 없는 경우 fallback 처리
+          if (rawData === undefined) {
+            return `${context.dataset.label}: ${context.parsed.x}%`;
+          }
+
+          switch (context.label) {
+            case "월정액":
+              return `월 ${rawData}원`;
+            case "데이터":
+              return `월 ${rawData}MB`;
+            case "속도":
+              return `다 쓰면 ${rawData}Kbps`;
+            case "음성통화":
+              return `${rawData}분`;
+            case "문자":
+              return `혜택 ${rawData}원`;
+            default:
+              return `${rawData}`;
+          }
         },
       },
     },
