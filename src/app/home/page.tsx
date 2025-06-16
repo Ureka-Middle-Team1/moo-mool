@@ -13,7 +13,9 @@ export default function HomePage() {
     <div className="flex flex-col items-center">
       <TopGradient />
       <section className="z-1 flex h-[85%] w-[90%] flex-col items-center">
-        <HomeHeader />
+        <Suspense fallback={<div>성향 불러오는 중...</div>}>
+          <HomeHeader />
+        </Suspense>
         <div className="flex w-full flex-col gap-7 px-3 py-5">
           <div className="flex w-full flex-col gap-3">
             <h2 className="text-lg font-semibold text-zinc-900">
