@@ -1,4 +1,5 @@
 import EmptyRadarPlaceholder from "@/components/home/EmptyRadarPlaceholder";
+import HomeBanner from "@/components/home/HomeBanner";
 import HomeHeader from "@/components/home/HomeHeader";
 import PopularPlansList from "@/components/home/PopularPlansList";
 import TopGradient from "@/components/planDetail/TopGradient";
@@ -11,8 +12,26 @@ export default function HomePage() {
       <TopGradient />
       <section className="z-1 flex h-[85%] w-[90%] flex-col items-center">
         <HomeHeader />
-        {isTested ? <div>hi</div> : <EmptyRadarPlaceholder />}
-        <PopularPlansList />
+        <div className="flex w-full flex-col gap-7 px-3 py-5">
+          <div className="flex w-full flex-col gap-3">
+            <h2 className="text-lg font-semibold text-zinc-900">
+              홍길동님께 딱 맞는 요금제를 찾아볼까요?
+            </h2>
+            <HomeBanner />
+          </div>
+          <div className="flex w-full flex-col gap-3">
+            <h2 className="text-zinc-900x text-lg font-semibold">
+              나의 콘텐츠 성향
+            </h2>
+            {isTested ? <div>Radar</div> : <EmptyRadarPlaceholder />}
+          </div>
+          <div className="flex w-full flex-col gap-3">
+            <h2 className="text-lg font-semibold text-zinc-900">
+              요즘 뜨는 요금제
+            </h2>
+            <PopularPlansList />
+          </div>
+        </div>
       </section>
     </div>
   );
