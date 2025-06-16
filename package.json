@@ -24,6 +24,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
+    "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.16.0",
     "gsap": "^3.13.0",
     "keen-slider": "^6.8.6",

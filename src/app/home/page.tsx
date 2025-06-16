@@ -25,7 +25,7 @@ export default function HomePage() {
             </h2>
             {isTested ? <div>Radar</div> : <EmptyRadarPlaceholder />}
           </div>
-          <div className="flex w-full flex-col gap-3">
+          <div className="flex w-full flex-col">
             <h2 className="text-lg font-semibold text-zinc-900">
               요즘 뜨는 요금제
             </h2>
