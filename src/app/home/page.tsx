@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import HomeBanner from "@/components/home/HomeBanner";
 import HomeHeader from "@/components/home/HomeHeader";
 import HomeRecommendedPlan from "@/components/home/HomeRecommendedPlan";
@@ -20,13 +21,22 @@ export default function HomePage() {
             </h2>
             <HomeBanner />
           </div>
+
           <div className="flex w-full flex-col gap-3">
-            <h2 className="text-zinc-900x text-lg font-semibold">
+            <h2 className="text-lg font-semibold text-zinc-900">
               나의 콘텐츠 성향
             </h2>
-            <UserTendencyRadar />
+            {/*  Suspense로 감싸기 */}
+            <Suspense fallback={<div>성향 분석 불러오는 중...</div>}>
+              <UserTendencyRadar />
+            </Suspense>
           </div>
-          <HomeRecommendedPlan />
+
+          {/* Suspense로 감싸기 */}
+          <Suspense fallback={<div>추천 요금제 불러오는 중...</div>}>
+            <HomeRecommendedPlan />
+          </Suspense>
+
           <div className="flex w-full flex-col">
             <h2 className="text-lg font-semibold text-zinc-900">
               요즘 뜨는 요금제
