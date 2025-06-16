@@ -1,6 +1,6 @@
 import { ChartOptions } from "chart.js";
 
-// Radar 차트 옵션 정의 (dataset 개별 애니메이션으로 관리 중이므로, global animation은 없음)
+// Radar 차트 옵션 정의
 export const getRadarChartOptions = (
   isRounded: boolean
 ): ChartOptions<"radar"> => ({
@@ -15,7 +15,7 @@ export const getRadarChartOptions = (
         stepSize: 20,
         color: "#888",
         backdropColor: "transparent",
-        font: { size: 8, weight: 400 }, // weight를 string으로 변경 (Chart.js v4에서 타입 안정성)
+        font: { size: 8, weight: 400 },
         padding: 18,
         z: 1,
         display: true,
@@ -27,7 +27,7 @@ export const getRadarChartOptions = (
       angleLines: { color: "rgba(0, 0, 0, 0.1)" },
       pointLabels: {
         color: "#666",
-        font: { size: 12, weight: 500 }, // 여기도 string으로 통일
+        font: { size: 12, weight: 500 },
       },
     },
   },
