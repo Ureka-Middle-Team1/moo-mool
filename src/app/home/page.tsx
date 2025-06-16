@@ -2,6 +2,7 @@ import EmptyRadarPlaceholder from "@/components/home/EmptyRadarPlaceholder";
 import HomeBanner from "@/components/home/HomeBanner";
 import HomeHeader from "@/components/home/HomeHeader";
 import PopularPlansList from "@/components/home/PopularPlansList";
+import UserTendencyRadar from "@/components/home/UserTendencyRadar";
 import TopGradient from "@/components/planDetail/TopGradient";
 
 export default function HomePage() {
@@ -23,7 +24,7 @@ export default function HomePage() {
             <h2 className="text-zinc-900x text-lg font-semibold">
               나의 콘텐츠 성향
             </h2>
-            {isTested ? <div>Radar</div> : <EmptyRadarPlaceholder />}
+            {isTested ? <UserTendencyRadar /> : <EmptyRadarPlaceholder />}
           </div>
           <div className="flex w-full flex-col">
             <h2 className="text-lg font-semibold text-zinc-900">
