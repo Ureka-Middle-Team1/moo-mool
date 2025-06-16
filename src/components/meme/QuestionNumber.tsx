@@ -14,7 +14,7 @@ export default function QuestionNumber({
     <div className="items-left mb-10 ml-[30px] flex flex-col justify-center">
       {difficulty === "bonus" ? (
         <Image
-          src={`/assets/moono/${stage}-moono.png`}
+          src={`/assets/moono/${stage.toLowerCase()}-moono.png`}
           alt="보너스 아이콘"
           width={60}
           height={40}

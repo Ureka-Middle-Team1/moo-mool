@@ -1,15 +1,14 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
+
   const handleLogin = () => {
-    const currentUrl = window.location.search.includes("callbackUrl=")
-      ? decodeURIComponent(
-          new URLSearchParams(window.location.search).get("callbackUrl")!
-        )
-      : "/";
-    signIn("kakao", { callbackUrl: currentUrl });
+    signIn("kakao", { callbackUrl });
   };
 
   return (

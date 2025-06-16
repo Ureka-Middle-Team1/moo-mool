@@ -51,7 +51,7 @@ export async function GET() {
   const moonos = Object.keys(typeNameMap).map((type) => ({
     type: type as MemeType,
     label: typeNameMap[type],
-    image: `${type}-moono`,
+    image: `${type.toLowerCase()}-moono`,
     percent: percent[type],
   }));
 
