@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-dynamic";
 import { Suspense } from "react";
 import HomeBanner from "@/components/home/HomeBanner";
 import HomeHeader from "@/components/home/HomeHeader";
