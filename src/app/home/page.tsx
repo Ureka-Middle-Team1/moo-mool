@@ -9,7 +9,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col items-center">
       <TopGradient />
-      <section className="z-1 flex flex-col items-center">
+      <section className="z-1 flex h-[85%] w-[90%] flex-col items-center">
         <HomeHeader />
         {isTested ? <div>hi</div> : <EmptyRadarPlaceholder />}
         <PopularPlansList />
