@@ -17,14 +17,17 @@ export type TypeRankResponse = {
   moonos: Moono[];
 };
 
-export const useGetTypeRankQuery = () => {
+export const useGetTypeRankQuery = (enabled: boolean = true) => {
   return useQuery<TypeRankResponse>({
     queryKey: ["type-rank"],
     queryFn: async () => {
       const { data } = await client.get("/meme-test/ranklists");
       return data;
     },
-    staleTime: 1000 * 60,
+    enabled,
+    staleTime: 0,
     retry: 2,
+    refetchOnMount: "always", // 컴포넌트 마운트 시 항상 refetch
+    refetchOnWindowFocus: false,
   });
 };
