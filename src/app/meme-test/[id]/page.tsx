@@ -50,7 +50,7 @@ export default function TestQuestionPage() {
   const setAnswer = useQuestionStore((state) => state.setAnswer);
   const answers = useQuestionStore((state) => state.answers);
   const { mutate: submitAnswers } = useSubmitAnswers();
-  // const { mutate } = useUpdateTestedCount();
+  const { mutate: updateTestedCount } = useUpdateTestedCount();
   const { data, isLoading, error } = useGetQuestions();
   const { data: session } = useSession();
   const queryClient = useQueryClient();
@@ -128,7 +128,7 @@ export default function TestQuestionPage() {
         },
         {
           onSuccess: () => {
-            // mutate(session.user.id);
+            updateTestedCount(session.user.id);
             queryClient.invalidateQueries({ queryKey: ["getTypeRank"] });
             router.push(`/meme-test/result/${encrypted}`);
           },
