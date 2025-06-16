@@ -58,7 +58,10 @@ export function useNormalizeAnswerFlow() {
         contentToAppend = questionTextMap[questionId];
       }
 
-      appendMessage({ role: "bot", content: contentToAppend }); // appendMessage에 메시지 붙이기
+      if (contentToAppend !== undefined) {
+        // contentToAppend가 undefined가 아닌 경우에만.. (즉, 유효한 경우에만..)
+        appendMessage({ role: "bot", content: contentToAppend }); // appendMessage에 메시지 붙이기
+      }
       if (data.normalizedValue !== "INVALID" && nextId !== undefined) {
         // 유효하지 않은 답변이 아니고, nextId 또한 undefined가 아닐 경우, nextId로 currentQuestionId 갱신
         setCurrentQuestionId(nextId);

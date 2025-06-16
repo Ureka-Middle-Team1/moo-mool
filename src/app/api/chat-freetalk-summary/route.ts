@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { OpenAI } from "openai";
 import path from "path";
 import fs from "fs/promises";
+import { Message } from "@/types/Chat";
 
 export async function POST(req: Request) {
   const { lastSummary, messages } = await req.json();
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
 
   // 3. 템플릿 변수 치환
   const recentMessagesText = messages
-    .map((m: any) => `${m.role}: ${m.content}`)
+    .map((m: Message) => `${m.role}: ${m.content}`)
     .join("\n");
 
   const systemPrompt = systemPromptTemplate // 해당하는 내용으로 prompt 내용 교체
