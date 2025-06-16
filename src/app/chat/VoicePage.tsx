@@ -1,5 +1,14 @@
-import CharacterScene from "@/components/chat/CharacterScene";
+"use client";
+
+import dynamic from "next/dynamic";
 import VoiceFooter from "@/components/chat/VoiceFooter";
+
+const CharacterScene = dynamic(
+  () => import("@/components/chat/CharacterScene"),
+  {
+    ssr: false,
+  }
+);
 
 export default function VoicePage() {
   return (

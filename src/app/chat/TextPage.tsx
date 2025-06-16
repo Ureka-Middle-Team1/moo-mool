@@ -5,8 +5,6 @@ import ChatMessageList from "@/components/chat/ChatMessageList";
 import ChatInputBox from "@/components/chat/ChatInputBox";
 import { useChatStore } from "@/store/useChatStore";
 import { useHandleAnswer } from "@/hooks/useHandleAnswer";
-import { callGPTFreeTalk } from "@/lib/chat/callGPTFreeTalk";
-import { questionTextMap } from "@/lib/chat/chatBotQuestionFlow";
 import { handleFreeTalkAnswer } from "@/lib/chat/handleFreeTalkAnswer";
 
 // "텍스트"로 챗봇 기능을 사용하는 페이지
