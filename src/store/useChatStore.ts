@@ -16,6 +16,8 @@ interface ChatStore {
   appendMessage: (message: Message) => void;
   clearMessages: () => void;
   getLastBotMessage: () => Message | undefined;
+  hasRecommended: boolean; // 추천이 이미 되었는지 여부(요금제 카드 새로고침 해도 한 번만 호출되기 하기 위함)
+  setHasRecommended: (v: boolean) => void;
 }
 
 // 채팅 관련 내용을 localStorage(persist 옵션에 의거)에 저장하는 ChatStore
@@ -36,12 +38,15 @@ export const useChatStore = create<ChatStore>()(
         }
         return undefined;
       },
+      hasRecommended: false,
+      setHasRecommended: (v) => set({ hasRecommended: v }),
     }),
     {
       name: "chat-storage", // localStorage key 이름
       partialize: (state) => ({
         messages: state.messages,
         currentQuestionId: state.currentQuestionId,
+        hasRecommended: state.hasRecommended, // 이 정보도 저장해야 함(새로고침 되어도 유지돼야 함)
       }), // 저장할 필드 제한
     }
   )

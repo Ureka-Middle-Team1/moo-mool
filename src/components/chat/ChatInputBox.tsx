@@ -1,5 +1,6 @@
 import { ArrowUp, Mic } from "lucide-react";
 import { useRef } from "react";
+import { useRouter } from "next/navigation";
 
 interface ChatInputBoxProps {
   input: string;
@@ -16,6 +17,12 @@ export default function ChatInputBox({
 }: ChatInputBoxProps) {
   const formRef = useRef<HTMLFormElement>(null); // 엔터키 중복 방지를 위한 ref
   const isSubmittingRef = useRef(false);
+
+  const router = useRouter();
+
+  const handleMicClick = () => {
+    router.push("?mode=voice");
+  };
 
   return (
     <form
@@ -39,7 +46,10 @@ export default function ChatInputBox({
         className="w-full resize-none bg-[#FFEBAF] text-sm placeholder-[#94A3B8] focus:outline-none"
       />
       <div className="mt-2 flex justify-end gap-3">
-        <button type="button" className="text-[#94A3B8]">
+        <button
+          type="button"
+          className="text-[#94A3B8]"
+          onClick={handleMicClick}>
           <Mic size={20} />
         </button>
         <button type="submit" className="text-[#94A3B8]">

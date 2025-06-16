@@ -5,7 +5,7 @@ import path from "path";
 import axios from "axios";
 
 export async function POST(req: Request) {
-  const { message } = await req.json();
+  const { message, lastSummary } = await req.json();
 
   if (!message || typeof message !== "string") {
     return NextResponse.json(
@@ -44,8 +44,13 @@ export async function POST(req: Request) {
     const response = await axios.post(
       url,
       {
-        model: "gpt-4.1-nano", // 또는 gpt-4.1-nano (권한 여부에 따라 조정)
+        model: "gpt-4.1-nano",
         messages: [
+          // 요약된 대화를 system 메시지로 포함해야 GPT가 "기억"하게 됨
+          {
+            role: "system",
+            content: lastSummary ? `[요약]\n${lastSummary}` : "",
+          },
           { role: "system", content: systemPrompt },
           { role: "user", content: message },
         ],

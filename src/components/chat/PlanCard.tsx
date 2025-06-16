@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { ParsedPlanWithID } from "@/types/Chat";
 import { Badge } from "../ui/badge";
+import { useRouter } from "next/navigation";
 
 export default function PlanCard({
   id,
@@ -17,8 +18,15 @@ export default function PlanCard({
   price,
   tel,
 }: ParsedPlanWithID) {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/plandetail/${id}`);
+  };
   return (
-    <Card className="w-full max-w-xs border-0 shadow-lg">
+    <Card
+      className="w-full max-w-xs cursor-pointer border-0 shadow-lg"
+      onClick={handleClick}>
       <CardHeader className="relative flex items-start justify-between px-4 pb-2">
         <span className="text-sm text-gray-800">LG U+</span>
         <CardAction className="text-sm font-semibold text-pink-600">

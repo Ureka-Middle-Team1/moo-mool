@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronLeft, X } from "lucide-react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
 import TrendBar from "@/components/chart/TrendBar";
 export const dynamic = "force-dynamic";
 
 import { decrypt } from "@/utils/crypto";
-import { useUser } from "@/hooks/useUser";
+import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { getMemeTypeLabel, MemeType, memeTypeData } from "@/store/memeTypeData";
 import {
   parseSentences,
@@ -17,7 +16,7 @@ import {
 } from "@/utils/textUtils";
 import { useParams, useRouter } from "next/navigation";
 import Header from "@/components/meme/Header";
-import Spinner from "@/components/ui/spinner";
+import SuspenseImage from "@/components/meme/SuspenseImage";
 
 export default function ResultPage() {
   const router = useRouter();
@@ -34,11 +33,7 @@ export default function ResultPage() {
     data: user,
     isLoading: isUserLoading,
     isError: isUserError,
-  } = useUser(decryptedId || "");
-
-  const [imgLoaded, setImgLoaded] = useState(false);
-  const [bannerLoaded, setBannerLoaded] = useState(false);
-  const [stampLoaded, setStampLoaded] = useState(false);
+  } = useGetUserInfo(decryptedId || "");
 
   if (!encryptedId || !decryptedId) {
     return <p>잘못된 접근입니다.</p>;
@@ -94,19 +89,15 @@ export default function ResultPage() {
         </div>
 
         <div className="relative aspect-[300/160] w-[40%]">
-          {!imgLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Spinner />
-            </div>
-          )}
-          <img
+          <SuspenseImage
             src={`/assets/moono/${type.toLowerCase()}-moono.png`}
             alt="무너"
-            className={`w-full object-contain ${imgLoaded ? "block" : "hidden"}`}
-            onLoad={() => setImgLoaded(true)}
+            fill={false}
+            width={300}
+            height={160}
+            className="w-full object-contain"
           />
         </div>
-
         <div className="w-[90%] rounded-lg border-1 border-pink-400 bg-white p-4">
           <div className="flex flex-col items-center">
             {/* 해시태그 영역 */}
@@ -183,16 +174,12 @@ export default function ResultPage() {
           </p>
 
           <div className="relative mt-4 aspect-[400/200] w-[70%]">
-            {!bannerLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Spinner />
-              </div>
-            )}
-            <img
+            <SuspenseImage
               src="/assets/icons/moomool_banner.png"
               alt="무물배너"
-              className={`w-full object-contain ${bannerLoaded ? "block" : "hidden"}`}
-              onLoad={() => setBannerLoaded(true)}
+              width={400}
+              height={200}
+              className="w-full object-contain"
             />
           </div>
 
@@ -227,16 +214,12 @@ export default function ResultPage() {
             </p>
           </div>
           <div className="relative w-full">
-            {!stampLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white">
-                <Spinner />
-              </div>
-            )}
-            <img
+            <SuspenseImage
               src="/assets/icons/stamp_area.png"
               alt="도장 미션"
-              className={`mx-auto w-full ${stampLoaded ? "block" : "hidden"}`}
-              onLoad={() => setStampLoaded(true)}
+              width={400}
+              height={200}
+              className="mx-auto w-full"
             />
           </div>
           <div className="mt-4 flex w-[90%] flex-col items-center justify-between">

@@ -14,7 +14,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useStreamingText } from "@/hooks/useStreamingText";
 
 export default function CharacterScene() {
-  const { speak } = useTTS();
+  const { speak, initAudio } = useTTS();
   const isSpeaking = useTTSStore((state) => state.isSpeaking);
 
   const messages = useChatStore((state) => state.messages);
@@ -42,6 +42,7 @@ export default function CharacterScene() {
   useEffect(() => {
     const handleClick = () => {
       hasInteracted.current = true;
+      initAudio();
     };
     window.addEventListener("click", handleClick, { once: true });
     return () => window.removeEventListener("click", handleClick);
@@ -54,6 +55,7 @@ export default function CharacterScene() {
       speak("지금은 대화가 준비되지 않았어요.");
       return;
     }
+    prevBotMessageRef.current = lastBotMessage.content;
     setTriggerCount((c) => c + 1); // 스트리밍 재시작
     speak(lastBotMessage.content);
   };
@@ -66,6 +68,7 @@ export default function CharacterScene() {
 
     if (latestBotMsg.content !== prevBotMessageRef.current) {
       prevBotMessageRef.current = latestBotMsg.content;
+      // setTriggerCount((c) => c + 1);
       speak(latestBotMsg.content); // 훅이 자동 스트리밍하므로 startStreaming 제거
     }
   }, [messages]);
