@@ -1,11 +1,8 @@
-// app/api/chat-freetalk-summary/route.ts
 import axios from "axios";
 import { NextResponse } from "next/server";
 import { OpenAI } from "openai";
 import path from "path";
 import fs from "fs/promises";
-
-const openai = new OpenAI();
 
 export async function POST(req: Request) {
   const { lastSummary, messages } = await req.json();

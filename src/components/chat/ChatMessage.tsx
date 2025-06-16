@@ -13,7 +13,6 @@ export default function ChatMessage({
 }: ChatMessageProps) {
   const isUser = message.role === "user";
   if (message.type === "plan" && message.planData) {
-    console.log("plan 아님?: ", message.type);
     return (
       <div className="flex items-start justify-start gap-2 py-2">
         <img
