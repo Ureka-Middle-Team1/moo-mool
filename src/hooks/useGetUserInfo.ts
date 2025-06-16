@@ -2,7 +2,7 @@ import { client } from "@/lib/axiosInstance";
 import { User } from "@/types/user";
 import { useQuery } from "@tanstack/react-query";
 
-export const useUser = (id: string) => {
+export const useGetUserInfo = (id: string) => {
   return useQuery<User>({
     queryKey: ["user", id],
     queryFn: async () => {
