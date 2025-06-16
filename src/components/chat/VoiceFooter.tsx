@@ -10,7 +10,6 @@ import { Button } from "../ui/button";
 import { useBotResponseGuard } from "@/hooks/useBotResponseGuard";
 import { useVoiceControlStore } from "@/store/useVoiceControlStore";
 import { useChatStore } from "@/store/useChatStore";
-import { callGPTFreeTalk } from "@/lib/chat/callGPTFreeTalk";
 import { handleFreeTalkAnswer } from "@/lib/chat/handleFreeTalkAnswer";
 
 export default function VoiceFooter() {
@@ -34,7 +33,7 @@ export default function VoiceFooter() {
 
       // "자연스러운 대화" 모드인 경우
       if (currentQuestionId === -1) {
-        await handleFreeTalkAnswer(result);
+        await handleFreeTalkAnswer(result, setCurrentQuestionId);
       } else {
         // 아닌 경우
         await handleNormalizedAnswer(result);
