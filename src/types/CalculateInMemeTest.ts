@@ -5,6 +5,9 @@ export type UserMemeTestResult = {
   sns_level: number; // 0~100
   youtube_level: number; // 0~100
   saving_level: number; // 0~100
+  book_level: number;
+  type?: string;
+  plan_id?: number;
 };
 
 // Smart Choice API에 넘길 때는 해당 값들을 각각 string으로 변환해서 넘겨야 한다!

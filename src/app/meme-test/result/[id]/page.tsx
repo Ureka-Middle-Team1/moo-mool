@@ -1,12 +1,13 @@
 "use client";
 
+import React, { useState } from "react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
 import TrendBar from "@/components/chart/TrendBar";
 export const dynamic = "force-dynamic";
 
 import { decrypt } from "@/utils/crypto";
-import { useUser } from "@/hooks/useUser";
+import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { getMemeTypeLabel, MemeType, memeTypeData } from "@/store/memeTypeData";
 import {
   parseSentences,
@@ -32,7 +33,7 @@ export default function ResultPage() {
     data: user,
     isLoading: isUserLoading,
     isError: isUserError,
-  } = useUser(decryptedId || "");
+  } = useGetUserInfo(decryptedId || "");
 
   if (!encryptedId || !decryptedId) {
     return <p>잘못된 접근입니다.</p>;
