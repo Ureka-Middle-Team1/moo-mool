@@ -1,11 +1,25 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useSession, signIn } from "next-auth/react";
+import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function HomeHeader() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const isLoggedIn = !!session?.user;
+  const userId = session?.user?.id;
+
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
+
+  const { data: userCharacterProfile, isLoading } = useGetUserCharacterProfile(
+    userId ?? ""
+  );
+
+  const handleLogin = () => {
+    signIn("kakao", { callbackUrl });
+  };
 
   return (
     <div className="w-full pt-2">
@@ -17,7 +31,11 @@ export default function HomeHeader() {
         {isLoggedIn ? (
           <Avatar className="h-10 w-10 bg-gray-500">
             <AvatarImage
-              src={session.user.image ?? "/assets/moono/books-moono.png"}
+              src={
+                userCharacterProfile?.type
+                  ? `/assets/moono/${userCharacterProfile.type.toLowerCase()}-moono.png`
+                  : session.user.image
+              }
               alt="user-avatar"
               className="scale-80 object-contain"
             />
@@ -25,7 +43,7 @@ export default function HomeHeader() {
           </Avatar>
         ) : (
           <button
-            onClick={() => signIn()}
+            onClick={handleLogin}
             className="rounded-md bg-yellow-300 px-4 py-1 text-sm font-semibold text-zinc-800 shadow-sm transition hover:bg-yellow-400">
             로그인
           </button>
