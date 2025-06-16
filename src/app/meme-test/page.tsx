@@ -1,6 +1,7 @@
 "use client";
 
 import ShareSection from "@/components/meme/shareSection";
+import { useAnimatedCount } from "@/hooks/useAnimatedCount";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -10,31 +11,7 @@ export default function TestHomePage() {
   const router = useRouter();
   const { data: session } = useSession();
   const { data, isLoading, isError } = useGetTypeRankQuery();
-
-  const [animatedCount, setAnimatedCount] = useState(0);
-
-  useEffect(() => {
-    if (!data?.participantCount) return;
-
-    let start = 0;
-    const end = data.participantCount;
-    const duration = 1000;
-    const frameDuration = 16;
-    const totalFrames = Math.round(duration / frameDuration);
-    let frame = 0;
-
-    const counter = setInterval(() => {
-      frame++;
-      const progress = frame / totalFrames;
-      const currentCount = Math.round(end * progress);
-      setAnimatedCount(currentCount);
-
-      if (frame === totalFrames) {
-        clearInterval(counter);
-      }
-    }, frameDuration);
-    return () => clearInterval(counter);
-  }, [data?.participantCount]);
+  const animatedCount = useAnimatedCount(data?.participantCount);
 
   if (isLoading)
     return <div className="mt-10 text-center font-medium">로딩 중...</div>;
