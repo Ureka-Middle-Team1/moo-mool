@@ -192,7 +192,7 @@ export default function ResultPage() {
           />
           <button
             onClick={handleOpenHomeInNewTab}
-            className="rounded-full bg-pink-400 px-9 py-4 font-bold text-black">
+            className="cursor-pointer rounded-full bg-pink-400 px-9 py-4 font-bold text-black">
             무너에게 요금제 상담하기
           </button>
         </div>
@@ -250,12 +250,12 @@ export default function ResultPage() {
           className="mt-6 flex w-[90%] flex-col gap-3 text-2xl">
           <button
             onClick={handleNavigateToMemeTest}
-            className="rounded-lg bg-pink-400 py-3 text-black shadow-md">
+            className="cursor-pointer rounded-lg bg-pink-400 py-3 text-black shadow-md">
             테스트 다시하기
           </button>
           <button
             onClick={handleNavigateToRankPage}
-            className="rounded-lg bg-yellow-300 py-3 text-black shadow-md">
+            className="cursor-pointer rounded-lg bg-yellow-300 py-3 text-black shadow-md">
             전체 유형 확인하기
           </button>
         </div>
