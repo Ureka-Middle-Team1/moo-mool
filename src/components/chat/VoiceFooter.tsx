@@ -34,7 +34,7 @@ export default function VoiceFooter() {
 
       // "자연스러운 대화" 모드인 경우
       if (currentQuestionId === -1) {
-        await handleFreeTalkAnswer(result);
+        await handleFreeTalkAnswer(result, setCurrentQuestionId);
       } else {
         // 아닌 경우
         await handleNormalizedAnswer(result);
