@@ -4,12 +4,13 @@ import NearbyHeader from "@/components/nearby/NearbyHeader";
 import { useNearbySocket } from "@/hooks/useNearbySocket";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
+import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
+import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 
-type NearbyUser = {
+export type NearbyUser = {
   userId: string;
   distance: number;
   angle?: number;
-  emoji?: string;
 };
 
 export default function NearbyPage() {
@@ -26,7 +27,6 @@ export default function NearbyPage() {
   }, [userId]);
 
   useNearbySocket((data: NearbyUser) => {
-    // 유효한 사용자만 반영
     if (
       !data.userId ||
       typeof data.userId !== "string" ||
@@ -54,7 +54,7 @@ export default function NearbyPage() {
     <>
       <NearbyHeader />
       <div className="relative flex h-screen items-center justify-center overflow-hidden bg-white">
-        {[30, 50, 70, 90, 110, 130].map((r, idx) => (
+        {[20, 50, 70, 90, 110, 130].map((r, idx) => (
           <div
             key={`circle-${r}`}
             className="absolute animate-ping rounded-full border border-yellow-300"
@@ -64,7 +64,7 @@ export default function NearbyPage() {
               left: `calc(50% - ${r / 2}vw)`,
               top: `calc(50% - ${r / 2}vw)`,
               animationDelay: `${idx * 0.4}s`,
-              opacity: 0.3,
+              opacity: 0.8,
             }}
           />
         ))}
@@ -75,26 +75,14 @@ export default function NearbyPage() {
 
         {users.map((user) => {
           const angle = user.angle ?? Math.random() * 360;
-          const distance = Math.min(user.distance * 80, 180);
-          const x = Math.cos((angle * Math.PI) / 180) * distance;
-          const y = Math.sin((angle * Math.PI) / 180) * distance;
 
           return (
-            <div
+            <NearbyUserAvatar
               key={`nearby-${user.userId}`}
-              className="absolute flex flex-col items-center text-center"
-              style={{
-                transform: `translate(${x}px, ${y}px)`,
-                left: "50%",
-                top: "50%",
-              }}>
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-yellow-200 text-xl shadow">
-                👤
-              </div>
-              <span className="mt-1 max-w-[80px] text-xs break-all text-gray-400">
-                {user.userId}
-              </span>
-            </div>
+              userId={user.userId}
+              angle={angle}
+              distance={user.distance}
+            />
           );
         })}
       </div>
