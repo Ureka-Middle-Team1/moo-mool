@@ -10,6 +10,8 @@ export interface PlanDetailData {
   tags: string[];
   radar: number[];
   bar: number[];
+  raw: number[];
   compare: number[];
+  compareRaw: number[];
   benefits: Benefit[];
 }
