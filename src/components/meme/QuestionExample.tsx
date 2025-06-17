@@ -11,14 +11,14 @@ export default function QuestionExample({
 }: QuestionExampleProps) {
   if (type === "image" && content) {
     return (
-      <div className="mb-6 flex justify-center">
-        <div className="flex h-[11rem] w-[20rem] items-center justify-center rounded-lg border border-pink-400 bg-white">
+      <div className="mb-6 flex items-center justify-center">
+        <div className="flex w-[20rem] max-w-full items-center justify-center overflow-hidden rounded-lg border border-pink-400 bg-white">
           <SuspenseImage
             src={content}
             alt="예시 이미지"
-            width={300}
-            height={160}
-            className="object-contain"
+            width={9999}
+            height={9999}
+            className="h-auto w-full object-contain"
           />
         </div>
       </div>
