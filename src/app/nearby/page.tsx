@@ -5,12 +5,8 @@ import { useNearbySocket } from "@/hooks/useNearbySocket";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
-
-export type NearbyUser = {
-  userId: string;
-  distance: number;
-  angle?: number;
-};
+import { motion, AnimatePresence } from "framer-motion";
+import { NearbyUser } from "@/types/Nearby";
 
 export default function NearbyPage() {
   const { data: session } = useSession();
@@ -19,28 +15,22 @@ export default function NearbyPage() {
   const [users, setUsers] = useState<NearbyUser[]>([]);
   const myIdRef = useRef<string | null>(null);
 
+  // 컴포넌트 상단에 추가
+  const positionCache = useRef<
+    Map<string, { angle: number; distance: number }>
+  >(new Map());
+
   useEffect(() => {
     if (userId) {
       myIdRef.current = userId;
     }
   }, [userId]);
 
-  useNearbySocket((data: NearbyUser) => {
-    if (
-      !data.userId ||
-      typeof data.userId !== "string" ||
-      data.userId === myIdRef.current
-    ) {
-      console.warn("🔎 유효하지 않거나 본인 userId 무시:", data.userId);
-      return;
-    }
+  useNearbySocket((users: NearbyUser[]) => {
+    // 내 userId는 제외
+    const filtered = users.filter((u) => u.userId !== myIdRef.current);
 
-    console.log("📡 새 사용자 감지:", data.userId);
-
-    setUsers((prev) => {
-      const filtered = prev.filter((u) => u.userId !== data.userId);
-      return [...filtered, data];
-    });
+    setUsers(filtered); // 현재 반경 내 사용자 목록 업데이트
   }, userId);
 
   if (!userId) {
@@ -54,7 +44,7 @@ export default function NearbyPage() {
       <NearbyHeader />
       <div className="relative flex h-screen items-center justify-center overflow-hidden bg-white">
         {/* 배경 파동 원형 */}
-        {[20, 50, 70, 90, 110, 130].map((r, idx) => (
+        {[20, 40, 60, 90, 110, 130].map((r, idx) => (
           <div
             key={`circle-${r}`}
             className="absolute animate-ping rounded-full border border-yellow-300"
@@ -70,27 +60,44 @@ export default function NearbyPage() {
         ))}
 
         {/* 나 표시 (크기 크게 + 보정 위치) */}
-        <NearbyUserAvatar
+        <motion.div
           key={`nearby-me`}
-          userId={userId}
-          angle={0}
-          distance={0}
-          isMe
-        />
+          initial={{ scale: 0, opacity: 0 }} // 처음엔 작고 투명하게
+          animate={{ scale: 1, opacity: 1 }} // 등장 시 커지면서 나타남
+          transition={{ type: "spring", stiffness: 120, damping: 12 }} // 자연스러운 스프링 효과
+        >
+          <NearbyUserAvatar userId={userId} angle={0} distance={0} isMe />
+        </motion.div>
 
         {/* 주변 사용자 표시 */}
-        {users.map((user) => {
-          const angle = user.angle ?? Math.random() * 360;
+        <AnimatePresence>
+          {users.map((user) => {
+            let position = positionCache.current.get(user.userId);
 
-          return (
-            <NearbyUserAvatar
-              key={`nearby-${user.userId}`}
-              userId={user.userId}
-              angle={angle}
-              distance={user.distance}
-            />
-          );
-        })}
+            if (!position) {
+              const angle = Math.random() * 360;
+              const distance = Math.random() * 30 + 40; // [40 ~ 70] 정도 vw 단위
+
+              position = { angle, distance };
+              positionCache.current.set(user.userId, position);
+            }
+
+            return (
+              <motion.div
+                key={`nearby-${user.userId}`}
+                initial={{ scale: 0.5, opacity: 0, y: 10 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.5, opacity: 0, y: 10 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+                <NearbyUserAvatar
+                  userId={user.userId}
+                  angle={position.angle}
+                  distance={position.distance}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
     </>
   );

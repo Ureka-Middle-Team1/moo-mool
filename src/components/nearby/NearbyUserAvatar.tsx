@@ -3,11 +3,12 @@
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import Image from "next/image";
+import { useMemo } from "react";
 
 type Props = {
   userId: string;
-  angle: number;
-  distance: number;
+  angle?: number;
+  distance?: number;
   isMe?: boolean;
 };
 
@@ -18,43 +19,58 @@ export default function NearbyUserAvatar({
   isMe,
 }: Props) {
   const { data: profile } = useGetUserCharacterProfile(userId);
-
   const { data: userInfo } = useGetUserInfo(userId ?? "");
+
   const imageSrc = profile?.type
     ? `/assets/moono/${profile.type.toLowerCase()}-moono.png`
     : "/assets/moono/default-moono.png";
 
-  const boundedDistance = Math.min(distance * 80, 180);
-  const x = Math.cos((angle * Math.PI) / 180) * boundedDistance;
-  const y = Math.sin((angle * Math.PI) / 180) * boundedDistance;
-  const offsetY = isMe ? -55 : 0;
-  const offsetX = isMe ? -37 : 0;
+  // ✅ 랜덤 위치 캐싱: 동일 userId면 angle/distance 유지
+  const { angleDeg, distancePx } = useMemo(() => {
+    const angleDeg = angle ?? Math.random() * 360;
+    const rawDistance = distance ?? Math.random() * 30 + 40; // [40~70]
+    const distancePx = Math.min(rawDistance * 1.5, 180); // px 스케일 조정
+    return { angleDeg, distancePx };
+  }, [userId]);
+
+  const rad = (angleDeg * Math.PI) / 180;
+  const x = Math.cos(rad) * distancePx;
+  const y = Math.sin(rad) * distancePx;
+
+  const offsetY = isMe ? -3.2 : 0;
+  const offsetX = isMe ? -2.2 : 0;
+
+  const size = isMe ? "5rem" : "3rem";
 
   return (
     <div
       className="absolute flex flex-col items-center text-center"
       style={{
-        transform: `translate(${x + offsetX}px, ${y + offsetY}px)`,
+        transform: `translate(calc(-50% + ${x + offsetX}px), calc(-50% + ${y + offsetY}px))`,
         left: "50%",
         top: "50%",
       }}>
       <div
-        className={`relative overflow-hidden rounded-full shadow-md ${
-          isMe ? "h-20 w-20 border-4 border-green-400" : "h-12 w-12"
-        }`}>
+        className={`relative rounded-full bg-white ${
+          isMe ? "shadow-2xl" : "shadow-xl"
+        }`}
+        style={{
+          width: size,
+          height: size,
+        }}>
         <Image
           src={imageSrc}
           alt="user-avatar"
           width={isMe ? 80 : 48}
           height={isMe ? 80 : 48}
-          className="object-contain"
+          className="scale-90 object-contain"
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).src =
               "/assets/moono/default-moono.png";
           }}
         />
       </div>
-      <span className="mt-1 max-w-[80px] text-xs break-all text-gray-600">
+      <span className="mt-1 max-w-[5rem] text-xs break-all text-gray-600">
         {userInfo?.name}
       </span>
     </div>
