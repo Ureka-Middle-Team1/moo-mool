@@ -28,6 +28,8 @@ export async function POST(request: Request) {
       high: 50,
     };
 
+    const SPECIAL_STAGE_SET = new Set(["Calling", "Chat", "Saving"]);
+
     type Answer = {
       stage: string;
       difficulty: string | null;
@@ -59,12 +61,18 @@ export async function POST(request: Request) {
         };
       }
 
-      if (difficulty === "bonus") {
+      const isSpecialStage = SPECIAL_STAGE_SET.has(stage);
+
+      if (isSpecialStage) {
         const bonusScore = BONUS_SCORE_MAP[selectedChoiceId] || 0;
-        result[stage].details.bonus = bonusScore;
+        result[stage].details.bonus += bonusScore;
         result[stage].score += bonusScore;
       } else {
-        if (
+        if (difficulty === "bonus") {
+          const bonusScore = BONUS_SCORE_MAP[selectedChoiceId] || 0;
+          result[stage].details.bonus += bonusScore;
+          result[stage].score += bonusScore;
+        } else if (
           isCorrect === true &&
           difficulty !== null &&
           Object.prototype.hasOwnProperty.call(DIFFICULTY_SCORE, difficulty)
@@ -118,29 +126,31 @@ export async function POST(request: Request) {
 
     // 우선순위에 맞게 정렬 후 첫 번째 선택
     topStages.sort((a, b) => priority.indexOf(a) - priority.indexOf(b));
-
     const topStage = topStages[0];
+
+    const getScore = (key: string) => result[key]?.score ?? 0;
+
     await prisma.userCharacterProfile.upsert({
       where: { user_id: userId },
       update: {
         plan_id: planId,
-        call_level: result["Calling"]?.score ?? 0,
-        sms_level: result["Chat"]?.score ?? 0,
-        sns_level: result["SNS"]?.score ?? 0,
-        youtube_level: result["Youtube"]?.score ?? 0,
-        book_level: result["Books"]?.score ?? 0,
-        saving_level: result["Saving"]?.score ?? 0,
+        call_level: getScore("Calling"),
+        sms_level: getScore("Chat"),
+        sns_level: getScore("SNS"),
+        youtube_level: getScore("Youtube"),
+        book_level: getScore("Books"),
+        saving_level: getScore("Saving"),
         type: topStage,
       },
       create: {
         user_id: userId,
         plan_id: planId,
-        call_level: result["Calling"]?.score ?? 0,
-        sms_level: result["Chat"]?.score ?? 0,
-        sns_level: result["SNS"]?.score ?? 0,
-        youtube_level: result["Youtube"]?.score ?? 0,
-        book_level: result["Books"]?.score ?? 0,
-        saving_level: result["Saving"]?.score ?? 0,
+        call_level: getScore("Calling"),
+        sms_level: getScore("Chat"),
+        sns_level: getScore("SNS"),
+        youtube_level: getScore("Youtube"),
+        book_level: getScore("Books"),
+        saving_level: getScore("Saving"),
         type: topStage,
       },
     });
