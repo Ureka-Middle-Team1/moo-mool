@@ -1,6 +1,7 @@
 "use client";
 
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
+import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import Image from "next/image";
 
 type Props = {
@@ -17,6 +18,8 @@ export default function NearbyUserAvatar({
   isMe,
 }: Props) {
   const { data: profile } = useGetUserCharacterProfile(userId);
+
+  const { data: userInfo } = useGetUserInfo(userId ?? "");
   const imageSrc = profile?.type
     ? `/assets/moono/${profile.type.toLowerCase()}-moono.png`
     : "/assets/moono/default-moono.png";
@@ -51,8 +54,8 @@ export default function NearbyUserAvatar({
           }}
         />
       </div>
-      <span className="mt-1 max-w-[80px] text-xs break-all text-gray-400">
-        {userId}
+      <span className="mt-1 max-w-[80px] text-xs break-all text-gray-600">
+        {userInfo?.name}
       </span>
     </div>
   );
