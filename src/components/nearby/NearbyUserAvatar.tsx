@@ -1,46 +1,54 @@
+"use client";
+
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
+import Image from "next/image";
 
 type Props = {
   userId: string;
   angle: number;
   distance: number;
-  isMe?: boolean; // ✅ 추가
+  isMe?: boolean;
 };
 
 export default function NearbyUserAvatar({
   userId,
   angle,
   distance,
-  isMe = false,
+  isMe,
 }: Props) {
   const { data: profile } = useGetUserCharacterProfile(userId);
+  const imageSrc = profile?.type
+    ? `/assets/moono/${profile.type.toLowerCase()}-moono.png`
+    : "/assets/moono/default-moono.png";
 
   const boundedDistance = Math.min(distance * 80, 180);
   const x = Math.cos((angle * Math.PI) / 180) * boundedDistance;
   const y = Math.sin((angle * Math.PI) / 180) * boundedDistance;
+  const offsetY = isMe ? -55 : 0;
+  const offsetX = isMe ? -37 : 0;
 
   return (
     <div
       className="absolute flex flex-col items-center text-center"
       style={{
+        transform: `translate(${x + offsetX}px, ${y + offsetY}px)`,
         left: "50%",
         top: "50%",
-        transform: isMe
-          ? "translate(-50%, -50%)" // ✅ 정중앙
-          : `translate(${x}px, ${y}px)`,
       }}>
-      <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-yellow-200 text-xl shadow">
-        <img
-          src={
-            profile?.type
-              ? `/assets/moono/${profile.type.toLowerCase()}-moono.png`
-              : "/assets/moono/default-moono.png"
-          }
-          alt="user"
-          className="h-full w-full object-contain"
-          onError={(e) =>
-            (e.currentTarget.src = "/assets/moono/default-moono.png")
-          }
+      <div
+        className={`relative overflow-hidden rounded-full shadow-md ${
+          isMe ? "h-20 w-20 border-4 border-green-400" : "h-12 w-12"
+        }`}>
+        <Image
+          src={imageSrc}
+          alt="user-avatar"
+          width={isMe ? 80 : 48}
+          height={isMe ? 80 : 48}
+          className="object-contain"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src =
+              "/assets/moono/default-moono.png";
+          }}
         />
       </div>
       <span className="mt-1 max-w-[80px] text-xs break-all text-gray-400">

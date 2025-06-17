@@ -62,19 +62,19 @@ export default function NearbyPage() {
               width: `${r}vw`,
               height: `${r}vw`,
               left: `calc(50% - ${r / 2}vw)`,
-              top: `calc(50% - ${r / 2}vw)`,
+              top: `calc(50% - ${r / 2}vw - 2vh)`,
               animationDelay: `${idx * 0.4}s`,
               opacity: 0.8,
             }}
           />
         ))}
 
-        {/* 나 표시 */}
+        {/* 나 표시 (크기 크게 + 보정 위치) */}
         <NearbyUserAvatar
           key={`nearby-me`}
           userId={userId}
-          angle={0} // 중심에 고정
-          distance={0} // 중심 위치
+          angle={0}
+          distance={0}
           isMe
         />
 
