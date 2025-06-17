@@ -2,7 +2,8 @@
 
 import NearbyHeader from "@/components/nearby/NearbyHeader";
 import { useNearbySocket } from "@/hooks/useNearbySocket";
-import { useRef, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRef, useState, useEffect } from "react";
 
 type NearbyUser = {
   userId: string;
@@ -12,59 +13,78 @@ type NearbyUser = {
 };
 
 export default function NearbyPage() {
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
   const [users, setUsers] = useState<NearbyUser[]>([]);
-  const myIdRef = useRef<string>("user-" + Math.floor(Math.random() * 1000));
+  const myIdRef = useRef<string | null>(null);
 
-  useNearbySocket((data: NearbyUser) => {
-    if (data.userId === myIdRef.current) return; // 자기 자신 제외
+  useEffect(() => {
+    if (userId) {
+      myIdRef.current = userId;
+    }
+  }, [userId]);
 
-    setUsers((prev) => {
-      const filtered = prev.filter((u) => u.userId !== data.userId);
-      return [...filtered, data];
-    });
-  });
+  useNearbySocket(
+    (data: NearbyUser) => {
+      if (data.userId === myIdRef.current) return;
+
+      setUsers((prev) => {
+        const filtered = prev.filter((u) => u.userId !== data.userId);
+        return [...filtered, data];
+      });
+    },
+    userId // 세션 userId를 WebSocket으로 전송
+  );
+
+  if (!userId) {
+    return (
+      <div className="p-4 text-center text-gray-500">로그인이 필요합니다</div>
+    );
+  }
 
   return (
     <>
       <NearbyHeader />
-      <div className="relative flex h-full items-center justify-center overflow-hidden bg-white">
-        {/* 배경 레이더 원 */}
-        {[10, 50, 100, 150, 200, 250].map((r, idx) => (
+      <div className="relative flex h-screen items-center justify-center overflow-hidden bg-white">
+        {[30, 50, 70, 90, 110, 130].map((r, idx) => (
           <div
             key={idx}
-            className="absolute animate-ping rounded-full border border-yellow-400"
+            className="absolute animate-ping rounded-full border border-yellow-300"
             style={{
-              width: `${r}px`,
-              height: `${r}px`,
-              left: `calc(50% - ${r / 2}px)`,
-              top: `calc(50% - ${r / 2}px)`,
-              animationDelay: `${idx * 0.3}s`,
+              width: `${r}vw`,
+              height: `${r}vw`,
+              left: `calc(50% - ${r / 2}vw)`,
+              top: `calc(50% - ${r / 2}vw)`,
+              animationDelay: `${idx * 0.4}s`,
+              opacity: 0.3,
             }}
           />
         ))}
 
-        {/* 내 아이콘 */}
         <div className="z-10 flex h-16 w-16 items-center justify-center rounded-full bg-green-500 font-bold text-white shadow-md">
           나
         </div>
 
-        {/* 주변 사용자 아이콘 */}
         {users.map((user) => {
           const angle = user.angle ?? Math.random() * 360;
-          const distance = Math.min(user.distance * 80, 180); // UI 최대 반지름 제한
+          const distance = Math.min(user.distance * 80, 180);
           const x = Math.cos((angle * Math.PI) / 180) * distance;
           const y = Math.sin((angle * Math.PI) / 180) * distance;
 
           return (
             <div
               key={user.userId}
-              className="absolute flex h-12 w-12 items-center justify-center rounded-full bg-yellow-200 text-xl shadow"
+              className="absolute flex flex-col items-center text-center"
               style={{
                 transform: `translate(${x}px, ${y}px)`,
                 left: "50%",
                 top: "50%",
               }}>
-              {user.emoji ?? "👤"}
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-yellow-200 text-xl shadow">
+                👤
+              </div>
+              <span className="mt-1 text-xs text-gray-400">{user.userId}</span>
             </div>
           );
         })}
