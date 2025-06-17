@@ -8,7 +8,7 @@ export interface PlanDBApiResponse {
   dataAmountMb: number;
   overageSpeedMbps: number | null;
   voiceMinutes: number;
-  smsIncluded: boolean;
+  smsIncluded: number;
   networkType: "LTE" | "5G";
   subscriptionServices: string[];
 }
