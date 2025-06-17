@@ -5,11 +5,11 @@ import path from "path";
 import axios from "axios";
 
 export async function POST(req: Request) {
-  const { message, lastSummary } = await req.json();
+  const { lastSummary, recentMessages, userMessage } = await req.json();
 
-  if (!message || typeof message !== "string") {
+  if (!userMessage || typeof userMessage !== "string") {
     return NextResponse.json(
-      { error: "message 누락 또는 형식 오류" },
+      { error: "사용자 메시지 누락 또는 형식 오류" },
       { status: 400 }
     );
   }
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 
   const url = "https://api.openai.com/v1/chat/completions";
 
-  // 텍스트 파일에서 관련 prompt를 읽어온다
+  // 텍스트 파일에서 관련 prompt 가져오기
   const filePath = path.join(
     process.cwd(),
     "src/lib/chat/prompts/free_talk.txt"
@@ -39,21 +39,24 @@ export async function POST(req: Request) {
     );
   }
 
+  console.log("recentMessages: ", recentMessages);
+  console.log("lastSummary: ", lastSummary);
+
+  // GPT API 요청을 위한 메시지 구성
+  const gptMessages = [
+    { role: "system", content: lastSummary ? `${lastSummary}` : "" }, //
+    { role: "system", content: systemPrompt },
+    ...(recentMessages ?? []), // recentMessages는 [{role, content}] 형태로 되어 있음
+    { role: "user", content: userMessage },
+  ];
+
   // 읽어온 프롬프트를 바탕으로 GPT API 요청 처리
   try {
     const response = await axios.post(
       url,
       {
         model: "gpt-4.1-nano",
-        messages: [
-          // 요약된 대화를 system 메시지로 포함해야 GPT가 "기억"하게 됨
-          {
-            role: "system",
-            content: lastSummary ? `[요약]\n${lastSummary}` : "",
-          },
-          { role: "system", content: systemPrompt },
-          { role: "user", content: message },
-        ],
+        messages: gptMessages,
         temperature: 0.8,
         max_tokens: 200,
       },

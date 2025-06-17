@@ -31,4 +31,5 @@ export async function handleFreeTalkAnswer(
 
   // 4. GPT의 응답 메시지 출력 (추후, 쿠션 질문을 추가하기 위해서 triggeredFSM을 사용해도 될 듯)
   appendMessage({ role: "bot", content: message });
+  addMessage({ role: "bot", content: message });
 }

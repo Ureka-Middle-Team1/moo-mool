@@ -9,7 +9,7 @@ export default function ChoiceList({
   onSelect: (choice: Choice) => void;
 }) {
   return (
-    <div className="item-center mx-auto flex max-w-xs flex-col gap-5">
+    <div className="item-center mx-auto mb-20 flex max-w-xs flex-col gap-5">
       {choices.map((choice) => (
         <Button
           key={choice.id}
