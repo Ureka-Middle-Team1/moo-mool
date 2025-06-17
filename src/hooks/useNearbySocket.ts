@@ -2,11 +2,18 @@ import { useEffect, useRef } from "react";
 
 export function useNearbySocket(
   onMessage: (data: any) => void,
-  userId: string
+  userId?: string
 ) {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
+    if (!userId) {
+      console.warn(
+        "❗ userId가 undefined 상태에서 WebSocket 연결을 시도했습니다."
+      );
+      return;
+    }
+
     const socket = new WebSocket(process.env.NEXT_PUBLIC_WSS_SERVER_URL!);
     wsRef.current = socket;
 
@@ -16,14 +23,25 @@ export function useNearbySocket(
       socket.send(
         JSON.stringify({
           userId,
-          distance: Math.random() * 2 + 0.5, // 이후 BLE 거리로 교체 가능
+          distance: Math.random() * 2 + 0.5,
         })
       );
     };
 
     socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      onMessage(data);
+      try {
+        const data = JSON.parse(event.data);
+
+        // 유효성 검사
+        if (!data.userId || typeof data.userId !== "string") {
+          console.warn("🚫 잘못된 데이터 수신됨:", data);
+          return;
+        }
+
+        onMessage(data);
+      } catch (err) {
+        console.error("❌ 메시지 파싱 실패:", err);
+      }
     };
 
     socket.onclose = () => {

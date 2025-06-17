@@ -3,7 +3,7 @@
 import NearbyHeader from "@/components/nearby/NearbyHeader";
 import { useNearbySocket } from "@/hooks/useNearbySocket";
 import { useSession } from "next-auth/react";
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type NearbyUser = {
   userId: string;
@@ -25,17 +25,24 @@ export default function NearbyPage() {
     }
   }, [userId]);
 
-  useNearbySocket(
-    (data: NearbyUser) => {
-      if (data.userId === myIdRef.current) return;
+  useNearbySocket((data: NearbyUser) => {
+    // 유효한 사용자만 반영
+    if (
+      !data.userId ||
+      typeof data.userId !== "string" ||
+      data.userId === myIdRef.current
+    ) {
+      console.warn("🔎 유효하지 않거나 본인 userId 무시:", data.userId);
+      return;
+    }
 
-      setUsers((prev) => {
-        const filtered = prev.filter((u) => u.userId !== data.userId);
-        return [...filtered, data];
-      });
-    },
-    userId // 세션 userId를 WebSocket으로 전송
-  );
+    console.log("📡 새 사용자 감지:", data.userId);
+
+    setUsers((prev) => {
+      const filtered = prev.filter((u) => u.userId !== data.userId);
+      return [...filtered, data];
+    });
+  }, userId);
 
   if (!userId) {
     return (
@@ -49,7 +56,7 @@ export default function NearbyPage() {
       <div className="relative flex h-screen items-center justify-center overflow-hidden bg-white">
         {[30, 50, 70, 90, 110, 130].map((r, idx) => (
           <div
-            key={idx}
+            key={`circle-${r}`}
             className="absolute animate-ping rounded-full border border-yellow-300"
             style={{
               width: `${r}vw`,
@@ -74,7 +81,7 @@ export default function NearbyPage() {
 
           return (
             <div
-              key={user.userId}
+              key={`nearby-${user.userId}`}
               className="absolute flex flex-col items-center text-center"
               style={{
                 transform: `translate(${x}px, ${y}px)`,
@@ -84,7 +91,9 @@ export default function NearbyPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-yellow-200 text-xl shadow">
                 👤
               </div>
-              <span className="mt-1 text-xs text-gray-400">{user.userId}</span>
+              <span className="mt-1 max-w-[80px] text-xs break-all text-gray-400">
+                {user.userId}
+              </span>
             </div>
           );
         })}
