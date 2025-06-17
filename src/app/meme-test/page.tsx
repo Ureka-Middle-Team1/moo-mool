@@ -4,7 +4,7 @@ import HeadLogo from "@/components/common/headlogo";
 import ShareSection from "@/components/meme/shareSection";
 import { useAnimatedCount } from "@/hooks/useAnimatedCount";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function TestHomePage() {
@@ -24,11 +24,11 @@ export default function TestHomePage() {
 
   const handleStart = () => {
     const randomId = Math.random().toString(36).substring(2, 10);
+    const callbackUrl = `/meme-test/${randomId}`;
     if (!session) {
-      const callbackUrl = `/meme-test/${randomId}`;
-      router.push(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+      signIn("kakao", { callbackUrl });
     } else {
-      router.push(`/meme-test/${randomId}`);
+      router.push(callbackUrl);
     }
   };
 
