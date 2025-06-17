@@ -4,7 +4,6 @@ import NearbyHeader from "@/components/nearby/NearbyHeader";
 import { useNearbySocket } from "@/hooks/useNearbySocket";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
-import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 
 export type NearbyUser = {
@@ -54,6 +53,7 @@ export default function NearbyPage() {
     <>
       <NearbyHeader />
       <div className="relative flex h-screen items-center justify-center overflow-hidden bg-white">
+        {/* 배경 파동 원형 */}
         {[20, 50, 70, 90, 110, 130].map((r, idx) => (
           <div
             key={`circle-${r}`}
@@ -69,10 +69,16 @@ export default function NearbyPage() {
           />
         ))}
 
-        <div className="z-10 flex h-16 w-16 items-center justify-center rounded-full bg-green-500 font-bold text-white shadow-md">
-          나
-        </div>
+        {/* 나 표시 */}
+        <NearbyUserAvatar
+          key={`nearby-me`}
+          userId={userId}
+          angle={0} // 중심에 고정
+          distance={0} // 중심 위치
+          isMe
+        />
 
+        {/* 주변 사용자 표시 */}
         {users.map((user) => {
           const angle = user.angle ?? Math.random() * 360;
 
