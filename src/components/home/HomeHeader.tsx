@@ -11,7 +11,7 @@ export default function HomeHeader() {
   const userId = session?.user?.id;
 
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/home";
 
   const { data: userCharacterProfile, isLoading } = useGetUserCharacterProfile(
     userId ?? ""
