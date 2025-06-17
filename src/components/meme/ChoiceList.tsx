@@ -14,7 +14,7 @@ export default function ChoiceList({
         <Button
           key={choice.id}
           variant="outline"
-          className="h-[3.75rem] w-[20rem] rounded-full border-1 border-pink-400 bg-white font-[17px] hover:bg-pink-300"
+          className="h-[3.5rem] w-[20rem] cursor-pointer rounded-full border-1 border-pink-400 bg-white font-[17px] hover:bg-pink-300"
           onClick={() => onSelect(choice)}>
           {choice.text}
         </Button>
