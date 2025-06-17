@@ -9,7 +9,7 @@ export default function HeadLogo() {
   };
 
   return (
-    <div className="flex cursor-pointer items-center justify-between">
+    <div className="cursor-pointer">
       {/* 좌측 로고 */}
       <img
         src="/assets/icons/logo.png"

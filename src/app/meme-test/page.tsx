@@ -34,7 +34,7 @@ export default function TestHomePage() {
 
   return (
     <div className="flex h-full w-full flex-col bg-pink-200 px-0">
-      <div className="pl-5">
+      <div className="pt-2 pl-5">
         <HeadLogo />
       </div>
 
