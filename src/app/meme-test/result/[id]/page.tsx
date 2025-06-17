@@ -227,7 +227,7 @@ export default function ResultPage() {
               title="내 결과 공유하기"
               count={data?.sharedCount || 0}
               id={decryptedId}
-              shareUrl={`/meme-test/result/${encryptedId}`}
+              shareUrl={`/result/${encryptedId}`}
             />
             <div className="rounded-md p-3 text-[11px] leading-tight text-gray-800">
               <ul className="list-disc space-y-1 text-left">
