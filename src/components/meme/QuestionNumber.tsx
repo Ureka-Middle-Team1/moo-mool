@@ -11,7 +11,7 @@ export default function QuestionNumber({
   questionNumber: number | null;
 }) {
   return (
-    <div className="items-left mb-10 ml-[30px] flex flex-col justify-center">
+    <div className="items-left mb-5 ml-[30px] flex flex-col justify-center">
       {difficulty === "bonus" ? (
         <Image
           src={`/assets/moono/${stage.toLowerCase()}-moono.png`}

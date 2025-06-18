@@ -16,12 +16,14 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 interface TendencyBarChartProps {
   data: number[] | [number[], number[]];
+  rawData: number[] | [number[], number[]];
   name: string;
   labels?: string[];
 }
 
 const TendencyBarChart = ({
   data,
+  rawData,
   name,
   labels = ["월정액", "데이터", "속도", "음성통화", "문자"],
 }: TendencyBarChartProps) => {
@@ -42,6 +44,7 @@ const TendencyBarChart = ({
         {
           label: name,
           data: [...(data as [number[], number[]])[0]],
+          rawData: [...(rawData as [number[], number[]])[0]],
           backgroundColor: "rgba(255, 188, 31, 0.6)",
           borderWidth: 0,
           categoryPercentage: 0.4,
@@ -50,6 +53,7 @@ const TendencyBarChart = ({
         {
           label: "내 요금제",
           data: [...(data as [number[], number[]])[1]],
+          rawData: [...(rawData as [number[], number[]])[1]],
           backgroundColor: "rgba(255, 99, 132, 0.6)",
           borderWidth: 0,
           categoryPercentage: 0.4,
@@ -60,6 +64,7 @@ const TendencyBarChart = ({
         {
           label: name,
           data: [...(data as number[])],
+          rawData: [...(rawData as number[])],
           backgroundColor: "rgba(255, 188, 31, 0.6)",
           borderWidth: 0,
           categoryPercentage: 0.4,

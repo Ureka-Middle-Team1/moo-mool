@@ -10,13 +10,14 @@ export function useWatchRecommendationTrigger() {
   const { currentQuestionId, clearMessages, setCurrentQuestionId } =
     useChatStore();
   const { userTendencyInfo } = useTendencyStore();
-  const { messages, shouldTriggerSummary, lastSummary } = useFreeTalkStore();
+  const { messages, shouldTriggerSummary, lastSummary, userMessageCount } =
+    useFreeTalkStore();
   const { hasRecommended, setHasRecommended } = useChatStore();
 
   const { mutate: recommendPlan } = useSmartChoiceRecommendation();
   const { mutate: summarize } = useFreeTalkSummary();
 
-  const hasSummarizedRef = useRef(false); // 요약 관련해서도 중복 방지 필요
+  const hasSummarizedRef = useRef(false); // 요약 관련해서 중복 방지 필요
 
   useEffect(() => {
     // 정해진 질문 로직에서, 마지막 질문까지 모두 완료해서 끝에 도달했을 경우, 이미 추천된 상태가 아닌 경우에만 안의 것 수행
@@ -34,7 +35,9 @@ export function useWatchRecommendationTrigger() {
       clearMessages();
       setHasRecommended(false);
     }
+  }, [currentQuestionId, userTendencyInfo]);
 
+  useEffect(() => {
     // "자연스러운 대화" 모드에서 요약 트리거 조건
     if (
       currentQuestionId === -1 &&
@@ -45,5 +48,5 @@ export function useWatchRecommendationTrigger() {
       summarize({ lastSummary, messages }); // 요약 수행
       hasSummarizedRef.current = false;
     }
-  }, [currentQuestionId, userTendencyInfo]);
+  }, [userMessageCount]);
 }
