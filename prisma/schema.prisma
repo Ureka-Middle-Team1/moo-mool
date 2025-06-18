@@ -51,7 +51,7 @@ model Plan {
   dataAmountMb         Float       @default(0)
   overageSpeedMbps     Float?
   voiceMinutes         Int         @default(-1)
-  smsIncluded          Boolean     @default(false)
+  smsIncluded          Int         @default(0)
   networkType          NetworkType @default(LTE)
   subscriptionServices Json        @default("[]")
 
