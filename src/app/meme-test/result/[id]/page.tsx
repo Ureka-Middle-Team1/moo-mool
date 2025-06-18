@@ -3,16 +3,13 @@ import { decrypt } from "@/utils/crypto";
 import { prisma } from "@/lib/prisma";
 import ResultPage from "./resultPage";
 
-interface PageProps {
-  params: { id: string };
-}
-
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const userId = decrypt(decodeURIComponent(params.id));
+  const { id } = await params;
+  const userId = decrypt(decodeURIComponent(id));
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { name: true },
@@ -25,7 +22,7 @@ export async function generateMetadata({
       description: user?.name
         ? `${user.name}님의 성향을 확인해보세요!`
         : "성향 테스트 결과를 확인해보세요!",
-      url: `https://moo-mool.vercel.app/meme-test/result/${params.id}`,
+      url: `https://moo-mool.vercel.app/meme-test/result/${id}`,
       images: [
         {
           url: "https://moo-mool.vercel.app/assets/icons/meme-test-home.png",
@@ -39,7 +36,11 @@ export async function generateMetadata({
   };
 }
 
-export default function Page({ params }: PageProps) {
-  const { id } = params;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
   return <ResultPage encryptedId={id} />;
 }
