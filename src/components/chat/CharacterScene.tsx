@@ -68,7 +68,6 @@ export default function CharacterScene() {
 
     if (latestBotMsg.content !== prevBotMessageRef.current) {
       prevBotMessageRef.current = latestBotMsg.content;
-      // setTriggerCount((c) => c + 1);
       speak(latestBotMsg.content); // 훅이 자동 스트리밍하므로 startStreaming 제거
     }
   }, [messages]);
@@ -81,7 +80,7 @@ export default function CharacterScene() {
   return (
     <div className="relative flex h-[80%] w-full flex-col items-center justify-center">
       {/* 말풍선 */}
-      {isSpeaking && latestBotMsg?.content && (
+      {isSpeaking && latestBotMsg?.content && !shouldShowPlanCard && (
         <SpeechBubble text={streamingText} />
       )}
 
@@ -95,13 +94,6 @@ export default function CharacterScene() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="relative flex flex-col items-center">
-            {/* 상단에 context가 있다면 말풍선처럼 렌더링 */}
-            {lastMessage.content && (
-              <div className="mb-2 rounded-lg bg-white px-4 py-2 text-sm shadow-md">
-                {streamingText}
-              </div>
-            )}
-
             {/* 요금제 카드 */}
             <PlanCard {...lastMessage.planData!} />
           </motion.div>
