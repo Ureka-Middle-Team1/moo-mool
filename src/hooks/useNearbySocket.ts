@@ -45,20 +45,21 @@ export function useNearbySocket(
       sendLocation(); // 초기 1회
       intervalId = setInterval(sendLocation, 5000); // 주기 전송
     };
-
     socket.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data);
+
+        // ✅ 전체 메시지 콘솔 출력
+        console.log("📥 서버에서 수신된 메시지:", message);
+
+        // ✅ nearby_users일 경우만 처리
         if (message.type === "nearby_users" && Array.isArray(message.users)) {
+          console.log("📡 감지된 주변 사용자 목록:", message.users); // ✅ 사용자 목록 출력
           onNearbyUsers(message.users);
         }
       } catch (err) {
         console.error("❌ WebSocket 메시지 파싱 실패:", err);
       }
-    };
-
-    socket.onclose = () => {
-      console.log("❌ WebSocket 연결 종료");
     };
 
     // ✅ 여기서 useEffect 클린업 정의 (WebSocket 종료 + interval 제거)
