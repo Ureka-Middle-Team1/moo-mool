@@ -1,6 +1,5 @@
 "use client";
 
-
 import React, { useEffect } from "react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
@@ -44,7 +43,6 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
     isLoading: isUserLoading,
     isError: isUserError,
   } = useGetUserInfo(decryptedId || "");
-
 
   // 최초 렌더링 시에 DB로부터 결과 받아오기
   useEffect(() => {
@@ -164,18 +162,35 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
             />
           </div>
         </div>
-        {/* 현재 요금제 관련 정보는 chat-storage(전역 저장소)에 저장되어 있음, 그것을 가져와 사용 중 */}
-        {firstPlanMessage?.planData?.id !== undefined && (
-          <PlanCard
-            id={firstPlanMessage.planData.id}
-            name={firstPlanMessage.planData.name ?? ""}
-            data={firstPlanMessage.planData.data ?? ""}
-            voice={firstPlanMessage.planData.voice ?? ""}
-            sms={firstPlanMessage.planData.sms ?? ""}
-            price={firstPlanMessage.planData.price ?? ""}
-            tel={firstPlanMessage.planData.tel ?? ""}
-          />
-        )}
+        <div className="mt-3 flex w-[100%] flex-col items-center gap-2 rounded-lg">
+          <div className="mt-5 flex gap-2 text-2xl">
+            <img src="/assets/icons/U_plus.png" className="h-[30px]" />
+            <p style={{ fontFamily: "kkubulim" }} className="text-[25px]">
+              추천 요금제
+            </p>
+          </div>
+          <div className="flex w-full flex-col items-center gap-4 rounded-lg p-4">
+            {/* 현재 요금제 관련 정보는 chat-storage(전역 저장소)에 저장되어 있음, 그것을 가져와 사용 중 */}
+            {firstPlanMessage?.planData?.id !== undefined && (
+              <PlanCard
+                id={firstPlanMessage.planData.id}
+                name={firstPlanMessage.planData.name ?? ""}
+                data={firstPlanMessage.planData.data ?? ""}
+                voice={firstPlanMessage.planData.voice ?? ""}
+                sms={firstPlanMessage.planData.sms ?? ""}
+                price={firstPlanMessage.planData.price ?? ""}
+                tel={firstPlanMessage.planData.tel ?? ""}
+              />
+            )}
+          </div>
+          <div className="flex w-[90%] flex-col gap-4">
+            <p className="text-[11px] text-black">
+              본 테스트는 LG유플러스와의 협업을 통해 제작되었으며, <br />
+              테스트 결과에 기반한 추천 요금제는 모두 LG유플러스의 요금제입니다.
+            </p>
+          </div>
+        </div>
+
         <div className="mt-10 flex w-full flex-col items-center rounded-lg p-4 text-[14px]">
           <p style={{ fontFamily: "kkubulim" }} className="text-[25px]">
             더 정확한 요금제 추천을 원한다면?
