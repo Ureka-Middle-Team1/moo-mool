@@ -2,16 +2,13 @@
 
 import { useChatStore } from "@/store/useChatStore";
 import QuickReplyButton from "./QuickReplyButton";
-import { FormEvent } from "react";
-
-type SubmitType = { type: "quick"; text: string } | FormEvent | KeyboardEvent;
-
+import { SubmitType } from "@/hooks/useChatSubmit";
 interface QuickReplyListProps {
   onSubmit?: (e?: SubmitType) => void;
 }
 
 export default function QuickReplyList({ onSubmit }: QuickReplyListProps) {
-  const { quickReplies, setQuickReplies, appendMessage } = useChatStore();
+  const { quickReplies, setQuickReplies } = useChatStore();
 
   if (quickReplies.length === 0) return null;
 
