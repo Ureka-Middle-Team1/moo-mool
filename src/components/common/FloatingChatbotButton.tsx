@@ -74,7 +74,8 @@ export default function FloatingChatbotButton() {
               {sessions?.map((s) => (
                 <li
                   key={s.id}
-                  className="rounded-md bg-gray-100 px-3 py-2 text-xs">
+                  onClick={() => router.push(`/chat/${s.id}`)}
+                  className="cursor-pointer rounded-md bg-gray-100 px-3 py-2 text-xs">
                   {s.summary ||
                     JSON.parse(s.messages)?.[0]?.content ||
                     "대화 없음"}
@@ -93,7 +94,7 @@ export default function FloatingChatbotButton() {
         )}
       </AnimatePresence>
 
-      <div className="relative h-40 w-40">
+      <div className="relative h-40 w-40 cursor-pointer">
         {/* 무너 캐릭터 */}
         <Canvas camera={{ position: [0, 0, 2.5] }}>
           <ambientLight intensity={0.7} />
