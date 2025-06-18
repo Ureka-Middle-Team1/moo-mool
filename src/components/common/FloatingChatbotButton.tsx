@@ -69,7 +69,7 @@ export default function FloatingChatbotButton() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.2 }}
-            className="absolute -top-33 left-1/2 w-30 -translate-x-1/2 rounded-xl bg-white px-4 py-3 text-sm shadow-md ring-1 ring-gray-200">
+            className="absolute bottom-33 left-1/2 w-30 -translate-x-1/2 rounded-xl bg-white px-4 py-3 text-sm shadow-md ring-1 ring-gray-200">
             <ul className="max-h-40 space-y-1 overflow-y-auto text-gray-700">
               {sessions?.map((s) => (
                 <li
