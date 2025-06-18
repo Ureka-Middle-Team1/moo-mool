@@ -20,7 +20,7 @@ export default function QuickReplyList() {
   };
 
   return (
-    <div className="w-full px-4 pb-1.5">
+    <div className="w-full px-4">
       <div className="scrollbar-hide overflow-x-auto">
         <div className="flex w-fit gap-2 whitespace-nowrap">
           {quickReplies.map((reply, idx) => (
