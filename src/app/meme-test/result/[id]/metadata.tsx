@@ -1,5 +1,4 @@
 import { generateMemeMetadata } from "@/utils/generateMemeMetadata";
-import { Metadata } from "next";
 
 type Props = {
   params: { id: string };

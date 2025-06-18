@@ -1,13 +1,8 @@
 import { Metadata } from "next";
 
-export function generateMetadata({
-  searchParams,
-}: {
-  searchParams?: Record<string, string | string[] | undefined>;
-}): Metadata {
-  const inviterRaw = searchParams?.inviter;
+export function generateMemeMetadata(inviter?: string | string[]): Metadata {
   const inviterName =
-    typeof inviterRaw === "string" ? decodeURIComponent(inviterRaw) : "";
+    typeof inviter === "string" ? decodeURIComponent(inviter) : "";
 
   return {
     title: "MZ 성향 테스트하기!",
