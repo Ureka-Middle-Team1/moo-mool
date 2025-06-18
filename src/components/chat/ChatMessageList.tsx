@@ -17,14 +17,16 @@ export default function ChatMessageList({
   const isLastMessageBot = lastBot && messages[messages.length - 1] === lastBot;
 
   return (
-    <div className="scrollbar-hide flex-1 space-y-2 overflow-y-auto px-4 py-2">
-      {messages.map((msg, idx) => {
-        const isLast = isLastMessageBot && msg === lastBot;
-        return (
-          <ChatMessage key={idx} message={msg} isLastBotMessage={isLast} />
-        );
-      })}
-      <div ref={bottomRef} />
+    <div className="scrollbar-hide h-full overflow-y-auto">
+      <div className="space-y-2 px-4 py-2">
+        {messages.map((msg, idx) => {
+          const isLast = isLastMessageBot && msg === lastBot;
+          return (
+            <ChatMessage key={idx} message={msg} isLastBotMessage={isLast} />
+          );
+        })}
+        <div ref={bottomRef} />
+      </div>
     </div>
   );
 }
