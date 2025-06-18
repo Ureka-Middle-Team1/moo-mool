@@ -33,8 +33,8 @@ model User {
   created_at       DateTime @default(now())
 
   characterProfile UserCharacterProfile?
-  chatMessages     ChatMessage[]
   tendencyInfo     UserTendencyInfo?
+  chatSessions     ChatSession[] 
 
   badgeRef       Badge? @relation("UserBadge", fields: [badge], references: [id])
   myPlanRef      Plan?  @relation("MyPlan", fields: [my_plan], references: [id])
@@ -131,17 +131,6 @@ model Badge {
   users User[] @relation("UserBadge")
 }
 
-model ChatMessage {
-  id         Int      @id @default(autoincrement())
-  user_id    String
-  content    String
-  created_at DateTime @default(now())
-
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@map("ChatMessage")
-}
-
 model UserTendencyInfo {
   id        String @id
   voice     Int
@@ -154,4 +143,17 @@ model UserTendencyInfo {
   user User @relation(fields: [id], references: [id], onDelete: Cascade)
 
   @@map("UserTendencyInfo")
+}
+
+model ChatSession {
+  id         Int      @id @default(autoincrement())
+  user_id    String
+  messages   Json
+  summary    String   @default("")
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("ChatSession")
 }
