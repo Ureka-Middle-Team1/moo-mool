@@ -3,9 +3,10 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  params: Promise<{ id: string }>
 ): Promise<Response> {
-  const sessionId = parseInt(context.params.id, 10);
+  const { id } = await params;
+  const sessionId = parseInt(id, 10);
 
   if (isNaN(sessionId)) {
     return new Response(JSON.stringify({ error: "잘못된 session ID" }), {
