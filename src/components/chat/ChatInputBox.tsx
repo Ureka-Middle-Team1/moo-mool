@@ -3,11 +3,12 @@ import { ArrowUp, Mic } from "lucide-react";
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useChatStreamingStore } from "@/store/useChatStreamingStore";
+import { SubmitType } from "@/hooks/useChatSubmit";
 
 interface ChatInputBoxProps {
   input: string;
   setInput: (val: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (e?: SubmitType) => void;
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   disabled?: boolean;
 }

@@ -1,21 +1,26 @@
 "use client";
 export const dynamic = "force-dynamic";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import HomeBanner from "@/components/home/HomeBanner";
 import HomeHeader from "@/components/home/HomeHeader";
 import HomeRecommendedPlan from "@/components/home/HomeRecommendedPlan";
 import PopularPlansList from "@/components/home/PopularPlansList";
 import UserTendencyRadar from "@/components/home/UserTendencyRadar";
 import TopGradient from "@/components/planDetail/TopGradient";
+import MyPageModal from "@/components/myPage/MyPageModal";
 
 export default function HomePage() {
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 on, off 토글
+
   return (
     <div className="flex flex-col items-center">
       <TopGradient />
       <section className="z-1 flex h-[85%] w-[90%] flex-col items-center">
         <Suspense fallback={<div>성향 불러오는 중...</div>}>
-          <HomeHeader />
+          <HomeHeader onAvatarClick={() => setIsModalOpen(true)} />
         </Suspense>
+        {/* 마이페이지 Modal */}
+        <MyPageModal open={isModalOpen} onOpenChange={setIsModalOpen} />
         <div className="flex w-full flex-col gap-7 px-3 py-5">
           <div className="flex w-full flex-col gap-3">
             <h2 className="text-lg font-semibold text-zinc-900">

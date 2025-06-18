@@ -1,4 +1,5 @@
 import { Plan } from "./Chat";
+import { PrismaNetworkType } from "./network";
 
 // Smart Choice API 응답 시 받는 자료형
 export interface PlanDBApiResponse {
@@ -8,8 +9,8 @@ export interface PlanDBApiResponse {
   dataAmountMb: number;
   overageSpeedMbps: number | null;
   voiceMinutes: number;
-  smsIncluded: boolean;
-  networkType: "LTE" | "5G";
+  smsIncluded: number;
+  networkType: PrismaNetworkType;
   subscriptionServices: string[];
 }
 

@@ -37,7 +37,7 @@ export function parseSmartChoiceToPlan(raw: RawPlan): CleanedPlan {
     dataAmountMb: parseDataAmount(raw.v_plan_display_data._text),
     overageSpeedMbps: parseOverageSpeed(raw.v_plan_display_data._text),
     voiceMinutes: parseMinutes(raw.v_plan_display_voice._text),
-    smsIncluded: raw.v_plan_display_sms._text.includes("기본"),
+    smsIncluded: raw.v_plan_display_sms._text.includes("기본") ? 45200 : 0,
     networkType: "LTE", // 현재 SmartChoice 응답엔 없으므로 고정
     subscriptionServices: [], // 기본 빈 배열로 저장
   };

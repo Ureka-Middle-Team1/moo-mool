@@ -97,6 +97,7 @@ export default function TestQuestionPage() {
       stage: question.stage,
       difficulty: question.difficulty,
       isBonus: Boolean(question.is_bonus),
+      selectedChoiceScore: choice.score ?? null,
     };
 
     // 상태에 답변 저장
@@ -157,16 +158,20 @@ export default function TestQuestionPage() {
   const questionNumber = diffNum !== null ? (stageNum - 1) * 3 + diffNum : null;
 
   return (
-    <div className="min-h-screen bg-pink-200">
+    <div className="h-full bg-pink-200">
       <Header onBack={handleBack} />
       <ProgressBar currentIndex={currentIndex} total={questions.length} />
-      <StageInfo stage={question.stage} difficulty={question.difficulty} />
+      <StageInfo
+        stageLabel={stageMap[question.stage] || question.stage} // "stage1" 등
+        stageName={question.stage} // "SNS" 등
+        difficulty={question.difficulty}
+      />
       <QuestionNumber
         difficulty={question.difficulty}
         stage={question.stage}
         questionNumber={questionNumber}
       />
-      <p className="mb-10 text-center text-[17px]">{question.question_text}</p>
+      <p className="mb-5 text-center text-[17px]">{question.question_text}</p>
       <QuestionExample
         type={
           question.example_type === "image" || question.example_type === "text"

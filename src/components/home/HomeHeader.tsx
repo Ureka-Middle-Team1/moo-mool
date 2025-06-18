@@ -4,8 +4,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import HeadLogo from "../common/headlogo";
 
-export default function HomeHeader() {
+type Props = {
+  onAvatarClick: () => void;
+};
+
+export default function HomeHeader({ onAvatarClick }: Props) {
   const { data: session } = useSession();
   const isLoggedIn = !!session?.user;
   const userId = session?.user?.id;
@@ -25,11 +30,13 @@ export default function HomeHeader() {
     <div className="w-full pt-2">
       <div className="flex items-center justify-between">
         {/* 좌측 로고 */}
-        <img src="/assets/icons/logo.png" alt="logo" className="h-auto w-18" />
+        <HeadLogo />
 
-        {/* 우측: 로그인 상태에 따라 표시 */}
+        {/* 우측: 로그인 상태에 따라 표시, <Avatar>로 표시되면, 눌렀을 시 마이페이지 모달 토글 가능해야 함 */}
         {isLoggedIn ? (
-          <Avatar className="h-10 w-10 bg-gray-500">
+          <Avatar
+            className="h-10 w-10 cursor-pointer bg-gray-500"
+            onClick={onAvatarClick}>
             <AvatarImage
               src={
                 userCharacterProfile?.type
@@ -37,7 +44,7 @@ export default function HomeHeader() {
                   : session.user.image
               }
               alt="user-avatar"
-              className="scale-80 object-contain"
+              className="h-full w-full object-cover"
             />
             <AvatarFallback>🐤</AvatarFallback>
           </Avatar>
