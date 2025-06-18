@@ -12,44 +12,38 @@ const slides = [
     title: "내게 딱 맞는 AI 요금제 추천",
     description: "복잡한 요금제,\nAI가 당신에게 꼭 맞는 걸 찾아드려요",
     highlight: "AI 요금제 추천",
-    image: "/assets/icons/moomool_banner.png", // 실제 이미지 경로로 교체 예정
-    buttonText: "다음으로",
+    image: "/assets/icons/moomool_banner.png",
   },
   {
     id: 2,
     title: "나의 콘텐츠 성향은?",
-    description: "영상부터 음악까지, 당신의 취향을 반영한 요금제",
+    description: "영상부터 음악까지,\n당신의 취향을 반영한 요금제",
     highlight: "콘텐츠",
-    image: "/assets/icons/moomool_banner.png", // 실제 이미지 경로로 교체 예정
-    buttonText: "시작하기",
+    image: "/assets/icons/moomool_banner.png",
   },
   {
     id: 3,
     title: "나의 콘텐츠 성향은?",
-    description: "영상부터 음악까지, 당신의 취향을 반영한 요금제",
+    description: "영상부터 음악까지,\n당신의 취향을 반영한 요금제",
     highlight: "콘텐츠",
-    image: "/assets/icons/moomool_banner.png", // 실제 이미지 경로로 교체 예정
-    buttonText: "시작하기",
+    image: "/assets/icons/moomool_banner.png",
   },
   {
     id: 4,
     title: "나의 콘텐츠 성향은?",
-    description: "영상부터 음악까지, 당신의 취향을 반영한 요금제",
+    description: "영상부터 음악까지,\n당신의 취향을 반영한 요금제",
     highlight: "콘텐츠",
-    image: "/assets/icons/moomool_banner.png", // 실제 이미지 경로로 교체 예정
-    buttonText: "시작하기",
+    image: "/assets/icons/moomool_banner.png",
   },
   {
     id: 5,
     title: "나의 콘텐츠 성향은?",
-    description: "영상부터 음악까지, 당신의 취향을 반영한 요금제",
+    description: "영상부터 음악까지,\n당신의 취향을 반영한 요금제",
     highlight: "콘텐츠",
-    image: "/assets/icons/moomool_banner.png", // 실제 이미지 경로로 교체 예정
-    buttonText: "시작하기",
+    image: "/assets/icons/moomool_banner.png",
   },
 ];
 
-// 강조 텍스트 렌더링 유틸
 function HighlightedText({
   text,
   highlight,
@@ -66,6 +60,7 @@ function HighlightedText({
     </>
   );
 }
+
 function MultilineText({ text }: { text: string }) {
   return (
     <>
@@ -78,22 +73,35 @@ function MultilineText({ text }: { text: string }) {
     </>
   );
 }
+
 export default function onBoardingPage() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [direction, setDirection] = useState<"left" | "right">("right");
+  const [slideState, setSlideState] = useState({
+    index: 0,
+    direction: "right" as "left" | "right",
+  });
   const router = useRouter();
+
   const goToSlide = (nextIndex: number) => {
-    setDirection(nextIndex > currentSlide ? "right" : "left");
-    setCurrentSlide(nextIndex);
+    setSlideState((prev) => ({
+      index: nextIndex,
+      direction: nextIndex > prev.index ? "right" : "left",
+    }));
   };
 
   const handleLast = () => {
-    if (currentSlide < slides.length - 1) {
-      setCurrentSlide(currentSlide + 1);
+    if (slideState.index < slides.length - 1) {
+      setSlideState((prev) => ({
+        index: prev.index + 1,
+        direction: "right",
+      }));
     } else {
       router.push("/home");
     }
   };
+
+  const currentSlide = slideState.index;
+  const direction = slideState.direction;
+  const isLastSlide = currentSlide === slides.length - 1;
 
   return (
     <div className="relative flex h-[100dvh] w-full flex-col justify-start bg-white">
@@ -146,7 +154,7 @@ export default function onBoardingPage() {
         {/* 버튼 */}
         <div className="flex justify-center">
           <Button className="w-[70%]" onClick={handleLast}>
-            {slides[currentSlide].buttonText}
+            {isLastSlide ? "시작하기" : "다음으로"}
           </Button>
         </div>
       </div>
