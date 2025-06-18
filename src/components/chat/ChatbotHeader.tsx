@@ -37,7 +37,6 @@ export default function Header({ title }: HeaderProps) {
 
         // "텍스트 모드"에서 결과 추천까지 받은 상태에서, 뒤로 가기 버튼 눌렀을 경우
         chatHistorySummary({ userId: session?.user.id, messages }); // 요약 수행하고 저장소에 저장
-
         setCurrentQuestionId(0);
         setHasRecommended(false);
       }

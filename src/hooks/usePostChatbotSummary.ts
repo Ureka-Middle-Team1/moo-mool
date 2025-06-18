@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { client } from "@/lib/axiosInstance";
-import { useChatStore } from "@/store/useChatStore";
 import { Message } from "@/types/Chat";
 import { usePostChatSession } from "./usePostChatSession";
 
@@ -14,18 +13,26 @@ export const usePostChatbotSummary = () => {
   const { mutate: submitChatSummary } = usePostChatSession();
 
   return useMutation({
-    mutationFn: async ({ userId, messages }: ChatbotSummaryInput) => {
+    mutationFn: async ({ messages }: ChatbotSummaryInput) => {
       console.log("채팅 요약 진행 중..");
-      const res = await client.post("/chat-summary", {
-        messages: JSON.stringify(messages),
-      });
+      const res = await client.post(
+        "/chat-summary",
+        {
+          messages: JSON.stringify(messages),
+        },
+        {
+          headers: {
+            "Content-Type": "application/json", // 명시적으로 지정
+          },
+        }
+      );
       return res.data;
     },
     onSuccess: (data, variables) => {
       const summary = data.normalizedValue;
+      console.log("채팅 요약 성공: ", data);
       const { userId, messages } = variables;
       submitChatSummary({ userId, messages, summary });
-      console.log("채팅 요약 성공: ", data);
     },
     onError: (error) => {
       console.error("채팅 요약 실패: ", error);

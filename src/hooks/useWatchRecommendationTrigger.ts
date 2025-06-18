@@ -49,19 +49,7 @@ export function useWatchRecommendationTrigger() {
       recommendPlan(rest);
       setHasRecommended(true); // 추천 완료로 표시
     }
-
-    if (hasRecommended) {
-      // 이미 추천을 받았다면, 채팅창은 clear될 필요 있음 (chatStore에 저장되어 있는 내용 모두 삭제)
-      console.log("추천완료", userId, accurateMessages.length);
-      //  ChatSession 저장
-      if (userId && accurateMessages.length > 0) {
-        postChatSession.mutate({
-          userId: userId,
-          messages: accurateMessages,
-        });
-      }
-    }
-  }, [currentQuestionId, userTendencyInfo, hasRecommended]);
+  }, [currentQuestionId, userTendencyInfo]);
 
   useEffect(() => {
     // "자연스러운 대화" 모드에서 요약 트리거 조건
