@@ -67,7 +67,7 @@ export const useChatStore = create<ChatStore>()(
         messages: state.messages,
         currentQuestionId: state.currentQuestionId,
         hasRecommended: state.hasRecommended,
-        // quickReplies는 저장하지 않음
+        quickReplies: state.quickReplies,
       }),
     }
   )
