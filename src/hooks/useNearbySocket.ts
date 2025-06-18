@@ -45,7 +45,6 @@ export function useNearbySocket(
       sendLocation();
       intervalId = setInterval(sendLocation, 5000);
     };
-
     socket.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data);
@@ -68,7 +67,6 @@ export function useNearbySocket(
     socket.onclose = () => {
       console.log("❌ WebSocket 연결 종료");
     };
-
     return () => {
       if (wsRef.current?.readyState === WebSocket.OPEN) {
         wsRef.current.close();

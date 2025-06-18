@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-dynamic";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import { useRouter } from "next/navigation";
 import Header from "@/components/meme/Header";
