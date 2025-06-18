@@ -1,7 +1,7 @@
 import ResultPage from "./resultPage";
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 export default async function Page({ params }: PageProps) {
