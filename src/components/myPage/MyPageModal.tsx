@@ -16,6 +16,8 @@ import TendencyBarChart from "@/components/chart/PlanDetailBarChart";
 import { mapPlanToDetailData } from "@/utils/mapPlanToDetailData";
 import { getScoreContext } from "@/utils/planScore";
 import { PlanDetailData } from "@/types/planDetail";
+import { useSession } from "next-auth/react";
+import TypeLevel from "./TypeLevel";
 
 type Props = {
   open: boolean;
@@ -29,32 +31,37 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
     error,
   } = useGetAllPlans();
 
+  const { data: session } = useSession();
+  const [invitedCount, setInvitedCount] = useState(0);
   const [selectedPlanId, setSelectedPlanId] = useState("");
+  const [userType, setUserType] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [planChartData, setPlanChartData] = useState<PlanDetailData | null>(
     null
   );
 
-  // 모달이 열릴 때 유저의 현재 요금제 불러오기
+  // 모달이 열릴 때 유저의 현재 요금제 및 초대 개수 불러오기
   useEffect(() => {
     if (!open) return;
+    if (!session?.user?.id) return;
 
     async function fetchUserPlan() {
       try {
         const res = await axios.get("/api/user/my-plan");
         const userMyPlanId = res.data.my_plan;
-        if (userMyPlanId) {
-          setSelectedPlanId(userMyPlanId.toString());
-        } else {
-          setSelectedPlanId("");
-        }
+        const userInvitedCount = res.data.invited_count;
+        const userType = res.data.type;
+        if (userMyPlanId) setSelectedPlanId(userMyPlanId.toString());
+        else setSelectedPlanId("");
+        setInvitedCount(userInvitedCount ?? 0);
+        setUserType(userType ?? null);
       } catch (err) {
         console.error("유저 요금제 정보 불러오기 실패", err);
       }
     }
 
     fetchUserPlan();
-  }, [open]);
+  }, [open, session]);
 
   // 선택된 요금제에 따라 차트 데이터 가공
   useEffect(() => {
@@ -99,21 +106,20 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
         <DialogDescription className="sr-only">
           나의 요금제 설정 및 정보를 확인할 수 있는 모달
         </DialogDescription>
-        <UserStamp />
-        <UserProfile />
+        <UserProfile invitedCount={invitedCount} />
+        <TypeLevel invitedCount={invitedCount} typeName={userType} />
+        <UserStamp invitedCount={invitedCount} />
 
-        <div className="mt-6 flex items-center justify-between">
+        <div className="mt-1 flex items-center justify-between">
           <div className="flex w-full flex-col">
-            <label
-              htmlFor="plan"
-              className="block text-sm font-medium text-gray-700">
+            <label htmlFor="plan" className="text-lg">
               나의 요금제
             </label>
             <select
               id="plan"
               value={selectedPlanId}
               onChange={handlePlanChange}
-              className="mt-1 block rounded-md border border-gray-300 bg-white p-2 text-sm shadow-sm"
+              className="mt-4 block rounded-md border border-gray-300 bg-yellow-100 p-2 text-sm shadow-sm"
               disabled={loading || isPlansLoading}>
               <option value="">현재 사용중인 요금제를 선택해주세요</option>
               {plans.map((plan) => (
@@ -133,11 +139,13 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
 
         {/* 차트 표시 */}
         {planChartData && (
-          <div className="mt-10 w-full">
+          <div className="mt-1 w-full">
             <TendencyBarChart
               data={planChartData.bar}
               rawData={planChartData.raw}
               name={planChartData.name}
+              colors={["rgba(241, 145, 187, 0.6)", "rgba(241, 145, 187, 0.6)"]}
+              height={260}
             />
           </div>
         )}
