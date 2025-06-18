@@ -1,12 +1,11 @@
-// src/app/api/chat-sessions/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const sessionId = parseInt(params.id, 10);
+  const sessionId = parseInt(context.params.id, 10);
 
   if (isNaN(sessionId)) {
     return NextResponse.json(
