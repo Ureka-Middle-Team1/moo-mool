@@ -8,10 +8,12 @@ const difficultyMap: Record<Difficulty, string> = {
 };
 
 export default function StageInfo({
-  stage,
+  stageLabel, // ex: stage1
+  stageName, // ex: SNS
   difficulty,
 }: {
-  stage: string;
+  stageLabel: string;
+  stageName: string;
   difficulty: Difficulty;
 }) {
   return (
@@ -23,7 +25,7 @@ export default function StageInfo({
             : "flex justify-center gap-5"
         }`}>
         <span>
-          {stage} - {stage}
+          {stageLabel} - {stageName}
         </span>
         {difficulty !== "bonus" && (
           <span>난이도 {difficultyMap[difficulty]}</span>

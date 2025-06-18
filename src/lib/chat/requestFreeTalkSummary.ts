@@ -6,13 +6,15 @@ export async function requestFreeTalkSummary(
   messages: Message[],
   lastSummary: string | null
 ) {
-  // 매개변수로 넘겨받은 messages 중에서 content만 추출
-  const userContents = messages
-    .filter((m) => m.role === "user")
-    .map((m) => m.content);
+  // 매개변수로 넘겨받은 messages 모두를 추출(gpt는 "bot"보다는 "assistant"를 더 잘 알아들으므로 아래와 같이 수정)
+  const fullMessages = messages.map((m) => ({
+    role: m.role === "bot" ? "assistant" : m.role, // GPT 기준 role로 정규화
+    content: m.content,
+  }));
 
-  const res = await client.post<{ summary: string }>("/freetalk-summary", {
-    messages: userContents,
+  // 요약을 위한 api 호출
+  const res = await client.post<{ summary: string }>("/chat-freetalk-summary", {
+    messages: fullMessages,
     lastSummary: lastSummary,
   });
 

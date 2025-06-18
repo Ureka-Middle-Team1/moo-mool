@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import HeadLogo from "../common/headlogo";
 
 export default function HomeHeader() {
   const { data: session } = useSession();
@@ -11,7 +12,7 @@ export default function HomeHeader() {
   const userId = session?.user?.id;
 
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/home";
 
   const { data: userCharacterProfile, isLoading } = useGetUserCharacterProfile(
     userId ?? ""
@@ -25,7 +26,7 @@ export default function HomeHeader() {
     <div className="w-full pt-2">
       <div className="flex items-center justify-between">
         {/* 좌측 로고 */}
-        <img src="/assets/icons/logo.png" alt="logo" className="h-auto w-18" />
+        <HeadLogo />
 
         {/* 우측: 로그인 상태에 따라 표시 */}
         {isLoggedIn ? (
