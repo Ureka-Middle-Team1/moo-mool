@@ -1,4 +1,5 @@
 export type Choice = {
+  score?: number;
   id: string;
   text: string;
   isCorrect?: boolean;

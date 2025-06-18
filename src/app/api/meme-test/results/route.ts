@@ -33,7 +33,10 @@ export async function POST(request: Request) {
       difficulty: string | null;
       isCorrect: boolean | null;
       selectedChoiceId: string;
+      selectedChoiceScore?: number; // 특정 유형(calling,chat,saving) 선택한 선지의 점수
     };
+
+    const SPECIAL_STAGE_SET = new Set(["Calling", "Chat", "Saving"]);
 
     const result: Record<
       string,
@@ -50,7 +53,13 @@ export async function POST(request: Request) {
     > = {};
 
     for (const answer of answers as Answer[]) {
-      const { stage, difficulty, isCorrect, selectedChoiceId } = answer;
+      const {
+        stage,
+        difficulty,
+        isCorrect,
+        selectedChoiceId,
+        selectedChoiceScore,
+      } = answer;
 
       if (!result[stage]) {
         result[stage] = {
@@ -59,12 +68,24 @@ export async function POST(request: Request) {
         };
       }
 
-      if (difficulty === "bonus") {
-        const bonusScore = BONUS_SCORE_MAP[selectedChoiceId] || 0;
-        result[stage].details.bonus = bonusScore;
-        result[stage].score += bonusScore;
+      const isSpecialStage = SPECIAL_STAGE_SET.has(stage);
+
+      if (isSpecialStage) {
+        if (difficulty === "bonus") {
+          const bonusScore = BONUS_SCORE_MAP[selectedChoiceId] || 0;
+          result[stage].details.bonus += bonusScore;
+          result[stage].score += bonusScore;
+        } else {
+          const score = selectedChoiceScore ?? 0;
+          result[stage].details[difficulty ?? "low"] = score;
+          result[stage].score += score;
+        }
       } else {
-        if (
+        if (difficulty === "bonus") {
+          const bonusScore = BONUS_SCORE_MAP[selectedChoiceId] || 0;
+          result[stage].details.bonus += bonusScore;
+          result[stage].score += bonusScore;
+        } else if (
           isCorrect === true &&
           difficulty !== null &&
           Object.prototype.hasOwnProperty.call(DIFFICULTY_SCORE, difficulty)
@@ -79,8 +100,8 @@ export async function POST(request: Request) {
     // 백분율 계산
     for (const stage in result) {
       const rawScore = result[stage].score;
-      result[stage].score =
-        Math.round((rawScore / STAGE_MAX_SCORE) * 10000) / 100; // 소수점 둘째자리까지
+      const percent = Math.round((rawScore / STAGE_MAX_SCORE) * 10000) / 100; // 소수점 둘째자리까지
+      result[stage].score = Math.min(percent, 100); // 최대 100으로 제한
     }
 
     // 동점일 경우의 타입 지정 우선순위 (데이터 많이 쓰는 순 정렬)
@@ -118,29 +139,30 @@ export async function POST(request: Request) {
 
     // 우선순위에 맞게 정렬 후 첫 번째 선택
     topStages.sort((a, b) => priority.indexOf(a) - priority.indexOf(b));
-
     const topStage = topStages[0];
+    const getScore = (key: string) => result[key]?.score ?? 0;
+
     await prisma.userCharacterProfile.upsert({
       where: { user_id: userId },
       update: {
         plan_id: planId,
-        call_level: result["Calling"]?.score ?? 0,
-        sms_level: result["Chat"]?.score ?? 0,
-        sns_level: result["SNS"]?.score ?? 0,
-        youtube_level: result["Youtube"]?.score ?? 0,
-        book_level: result["Books"]?.score ?? 0,
-        saving_level: result["Saving"]?.score ?? 0,
+        call_level: getScore("Calling"),
+        sms_level: getScore("Chat"),
+        sns_level: getScore("SNS"),
+        youtube_level: getScore("Youtube"),
+        book_level: getScore("Books"),
+        saving_level: getScore("Saving"),
         type: topStage,
       },
       create: {
         user_id: userId,
         plan_id: planId,
-        call_level: result["Calling"]?.score ?? 0,
-        sms_level: result["Chat"]?.score ?? 0,
-        sns_level: result["SNS"]?.score ?? 0,
-        youtube_level: result["Youtube"]?.score ?? 0,
-        book_level: result["Books"]?.score ?? 0,
-        saving_level: result["Saving"]?.score ?? 0,
+        call_level: getScore("Calling"),
+        sms_level: getScore("Chat"),
+        sns_level: getScore("SNS"),
+        youtube_level: getScore("Youtube"),
+        book_level: getScore("Books"),
+        saving_level: getScore("Saving"),
         type: topStage,
       },
     });
