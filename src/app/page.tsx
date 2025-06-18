@@ -42,7 +42,7 @@ export default function Home() {
 
       {/* 캐릭터 영역 */}
       <Canvas
-        style={{ width: "60%", height: "40%" }}
+        style={{ width: "60%", height: "45%" }}
         camera={{ position: [0, 2, 4], fov: 35 }}>
         <ambientLight intensity={0.9} />
         <directionalLight position={[2, 2, 5]} intensity={1.2} />
@@ -56,18 +56,20 @@ export default function Home() {
 
       {/* 버튼 영역 */}
       <div className="z-10 mt-auto mb-10 flex w-full max-w-xs flex-col gap-4 font-semibold">
-        <Button
-          onClick={handleLogin}
-          variant="pink"
-          className="flex items-center justify-center gap-2 py-6 text-lg font-semibold text-white">
-          <Image
-            src={"/assets/icons/message-circle.png"}
-            alt="메세지"
-            width={15}
-            height={15}
-          />
-          카카오로 시작하기
-        </Button>
+        {!session && (
+          <Button
+            onClick={handleLogin}
+            variant="pink"
+            className="flex items-center justify-center gap-2 py-6 text-lg font-semibold text-white">
+            <Image
+              src={"/assets/icons/message-circle.png"}
+              alt="메세지"
+              width={15}
+              height={15}
+            />
+            카카오로 시작하기
+          </Button>
+        )}
 
         <Button
           onClick={handleExplore}
