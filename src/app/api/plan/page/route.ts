@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 //페이지 크기
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 5;
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
@@ -18,11 +18,18 @@ export async function GET(req: NextRequest) {
   const plans = await prisma.plan.findMany({
     where,
     skip: page * size,
-    take: size,
+    take: size + 1,
     orderBy: {
       [sort]: order === "asc" ? "asc" : "desc",
     },
   });
 
-  return NextResponse.json(plans);
+  const hasNext = plans.length > size;
+  const sliced = hasNext ? plans.slice(0, size) : plans;
+
+  if (process.env.NODE_ENV !== "production") {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+
+  return NextResponse.json({ data: sliced, hasNext });
 }
