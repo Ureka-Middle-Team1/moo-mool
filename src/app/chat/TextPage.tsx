@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import ChatMessageList from "@/components/chat/ChatMessageList";
 import ChatInputBox from "@/components/chat/ChatInputBox";
 import { useChatStore } from "@/store/useChatStore";
+import { useChatStreamingStore } from "@/store/useChatStreamingStore";
 import { useHandleAnswer } from "@/hooks/useHandleAnswer";
 import { handleFreeTalkAnswer } from "@/lib/chat/handleFreeTalkAnswer";
 
@@ -12,13 +13,14 @@ export default function TextPage() {
   const [input, setInput] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
   const isSubmittingRef = useRef(false);
+  const isStreaming = useChatStreamingStore((state) => state.isStreaming);
+
   const { handleNormalizedAnswer } = useHandleAnswer();
+  const { messages, currentQuestionId, setCurrentQuestionId } = useChatStore();
 
-  const { messages, appendMessage, currentQuestionId, setCurrentQuestionId } =
-    useChatStore();
-
-  // 스크롤 아래로 이동
+  // 메시지 추가될 때 스크롤 아래로 이동
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -33,8 +35,7 @@ export default function TextPage() {
 
   const handleSubmit = async (e?: React.FormEvent | React.KeyboardEvent) => {
     e?.preventDefault();
-    if (!input.trim() || isSubmittingRef.current) return;
-
+    if (!input.trim() || isSubmittingRef.current || isStreaming) return;
     const userMessage = input.trim();
     isSubmittingRef.current = true;
 
@@ -66,14 +67,21 @@ export default function TextPage() {
   };
 
   return (
-    <div className="flex h-full flex-1 flex-col overflow-hidden">
-      <ChatMessageList messages={messages} bottomRef={bottomRef} />
-      <ChatInputBox
-        input={input}
-        setInput={setInput}
-        onSubmit={handleSubmit}
-        textareaRef={textareaRef}
-      />
+    <div className="flex h-full flex-col">
+      <div className="min-h-0 flex-1">
+        <ChatMessageList messages={messages} bottomRef={bottomRef} />
+      </div>
+
+      {/* 입력창 - 하단 고정 */}
+      <div className="sticky bottom-0 z-10 w-full bg-pink-100 pb-[env(safe-area-inset-bottom)]">
+        <ChatInputBox
+          input={input}
+          setInput={setInput}
+          onSubmit={handleSubmit}
+          textareaRef={textareaRef}
+          disabled={isSubmittingRef.current || isStreaming}
+        />
+      </div>
     </div>
   );
 }
