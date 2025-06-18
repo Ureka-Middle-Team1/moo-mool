@@ -16,13 +16,18 @@ export async function GET(req: NextRequest) {
   try {
     const sessions = await prisma.chatSession.findMany({
       where: { user_id: userId },
+      select: {
+        id: true,
+        summary: true,
+        created_at: true,
+      },
       orderBy: { created_at: "desc" },
       take: 5,
     });
 
     return NextResponse.json(sessions);
   } catch (err) {
-    console.error("[CHAT_SESSION_GET_ERROR]", err);
+    console.error("[CHAT_SESSION_LIST_ERROR]", err);
     return NextResponse.json({ error: "서버 오류" }, { status: 500 });
   }
 }
