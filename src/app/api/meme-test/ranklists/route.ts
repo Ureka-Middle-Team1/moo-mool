@@ -38,14 +38,16 @@ export async function GET() {
   });
 
   // 실제 퍼센트 계산
-  countsByType.forEach(({ type, _count }) => {
-    if (type in typeNameMap) {
-      percent[type] =
-        totalProfiles > 0
-          ? Number(((_count.type / totalProfiles) * 100).toFixed(1))
-          : 0;
+  countsByType.forEach(
+    ({ type, _count }: { type: string; _count: { type: number } }) => {
+      if (type in typeNameMap) {
+        percent[type] =
+          totalProfiles > 0
+            ? Number(((_count.type / totalProfiles) * 100).toFixed(1))
+            : 0;
+      }
     }
-  });
+  );
 
   // moonos 배열 생성
   const moonos = Object.keys(typeNameMap).map((type) => ({

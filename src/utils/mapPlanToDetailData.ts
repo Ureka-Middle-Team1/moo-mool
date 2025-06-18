@@ -27,6 +27,10 @@ function getBenefits(services: string[]): PlanDetailData["benefits"] {
     .filter((b): b is PlanDetailData["benefits"][number] => b !== undefined);
 }
 
+function getNetworkTypeLabel(type: "LTE" | "FIVE_G"): string {
+  return type === "FIVE_G" ? "5G" : "LTE";
+}
+
 function normalize(value: number, min: number, max: number) {
   if (max === min) return 50;
   const clamped = Math.min(Math.max(value, min), max);
@@ -59,7 +63,7 @@ export function mapPlanToDetailData(
   return {
     name: plan.name,
     price: `월 ${plan.price.toLocaleString()} 원`,
-    tags: ["정제된 태그", plan.networkType, "혜택 풍부"],
+    tags: ["정제된 태그", getNetworkTypeLabel(plan.networkType), "혜택 풍부"],
     radar: scoreArray,
     bar: scoreArray,
     raw: rawArray,

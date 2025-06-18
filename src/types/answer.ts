@@ -7,4 +7,5 @@ export type Answer = {
   stage: string;
   difficulty: Difficulty;
   isBonus: boolean;
+  selectedChoiceScore?: number | null;
 };
