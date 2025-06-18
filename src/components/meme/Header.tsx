@@ -7,7 +7,7 @@ export default function Header({ onBack }: { onBack: () => void }) {
   return (
     <header className="sticky top-0 z-100 flex h-12 w-full items-center justify-between bg-yellow-200 px-4">
       <div className="flex items-center">
-        <ChevronLeft onClick={onBack} className="h-5 w-5" />
+        <ChevronLeft onClick={onBack} className="h-5 w-5 cursor-pointer" />
       </div>
       <div
         style={{ fontFamily: "kkubulim" }}
