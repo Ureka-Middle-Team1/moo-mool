@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
 import TrendBar from "@/components/chart/TrendBar";
@@ -17,13 +17,26 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import Header from "@/components/meme/Header";
 import SuspenseImage from "@/components/meme/SuspenseImage";
+import PlanCard from "@/components/chat/PlanCard";
+import { useChatStore } from "@/store/useChatStore";
+import { useSixTypeRecommendPlan } from "@/hooks/useSixTypeRecommendPlan";
 
 export default function ResultPage() {
   const router = useRouter();
   const { data, isLoading, isError } = useGetTypeRankQuery();
+  const { messages } = useChatStore(); // chatStore에 있는 정보 불러올 것임 (거기에 정보가 저장될 테니까요)
+  const {
+    mutate: fetchRecommendPlan,
+    isPending,
+    error,
+  } = useSixTypeRecommendPlan();
 
   const params = useParams();
   const encryptedId = params.id as string;
+  // 요금제 추천 카드 (맨 첫번째 것만 찾는다)
+  const firstPlanMessage = messages.find(
+    (msg) => msg.planData && msg.type === "plan"
+  );
 
   const decryptedId = encryptedId
     ? decrypt(decodeURIComponent(encryptedId))
@@ -34,6 +47,11 @@ export default function ResultPage() {
     isLoading: isUserLoading,
     isError: isUserError,
   } = useGetUserInfo(decryptedId || "");
+
+  // 최초 렌더링 시에 DB로부터 결과 받아오기
+  useEffect(() => {
+    fetchRecommendPlan();
+  }, []);
 
   if (!encryptedId || !decryptedId) {
     return <p>잘못된 접근입니다.</p>;
@@ -160,6 +178,18 @@ export default function ResultPage() {
               추천 요금제
             </p>
           </div>
+          {/* 현재 요금제 관련 정보는 chat-storage(전역 저장소)에 저장되어 있음, 그것을 가져와 사용 중 */}
+          {firstPlanMessage?.planData?.id !== undefined && (
+            <PlanCard
+              id={firstPlanMessage.planData.id}
+              name={firstPlanMessage.planData.name ?? ""}
+              data={firstPlanMessage.planData.data ?? ""}
+              voice={firstPlanMessage.planData.voice ?? ""}
+              sms={firstPlanMessage.planData.sms ?? ""}
+              price={firstPlanMessage.planData.price ?? ""}
+              tel={firstPlanMessage.planData.tel ?? ""}
+            />
+          )}
           <div className="flex w-[90%] flex-col gap-4">
             <p className="text-[11px] text-black">
               본 테스트는 LG유플러스와의 협업을 통해 제작되었으며, <br />
