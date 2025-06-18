@@ -23,7 +23,6 @@ export function useWatchRecommendationTrigger() {
     userMessageCount,
   } = useFreeTalkStore();
   const { hasRecommended, setHasRecommended } = useChatStore();
-
   const { mutate: recommendPlan } = useSmartChoiceRecommendation();
   const { mutate: summarize } = useFreeTalkSummary();
 
@@ -32,6 +31,14 @@ export function useWatchRecommendationTrigger() {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
   const postChatSession = usePostChatSession();
+
+  // 렌더링 초기에, chat-message 저장소를 clear 해야 함 (밈테스트 결과도 여기에 저장되기에, 초기화할 필요 있음)
+  useEffect(() => {
+    if (currentQuestionId === 0) {
+      // 질문을 시작하려 할 때
+      clearMessages();
+    }
+  }, []);
 
   useEffect(() => {
     console.log("변화감지", currentQuestionId);

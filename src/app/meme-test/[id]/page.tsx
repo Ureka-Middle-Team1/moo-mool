@@ -97,6 +97,7 @@ export default function TestQuestionPage() {
       stage: question.stage,
       difficulty: question.difficulty,
       isBonus: Boolean(question.is_bonus),
+      selectedChoiceScore: choice.score ?? null,
     };
 
     // 상태에 답변 저장

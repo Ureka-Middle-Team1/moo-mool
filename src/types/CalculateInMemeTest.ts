@@ -12,7 +12,7 @@ export type UserMemeTestResult = {
 
 // Smart Choice API에 넘길 때는 해당 값들을 각각 string으로 변환해서 넘겨야 한다!
 export type SmartChoiceInput = {
-  call: number; // 분
-  sms: number; // 건
-  data: number; // MB
+  call: string; // 분
+  sms: string; // 건
+  data: string; // MB
 };
