@@ -8,7 +8,7 @@ export function dbPlanToParsedPlanWithID(plan: {
   dataAmountMb: number;
   overageSpeedMbps: number | null;
   voiceMinutes: number;
-  smsIncluded: boolean;
+  smsIncluded: number;
 }): ParsedPlanWithID {
   // 데이터 표시
   const data =

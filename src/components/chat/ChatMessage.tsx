@@ -1,6 +1,10 @@
+"use client";
+
 import { Message } from "@/types/Chat";
 import PlanCard from "./PlanCard";
 import TypingMessage from "./TypingMessage";
+import { useChatStore } from "@/store/useChatStore";
+import QuickReplyList from "./QuickReplyList";
 
 interface ChatMessageProps {
   message: Message;
@@ -12,6 +16,9 @@ export default function ChatMessage({
   isLastBotMessage,
 }: ChatMessageProps) {
   const isUser = message.role === "user";
+  const { quickReplies } = useChatStore();
+
+  // 최종 요금제 카드 추천 버전
   if (message.type === "plan" && message.planData) {
     return (
       <div className="flex items-start justify-start gap-2 py-2">
@@ -20,14 +27,18 @@ export default function ChatMessage({
           alt="무너"
           className="mt-1 h-8 w-8 rounded-full"
         />
-        <div className="flex w-full flex-col">
+        <div className="flex flex-col">
           <span className="mb-1 text-xs text-gray-800">무너</span>
-          <PlanCard {...message.planData} />
+          <TypingMessage fullText={message.content} />
+          <div className="flex w-full flex-col py-3">
+            <PlanCard {...message.planData} />
+          </div>
         </div>
       </div>
     );
   }
 
+  // 사용자 답변 버전
   if (isUser) {
     return (
       <div className="flex items-start justify-end gap-2">
@@ -38,6 +49,7 @@ export default function ChatMessage({
     );
   }
 
+  // 무너 질문 버전
   return (
     <div className="flex items-start justify-start gap-2">
       <img
@@ -48,7 +60,9 @@ export default function ChatMessage({
       <div className="flex flex-col">
         <span className="mb-1 text-xs text-gray-800">무너</span>
         {isLastBotMessage ? (
-          <TypingMessage fullText={message.content} />
+          <>
+            <TypingMessage fullText={message.content} />
+          </>
         ) : (
           <div className="max-w-[75%] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl bg-white px-3 py-2 text-sm shadow-md">
             {message.content}

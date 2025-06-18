@@ -1,3 +1,4 @@
+import { useChatStreamingStore } from "@/store/useChatStreamingStore";
 import { useEffect, useState } from "react";
 
 interface UseStreamingTextParams {
@@ -17,31 +18,42 @@ export function useStreamingText({
 }: UseStreamingTextParams) {
   const [displayedText, setDisplayedText] = useState("");
   const [index, setIndex] = useState(0);
+  const { setIsStreaming } = useChatStreamingStore();
 
   const units = mode === "word" ? fullText.split(" ") : [...fullText];
 
   useEffect(() => {
     setDisplayedText("");
     setIndex(0);
+    if (units.length > 0) {
+      setIsStreaming(true);
+    }
   }, [triggerKey, fullText]);
 
   useEffect(() => {
-    if (index < units.length) {
-      const timeout = setTimeout(() => {
-        setDisplayedText((prev) =>
-          prev.length === 0
-            ? units[index]
-            : mode === "word"
-              ? `${prev} ${units[index]}`
-              : `${prev}${units[index]}`
-        );
-        setIndex((i) => i + 1);
-      }, speed);
-      return () => clearTimeout(timeout);
-    } else {
-      onDone?.();
-    }
-  }, [index, units, speed, onDone, mode]);
+    if (index >= units.length) return;
+
+    const timeout = setTimeout(() => {
+      const next = units[index];
+      setDisplayedText((prev) =>
+        prev.length === 0
+          ? next
+          : mode === "word"
+            ? `${prev} ${next}`
+            : `${prev}${next}`
+      );
+
+      const nextIndex = index + 1;
+      setIndex(nextIndex);
+
+      if (nextIndex === units.length) {
+        setIsStreaming(false);
+        onDone?.();
+      }
+    }, speed);
+
+    return () => clearTimeout(timeout);
+  }, [index, units, speed, mode]);
 
   return displayedText;
 }

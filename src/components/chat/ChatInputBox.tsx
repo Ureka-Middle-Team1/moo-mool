@@ -1,12 +1,16 @@
+"use client";
 import { ArrowUp, Mic } from "lucide-react";
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useChatStreamingStore } from "@/store/useChatStreamingStore";
+import { SubmitType } from "@/hooks/useChatSubmit";
 
 interface ChatInputBoxProps {
   input: string;
   setInput: (val: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (e?: SubmitType) => void;
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
+  disabled?: boolean;
 }
 
 export default function ChatInputBox({
@@ -16,9 +20,9 @@ export default function ChatInputBox({
   textareaRef,
 }: ChatInputBoxProps) {
   const formRef = useRef<HTMLFormElement>(null); // 엔터키 중복 방지를 위한 ref
-  const isSubmittingRef = useRef(false);
 
   const router = useRouter();
+  const isStreaming = useChatStreamingStore((state) => state.isStreaming);
 
   const handleMicClick = () => {
     router.push("?mode=voice");
@@ -38,7 +42,7 @@ export default function ChatInputBox({
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             // 중복 호출 방지
-            if (!isSubmittingRef.current) {
+            if (!isStreaming) {
               onSubmit(e);
             }
           }
@@ -49,10 +53,11 @@ export default function ChatInputBox({
         <button
           type="button"
           className="text-[#94A3B8]"
+          disabled={isStreaming}
           onClick={handleMicClick}>
           <Mic size={20} />
         </button>
-        <button type="submit" className="text-[#94A3B8]">
+        <button type="submit" className="text-[#94A3B8]" disabled={isStreaming}>
           <ArrowUp size={20} />
         </button>
       </div>
