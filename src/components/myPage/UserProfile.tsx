@@ -1,7 +1,6 @@
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useSession } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
 
 // 유저 프로필
 export default function UserProfile() {
@@ -16,8 +15,9 @@ export default function UserProfile() {
   return (
     <>
       {isLoggedIn ? (
-        <div className="flex w-full flex-row px-4 py-8">
-          <Avatar className="h-24 w-24 overflow-hidden rounded-full bg-gray-500">
+        <div className="flex w-full flex-row items-center gap-4 px-4 py-6">
+          {/* 아바타 */}
+          <Avatar className="relative h-16 w-16 rounded-full bg-gray-400">
             <AvatarImage
               src={
                 userCharacterProfile?.type
@@ -25,10 +25,20 @@ export default function UserProfile() {
                   : session.user.image
               }
               alt="user-avatar"
-              className="h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-contain"
             />
-            <AvatarFallback>🐤</AvatarFallback>
+            <AvatarFallback className="flex h-full w-full items-center justify-center">
+              🐤
+            </AvatarFallback>
           </Avatar>
+
+          {/* 이름, 이메일 */}
+          <div className="flex flex-col">
+            <p className="text-base font-semibold text-gray-900">
+              {session.user.name}님
+            </p>
+            <p className="text-sm text-gray-500">{session.user.email}</p>
+          </div>
         </div>
       ) : (
         <div>로딩한 것이 없습니다.</div>
