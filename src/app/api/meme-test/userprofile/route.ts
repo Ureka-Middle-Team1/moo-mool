@@ -24,8 +24,6 @@ export async function GET(request: Request) {
         youtube_level: true,
         saving_level: true,
         book_level: true,
-        type: true,
-        plan_id: true,
       },
     });
 

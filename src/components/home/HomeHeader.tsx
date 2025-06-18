@@ -44,7 +44,7 @@ export default function HomeHeader({ onAvatarClick }: Props) {
                   : session.user.image
               }
               alt="user-avatar"
-              className="scale-80 object-contain"
+              className="h-full w-full object-cover"
             />
             <AvatarFallback>🐤</AvatarFallback>
           </Avatar>
