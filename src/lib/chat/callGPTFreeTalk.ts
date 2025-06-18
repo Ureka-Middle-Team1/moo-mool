@@ -38,17 +38,30 @@ export async function callGPTFreeTalk(
   }
 
   // 특정 필드에 대한 정보가 반영 되었는지, 응답의 정규식으로 확인
-  const summaryRegex = /^정리하겠습니다:\s*(\w+):([^\s]+)\s*/;
-  const match = reply.match(summaryRegex);
+  const summaryRegexGlobal =
+    /^정리하겠습니다:\s*(voice|data|sms|age|type|dis|subscribe):([A-Z0-9_+]+)(?:\s|$)/gm;
 
-  let visibleMessage = reply;
-  if (match) {
-    // 정규식에 부합한다면..
-    const [, key, value] = match;
-    updateTendency({ [key]: value });
-    setLastSummary(`${lastSummary}, + ${key}:${value}`); // 기존의 저장된 내용에서 이어 붙이기
-    visibleMessage = reply.replace(summaryRegex, "").trim();
+  const safeSummary = lastSummary ?? ""; // lastSummary가 null일 경우에는 공백
+  const matches = [...reply.matchAll(summaryRegexGlobal)];
+
+  console.log("매치되는 것: ", matches);
+
+  for (const [, key, value] of matches) {
+    const alreadyHas = new RegExp(`(?:^|\\+|,)\\s*${key}:${value}`).test(
+      safeSummary
+    );
+    if (!alreadyHas) {
+      updateTendency({ [key]: value });
+      const newEntry = `${key}:${value}`;
+      const updatedSummary = safeSummary
+        ? `${safeSummary}, +${newEntry}`
+        : newEntry;
+      setLastSummary(updatedSummary);
+    }
   }
+
+  // 응답에서 문장만 출력
+  const cleanedReply = reply.replace(summaryRegexGlobal, "").trim();
 
   // "정확한 답변" 로직으로 가야 하는 경우
   if (reply?.toUpperCase() === "FSM") {
@@ -58,5 +71,5 @@ export async function callGPTFreeTalk(
     };
   }
 
-  return { message: visibleMessage, triggeredFSM: false };
+  return { message: cleanedReply, triggeredFSM: false };
 }
