@@ -4,7 +4,7 @@ import { useChatStore } from "@/store/useChatStore";
 
 interface ChatMessageListProps {
   messages: Message[];
-  bottomRef: React.RefObject<HTMLDivElement | null>;
+  bottomRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export default function ChatMessageList({

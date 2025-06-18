@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 const slides = [
   {
@@ -80,6 +81,12 @@ export default function onBoardingPage() {
     direction: "right" as "left" | "right",
   });
   const router = useRouter();
+  const currentSlide = slideState.index;
+  const direction = slideState.direction;
+  const isLastSlide = currentSlide === slides.length - 1;
+
+  const { data: session } = useSession();
+  const callbackUrl = "/home";
 
   const goToSlide = (nextIndex: number) => {
     setSlideState((prev) => ({
@@ -95,13 +102,13 @@ export default function onBoardingPage() {
         direction: "right",
       }));
     } else {
-      router.push("/home");
+      if (!session) {
+        signIn("kakao", { callbackUrl });
+      } else {
+        router.push("/home");
+      }
     }
   };
-
-  const currentSlide = slideState.index;
-  const direction = slideState.direction;
-  const isLastSlide = currentSlide === slides.length - 1;
 
   return (
     <div className="relative flex h-[100dvh] w-full flex-col justify-start bg-white">
