@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+
+import React, { useEffect } from "react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
 import TrendBar from "@/components/chart/TrendBar";
@@ -15,20 +16,40 @@ import {
 import { useRouter } from "next/navigation";
 import Header from "@/components/meme/Header";
 import SuspenseImage from "@/components/meme/SuspenseImage";
+import { useChatStore } from "@/store/useChatStore";
+import { useSixTypeRecommendPlan } from "@/hooks/useSixTypeRecommendPlan";
+import PlanCard from "@/components/chat/PlanCard";
 
 export default function ResultPage({ encryptedId }: { encryptedId: string }) {
   const router = useRouter();
   const { data, isLoading, isError } = useGetTypeRankQuery();
+  const { messages } = useChatStore(); // chatStore에 있는 정보 불러올 것임 (거기에 정보가 저장될 테니까요)
+  const {
+    mutate: fetchRecommendPlan,
+    isPending,
+    error,
+  } = useSixTypeRecommendPlan();
 
   const decryptedId = encryptedId
     ? decrypt(decodeURIComponent(encryptedId))
     : null;
+
+  // 요금제 추천 카드 (맨 첫번째 것만 찾는다)
+  const firstPlanMessage = messages.find(
+    (msg) => msg.planData && msg.type === "plan"
+  );
 
   const {
     data: user,
     isLoading: isUserLoading,
     isError: isUserError,
   } = useGetUserInfo(decryptedId || "");
+
+
+  // 최초 렌더링 시에 DB로부터 결과 받아오기
+  useEffect(() => {
+    fetchRecommendPlan();
+  }, []);
 
   if (!encryptedId || !decryptedId) {
     return <p>잘못된 접근입니다.</p>;
@@ -143,7 +164,18 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
             />
           </div>
         </div>
-
+        {/* 현재 요금제 관련 정보는 chat-storage(전역 저장소)에 저장되어 있음, 그것을 가져와 사용 중 */}
+        {firstPlanMessage?.planData?.id !== undefined && (
+          <PlanCard
+            id={firstPlanMessage.planData.id}
+            name={firstPlanMessage.planData.name ?? ""}
+            data={firstPlanMessage.planData.data ?? ""}
+            voice={firstPlanMessage.planData.voice ?? ""}
+            sms={firstPlanMessage.planData.sms ?? ""}
+            price={firstPlanMessage.planData.price ?? ""}
+            tel={firstPlanMessage.planData.tel ?? ""}
+          />
+        )}
         <div className="mt-10 flex w-full flex-col items-center rounded-lg p-4 text-[14px]">
           <p style={{ fontFamily: "kkubulim" }} className="text-[25px]">
             더 정확한 요금제 추천을 원한다면?
