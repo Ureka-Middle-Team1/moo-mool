@@ -22,7 +22,7 @@ export function useSmartChoiceRecommendation(options?: Options) {
       if (data.result!.length > 0) {
         addMessage({
           role: "bot",
-          content: "",
+          content: "너에게 딱맞는 요금제 추천해줄게!",
           type: "plan",
           planData: data.result![0],
         });

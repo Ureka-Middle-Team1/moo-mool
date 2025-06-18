@@ -93,7 +93,16 @@ export default function CharacterScene() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}>
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="relative flex flex-col items-center">
+            {/* 상단에 context가 있다면 말풍선처럼 렌더링 */}
+            {lastMessage.content && (
+              <div className="mb-2 rounded-lg bg-white px-4 py-2 text-sm shadow-md">
+                {streamingText}
+              </div>
+            )}
+
+            {/* 요금제 카드 */}
             <PlanCard {...lastMessage.planData!} />
           </motion.div>
         )}

@@ -27,9 +27,12 @@ export default function ChatMessage({
           alt="무너"
           className="mt-1 h-8 w-8 rounded-full"
         />
-        <div className="flex w-full flex-col">
+        <div className="flex flex-col">
           <span className="mb-1 text-xs text-gray-800">무너</span>
-          <PlanCard {...message.planData} />
+          <TypingMessage fullText={message.content} />
+          <div className="flex w-full flex-col py-3">
+            <PlanCard {...message.planData} />
+          </div>
         </div>
       </div>
     );
