@@ -41,7 +41,6 @@ export function useWatchRecommendationTrigger() {
   }, []);
 
   useEffect(() => {
-    console.log("변화감지", currentQuestionId);
     // 정해진 질문 로직에서, 마지막 질문까지 모두 완료해서 끝에 도달했을 경우, 이미 추천된 상태가 아닌 경우에만 안의 것 수행
     if (currentQuestionId === 12 && !hasRecommended) {
       // subscribe만 제거한 나머지 필드 추출
@@ -61,9 +60,6 @@ export function useWatchRecommendationTrigger() {
           messages: accurateMessages,
         });
       }
-      setCurrentQuestionId(0);
-      // clearMessages();
-      setHasRecommended(false);
     }
   }, [currentQuestionId, userTendencyInfo, hasRecommended]);
 
