@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import Header from "@/components/meme/Header";
 import SuspenseImage from "@/components/meme/SuspenseImage";
 import { useChatStore } from "@/store/useChatStore";
-import { useSixTypeRecommendPlan } from "@/hooks/useSixTypeRecommendPlan";
+import { useGetSixTypeRecommendPlan } from "@/hooks/useGetSixTypeRecommendPlan";
 import PlanCard from "@/components/chat/PlanCard";
 
 export default function ResultPage({ encryptedId }: { encryptedId: string }) {
@@ -27,7 +27,7 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
     mutate: fetchRecommendPlan,
     isPending,
     error,
-  } = useSixTypeRecommendPlan();
+  } = useGetSixTypeRecommendPlan();
 
   const decryptedId = encryptedId
     ? decrypt(decodeURIComponent(encryptedId))

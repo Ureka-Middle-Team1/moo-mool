@@ -16,7 +16,7 @@ export default function ChatbotPage() {
 
   return (
     <div className="flex h-screen flex-col bg-pink-100">
-      <Header />
+      <Header title="챗봇" />
       <div className="flex flex-1 flex-col overflow-hidden">
         {mode === "text" ? <TextPage /> : <VoicePage />}
       </div>

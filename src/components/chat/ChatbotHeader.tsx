@@ -4,7 +4,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, X } from "lucide-react";
 import { Button } from "../ui/button";
 
-export default function Header() {
+type HeaderProps = {
+  title: string;
+};
+
+export default function Header({ title }: HeaderProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
@@ -17,8 +21,6 @@ export default function Header() {
       router.back();
     }
   };
-
-  const title = "챗봇";
 
   return (
     <div className="relative flex h-12 items-center justify-center bg-white">
