@@ -1,5 +1,6 @@
 "use client";
 
+
 import React, { useEffect } from "react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
@@ -43,6 +44,7 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
     isLoading: isUserLoading,
     isError: isUserError,
   } = useGetUserInfo(decryptedId || "");
+
 
   // 최초 렌더링 시에 DB로부터 결과 받아오기
   useEffect(() => {
@@ -174,7 +176,6 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
             tel={firstPlanMessage.planData.tel ?? ""}
           />
         )}
-
         <div className="mt-10 flex w-full flex-col items-center rounded-lg p-4 text-[14px]">
           <p style={{ fontFamily: "kkubulim" }} className="text-[25px]">
             더 정확한 요금제 추천을 원한다면?

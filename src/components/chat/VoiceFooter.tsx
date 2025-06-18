@@ -10,7 +10,6 @@ import { Button } from "../ui/button";
 import { useBotResponseGuard } from "@/hooks/useBotResponseGuard";
 import { useVoiceControlStore } from "@/store/useVoiceControlStore";
 import { useChatStore } from "@/store/useChatStore";
-import { callGPTFreeTalk } from "@/lib/chat/callGPTFreeTalk";
 import { handleFreeTalkAnswer } from "@/lib/chat/handleFreeTalkAnswer";
 
 export default function VoiceFooter() {

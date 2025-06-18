@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import TestHomePage from "./TestHomePage";
 
 type Props = {
+  params: { id: string };
   searchParams: { inviter?: string };
 };
 
@@ -15,7 +15,7 @@ export function generateMetadata({ searchParams }: Props): Metadata {
       description: inviterName
         ? `${inviterName}님의 성향을 확인해보세요!`
         : "성향 테스트 결과를 확인해보세요!",
-      url: "https://moo-mool-one.vercel.app/meme-test",
+      url: "https://moo-mool-one.vercel.app",
       images: [
         {
           url: "https://moo-mool-one.vercel.app/assets/icons/meme-test-home.png",
@@ -27,8 +27,4 @@ export function generateMetadata({ searchParams }: Props): Metadata {
       type: "website",
     },
   };
-}
-
-export default function Page() {
-  return <TestHomePage />;
 }
