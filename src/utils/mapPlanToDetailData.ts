@@ -41,7 +41,7 @@ export function mapPlanToDetailData(
   const dataScore = normalize(plan.dataAmountMb ?? 0, 0, 300000);
   const speedScore = normalize(plan.overageSpeedMbps ?? 0, 0, 8000);
   const voiceScore = normalize(plan.voiceMinutes ?? 0, 0, 400);
-  const smsScore = normalize(plan.smsIncluded ? 45200 : 0, 0, 45200);
+  const smsScore = normalize(plan.smsIncluded ?? 0, 0, 45200);
 
   const scoreArray = [priceScore, dataScore, speedScore, voiceScore, smsScore];
 
@@ -50,7 +50,7 @@ export function mapPlanToDetailData(
     plan.dataAmountMb ?? 0,
     plan.overageSpeedMbps ?? 0,
     plan.voiceMinutes ?? 0,
-    plan.smsIncluded ? 45200 : 0,
+    plan.smsIncluded ?? 0,
   ];
 
   const compareArray = [40, 82, 84, 43, 59];

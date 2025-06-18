@@ -43,8 +43,8 @@ export function calculateSmartChoiceValues(
       );
 
   return {
-    call: finalCall,
-    sms: finalSms,
-    data: finalData,
+    call: finalCall.toString(),
+    sms: finalSms.toString(),
+    data: finalData.toString(),
   };
 }
