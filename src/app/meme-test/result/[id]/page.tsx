@@ -1,9 +1,10 @@
 import ResultPage from "./resultPage";
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default function Page({ params }: PageProps) {
-  return <ResultPage encryptedId={params.id} />;
+export default async function Page({ params }: PageProps) {
+  const { id } = await params;
+  return <ResultPage encryptedId={id} />;
 }
