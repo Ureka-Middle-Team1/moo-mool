@@ -14,7 +14,7 @@ export default function QuickReplyButton({
   return (
     <Button
       variant="outline"
-      className="mb-4 h-auto rounded-full border border-none bg-yellow-50 px-3 py-1 text-xs font-light text-gray-800 shadow-sm"
+      className="mb-3 h-auto rounded-full border border-none bg-yellow-50 px-3 py-1 text-xs font-light text-gray-800 shadow-sm"
       onClick={onClick}>
       {label}
     </Button>
