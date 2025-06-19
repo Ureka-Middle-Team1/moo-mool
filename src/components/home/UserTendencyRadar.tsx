@@ -31,6 +31,44 @@ export default function UserTendencyRadar() {
 
   const { data, isLoading } = useGetUserCharacterProfile(userId ?? "");
 
+  const iconMap = {
+    SNS: "/assets/moono/sns-moono.png",
+    Youtube: "/assets/moono/youtube-moono.png",
+    Chat: "/assets/moono/chat-moono.png",
+    Calling: "/assets/moono/calling-moono.png",
+    Books: "/assets/moono/books-moono.png",
+    Saving: "/assets/moono/saving-moono.png",
+  };
+
+  const drawIconsPlugin = {
+    id: "drawIconsPlugin",
+    afterDraw: (chart: any) => {
+      const ctx = chart.ctx;
+      const rScale = chart.scales.r;
+      const labels = chart.data.labels;
+
+      type IconLabel = keyof typeof iconMap;
+
+      labels.forEach((label: string, index: number) => {
+        const pos = rScale.getPointPositionForValue(index, rScale.max); // 라벨 위치 기준
+        const img = new Image();
+        img.src = iconMap[label as IconLabel];
+
+        img.onload = () => {
+          const size = 36; // 원하시는 만큼 키우세요
+          const offsetY = -28; // 텍스트 위로 올리기 위한 y축 보정
+          ctx.drawImage(
+            img,
+            pos.x - size / 2,
+            pos.y - size / 2 + offsetY,
+            size,
+            size
+          );
+        };
+      });
+    },
+  };
+
   if (status === "loading" || isLoading) {
     return <div>로딩 중...</div>;
   }
@@ -63,6 +101,7 @@ export default function UserTendencyRadar() {
   };
 
   const radarOptions: ChartOptions<"radar"> = {
+    maintainAspectRatio: false,
     scales: {
       r: {
         beginAtZero: true,
@@ -112,8 +151,12 @@ export default function UserTendencyRadar() {
   };
 
   return (
-    <div className="mx-auto max-w-xl">
-      <Radar data={radarData} options={radarOptions} />
+    <div className="mx-auto h-[300px] w-full max-w-xl">
+      <Radar
+        data={radarData}
+        options={radarOptions}
+        plugins={[drawIconsPlugin]}
+      />
     </div>
   );
 }
