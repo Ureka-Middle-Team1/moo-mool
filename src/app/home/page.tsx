@@ -32,17 +32,12 @@ export default function HomePage() {
         <MyPageModal open={isModalOpen} onOpenChange={setIsModalOpen} />
         <div className="flex w-full flex-col gap-7 px-3 py-5">
           <FeatureBannerSlider />
-
-          <div className="flex w-full flex-col gap-3">
+          <div className="flex w-full flex-col">
             <h2 className="pl-1 text-lg font-semibold text-gray-900">
-              {userInfo?.name}님의 콘텐츠 성향은?
+              최근 대화내역
             </h2>
-            {/*  Suspense로 감싸기 */}
-            <Suspense fallback={<div>성향 분석 불러오는 중...</div>}>
-              <UserTendencyRadar />
-            </Suspense>
+            <ChatHistoryList />
           </div>
-
           {/* Suspense로 감싸기 */}
           <Suspense fallback={<div>추천 요금제 불러오는 중...</div>}>
             <HomeRecommendedPlan />
@@ -53,13 +48,6 @@ export default function HomePage() {
               요즘 뜨는 요금제
             </h2>
             <PopularPlansList />
-          </div>
-
-          <div className="flex w-full flex-col">
-            <h2 className="pl-1 text-lg font-semibold text-gray-900">
-              최근 대화내역
-            </h2>
-            <ChatHistoryList />
           </div>
         </div>
       </section>
