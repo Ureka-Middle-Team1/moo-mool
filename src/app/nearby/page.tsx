@@ -13,7 +13,7 @@ export default function NearbyPage() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const { data: myProfile } = useGetUserCharacterProfile(userId);
-  const { data: userInfo } = useGetUserInfo(userId ?? "");
+  const { data: userInfo } = useGetUserInfo(userId);
 
   const [users, setUsers] = useState<NearbyUser[]>([]);
   const [interactedUserIds, setInteractedUserIds] = useState<Set<string>>(
@@ -36,7 +36,10 @@ export default function NearbyPage() {
 
   // ✅ WebSocket 연결 및 메시지 처리
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !userInfo) {
+      console.log("websoket 연결 중");
+      return;
+    }
 
     const socket = new WebSocket(process.env.NEXT_PUBLIC_WSS_SERVER_URL!);
     wsRef.current = socket;
@@ -51,6 +54,7 @@ export default function NearbyPage() {
                 JSON.stringify({
                   type: "location_update",
                   userId,
+                  userName: userInfo.name,
                   lat: latitude,
                   lng: longitude,
                 })
@@ -62,12 +66,14 @@ export default function NearbyPage() {
       };
 
       sendLocation();
-      const intervalId = setInterval(sendLocation, 5000);
+      const intervalId = setInterval(sendLocation, 1000);
       return () => clearInterval(intervalId);
     };
 
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
+
+      console.log("message", message);
 
       if (message.type === "nearby_users") {
         const filtered = message.nearbyUsers.filter(
@@ -76,8 +82,13 @@ export default function NearbyPage() {
         setUsers(filtered);
       }
 
-      if (message.type === "click_notice" && message.from) {
-        alert(`${message.from}님이 ${userInfo?.name}님을 클릭했습니다`);
+      if (message.type === "click_notice") {
+        const fromName = message.fromUserName || message.fromUserId;
+        const toName = message.toUserName || userInfo?.name || message.toUserId;
+
+        if (fromName && toName) {
+          alert(`${fromName}님이 ${toName}님을 클릭했습니다`);
+        }
       }
     };
 
@@ -89,26 +100,32 @@ export default function NearbyPage() {
       console.log("❌ WebSocket 연결 종료됨");
     };
 
+    console.log("NearByPage 초기 세팅 완료");
+
     return () => {
       socket.close();
     };
-  }, [userId]);
+  }, [userId, userInfo]);
 
   const handleUserClick = (targetId: string, clickedType?: string) => {
     const myType = myProfile?.type;
-    if (!clickedType || !myType || !wsRef.current) return;
+    if (!clickedType || !myType || !wsRef.current || !userInfo?.name) {
+      console.log("아직 세팅 다 안됨");
+      return;
+    }
 
     if (clickedType === myType) {
       const pos = positionCache.current.get(targetId);
       if (pos) clickedUserPositions.current.set(targetId, pos);
       setInteractedUserIds((prev) => new Set(prev).add(targetId));
-
+      console.log("아이콘 클릭");
       // ✅ WebSocket 상태 확인 후 클릭 전송
       if (wsRef.current.readyState === WebSocket.OPEN) {
         wsRef.current.send(
           JSON.stringify({
             type: "user_click",
             fromUserId: userId,
+            fromUserName: userInfo?.name,
             toUserId: targetId,
           })
         );
