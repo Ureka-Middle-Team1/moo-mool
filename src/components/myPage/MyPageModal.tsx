@@ -18,6 +18,7 @@ import { getScoreContext } from "@/utils/planScore";
 import { PlanDetailData } from "@/types/planDetail";
 import { useSession } from "next-auth/react";
 import TypeLevel from "./TypeLevel";
+import { useUserStore } from "@/store/userStore";
 
 type Props = {
   open: boolean;
@@ -32,7 +33,7 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
   } = useGetAllPlans();
 
   const { data: session } = useSession();
-  const [invitedCount, setInvitedCount] = useState(0);
+  const { setInvitedCount: setInvitedCountZustand } = useUserStore();
   const [selectedPlanId, setSelectedPlanId] = useState("");
   const [userType, setUserType] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,6 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
     null
   );
 
-  // 모달이 열릴 때 유저의 현재 요금제 및 초대 개수 불러오기
   useEffect(() => {
     if (!open) return;
     if (!session?.user?.id) return;
@@ -51,9 +51,11 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
         const userMyPlanId = res.data.my_plan;
         const userInvitedCount = res.data.invited_count;
         const userType = res.data.type;
+
         if (userMyPlanId) setSelectedPlanId(userMyPlanId.toString());
         else setSelectedPlanId("");
-        setInvitedCount(userInvitedCount ?? 0);
+
+        setInvitedCountZustand(userInvitedCount ?? 0); // zustand 공유 상태
         setUserType(userType ?? null);
       } catch (err) {
         console.error("유저 요금제 정보 불러오기 실패", err);
@@ -106,9 +108,12 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
         <DialogDescription className="sr-only">
           나의 요금제 설정 및 정보를 확인할 수 있는 모달
         </DialogDescription>
-        <UserProfile invitedCount={invitedCount} />
-        <TypeLevel invitedCount={invitedCount} typeName={userType} />
-        <UserStamp invitedCount={invitedCount} />
+        <UserProfile invitedCount={useUserStore.getState().invitedCount} />
+        <TypeLevel
+          invitedCount={useUserStore.getState().invitedCount}
+          typeName={userType}
+        />
+        <UserStamp />
 
         <div className="mt-1 flex items-center justify-between">
           <div className="flex w-full flex-col">

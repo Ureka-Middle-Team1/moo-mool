@@ -1,38 +1,67 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect, useState, useRef } from "react";
+import { useUserStore } from "@/store/userStore";
+import { gsap } from "gsap";
 
-type Props = {
-  invitedCount: number;
-};
+const STAMP_TOTAL = 10;
 
-const TOTAL_STAMPS = 10;
+export default function UserStamp() {
+  const invitedCount = useUserStore((state) => state.invitedCount);
+  const prevCountRef = useRef<number>(invitedCount);
+  const [animatedIndexes, setAnimatedIndexes] = useState<number[]>([]);
+  const stampRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-export default function UserStamp({ invitedCount }: Props) {
-  const stamps = Array.from({ length: TOTAL_STAMPS }, (_, i) => {
-    const isStamped = invitedCount >= i + 1;
+  useEffect(() => {
+    if (invitedCount > prevCountRef.current) {
+      const newAnimated = Array.from(
+        { length: invitedCount - prevCountRef.current },
+        (_, i) => i + prevCountRef.current
+      );
+      setAnimatedIndexes(newAnimated);
 
-    const src = isStamped
-      ? "/assets/stamps/stamp_red.svg"
-      : "/assets/stamps/stamp_gray.svg";
+      newAnimated.forEach((index) => {
+        const target = stampRefs.current[index];
+        if (target) {
+          gsap.fromTo(
+            target,
+            { scale: 2, opacity: "50% 50%" },
+            { scale: 1, opacity: 1, duration: 1, ease: "power2.out" }
+          );
+        }
+      });
 
-    return (
-      <div
-        key={i}
-        className="relative flex h-[50px] w-[50px] items-center justify-center">
-        <Image
-          alt="스탬프 이미지"
-          src={src}
-          fill
-          style={{ objectFit: "contain" }}
-        />
-      </div>
-    );
-  });
+      setTimeout(() => setAnimatedIndexes([]), 1000);
+    }
+
+    prevCountRef.current = invitedCount;
+  }, [invitedCount]);
 
   return (
-    <div className="mb-5 grid w-full grid-cols-5 gap-x-2 gap-y-6 px-2">
-      {stamps}
+    <div className="mx-auto grid w-fit grid-cols-5 gap-2">
+      {Array.from({ length: STAMP_TOTAL }).map((_, index) => {
+        const isFilled = index < invitedCount;
+
+        return (
+          <div
+            key={index}
+            ref={(el) => {
+              stampRefs.current[index] = el;
+            }}
+            className="relative flex h-13 w-13 items-center justify-center">
+            <img
+              style={{ backfaceVisibility: "hidden" }}
+              src={
+                isFilled
+                  ? "/assets/stamps/stamp_red.svg"
+                  : "/assets/stamps/stamp_gray.svg"
+              }
+              alt="stamp"
+              className="object-unset h-12 w-12"
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
