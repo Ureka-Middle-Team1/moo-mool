@@ -8,7 +8,7 @@ const featureBannerList = [
   {
     subtitle: "나만의 디지털 도우미",
     title: "똑똑한 챗봇,\n나를 더 잘 알아가요!",
-    description: "데이터, 통화, 혜택까지 질문만 하면 술술!",
+    description: "데이터, 통화, 혜택까지 질문만 해요!",
     image: "/assets/banner/advice.png",
   },
   {
