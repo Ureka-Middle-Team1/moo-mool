@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { SortTarget } from "@/types/sort";
 import { PrismaNetworkType, UINetworkType } from "@/types/network";
-import SortFilterPanel from "@/components/planList/SortFilterPanel";
+import StickySortFilter from "@/components/planList/StickySortFilter";
 import PlanListCard from "@/components/planList/PlanListCard";
 import { useInfinitePlans } from "@/hooks/useInfinitePlans";
 import { getScoreContext } from "@/utils/planScore";
 import PlanListTrigger from "@/components/planList/PlanListTrigger";
+import PlanListHeader from "@/components/planList/PlanListHeader";
 
 const getEnumNetworkType = (
   type: UINetworkType | null
@@ -82,13 +83,8 @@ export default function PlanListPage() {
     <div
       className="relative space-y-6 bg-gradient-to-r from-pink-100 to-yellow-100 p-4"
       ref={listRef}>
-      <img
-        src="/assets/icons/logo.png"
-        alt="로고"
-        className="absolute top-4 left-4 h-16 w-auto drop-shadow-md"
-      />
-      <div className="mt-18" />
-      <SortFilterPanel
+      <PlanListHeader />
+      <StickySortFilter
         selectedNetwork={selectedNetwork}
         setSelectedNetwork={setSelectedNetwork}
         sortOrder={sortOrder}
