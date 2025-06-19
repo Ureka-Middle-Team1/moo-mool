@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, X } from "lucide-react";
 import { Button } from "../ui/button";
+import HamburgerMenu from "../common/HamburgerMenu";
 
 export default function Header({ text = "챗봇" }: { text?: string }) {
   const router = useRouter();
@@ -23,7 +24,10 @@ export default function Header({ text = "챗봇" }: { text?: string }) {
       <Button className="absolute left-2" variant="ghost" onClick={handleClick}>
         {isVoiceMode ? <ArrowLeft size={20} /> : <X size={20} />}
       </Button>
-      <span className="text-center text-sm font-semibold">{text}</span>
+      <div className="text-center text-sm font-semibold">{text}</div>
+      <div className="absolute right-4">
+        <HamburgerMenu />
+      </div>
     </div>
   );
 }
