@@ -10,6 +10,7 @@ type Props = {
   angle?: number;
   distance?: number;
   isMe?: boolean;
+  onClick?: (type?: string) => void;
 };
 
 export default function NearbyUserAvatar({
@@ -17,6 +18,7 @@ export default function NearbyUserAvatar({
   angle,
   distance,
   isMe,
+  onClick,
 }: Props) {
   const { data: profile } = useGetUserCharacterProfile(userId);
   const { data: userInfo } = useGetUserInfo(userId ?? "");
@@ -42,8 +44,16 @@ export default function NearbyUserAvatar({
 
   const size = isMe ? "5rem" : "3rem";
 
+  const handleClickAvatar = () => {
+    if (!isMe && profile?.type) {
+      console.log("클릭한 사용자의 타입= ", profile?.type);
+      onClick?.(profile?.type);
+    }
+  };
+
   return (
     <div
+      onClick={handleClickAvatar}
       className="absolute flex flex-col items-center text-center"
       style={{
         transform: `translate(calc(-50% + ${x + offsetX}px), calc(-50% + ${y + offsetY}px))`,
