@@ -23,8 +23,7 @@ export default function StickySortFilter({
   setSortTarget,
 }: StickySortFilterProps) {
   return (
-    <div className="sticky top-[3.5rem] z-40 p-4">
-      <div className="absolute inset-0 -z-10 rounded-xl" />
+    <div className="sticky top-[0rem] z-10">
       <SortFilterPanel
         selectedNetwork={selectedNetwork}
         setSelectedNetwork={setSelectedNetwork}
