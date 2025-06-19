@@ -3,9 +3,9 @@
 export default function TopGradient() {
   return (
     <div
-      className="absolute top-0 left-0 z-0 h-[30rem] w-full"
+      className="absolute top-0 left-0 z-0 h-[20rem] w-full"
       style={{
-        background: "linear-gradient(to bottom, #fff6d8, transparent)",
+        background: "linear-gradient(to bottom, #fff8e2, transparent)",
       }}
     />
   );

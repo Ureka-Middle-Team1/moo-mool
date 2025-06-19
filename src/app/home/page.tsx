@@ -1,7 +1,6 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { Suspense, useState } from "react";
-import HomeBanner from "@/components/home/HomeBanner";
 import HomeHeader from "@/components/home/HomeHeader";
 import HomeRecommendedPlan from "@/components/home/HomeRecommendedPlan";
 import PopularPlansList from "@/components/home/PopularPlansList";
@@ -11,6 +10,7 @@ import MyPageModal from "@/components/myPage/MyPageModal";
 import { useSession } from "next-auth/react";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import ChatHistoryList from "@/components/home/ChatHistoryList";
+import FeatureBannerSlider from "@/components/home/FeatureBannerSlider";
 
 export default function HomePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,38 +31,23 @@ export default function HomePage() {
         {/* 마이페이지 Modal */}
         <MyPageModal open={isModalOpen} onOpenChange={setIsModalOpen} />
         <div className="flex w-full flex-col gap-7 px-3 py-5">
-          <div className="flex w-full flex-col gap-3">
-            <h2 className="text-lg font-semibold text-zinc-900">
-              {userInfo?.name}님께 딱 맞는 요금제를 찾아볼까요?
+          <FeatureBannerSlider />
+          <div className="flex w-full flex-col">
+            <h2 className="pl-1 text-lg font-semibold text-gray-900">
+              💬 최근 대화내역
             </h2>
-            <HomeBanner />
+            <ChatHistoryList />
           </div>
-
-          <div className="flex w-full flex-col gap-3">
-            <h2 className="text-lg font-semibold text-zinc-900">콘텐츠 성향</h2>
-            {/*  Suspense로 감싸기 */}
-            <Suspense fallback={<div>성향 분석 불러오는 중...</div>}>
-              <UserTendencyRadar />
-            </Suspense>
-          </div>
-
           {/* Suspense로 감싸기 */}
           <Suspense fallback={<div>추천 요금제 불러오는 중...</div>}>
             <HomeRecommendedPlan />
           </Suspense>
 
           <div className="flex w-full flex-col">
-            <h2 className="text-lg font-semibold text-zinc-900">
-              요즘 뜨는 요금제
+            <h2 className="pl-1 text-lg font-semibold text-gray-900">
+              🔥 요즘 뜨는 요금제
             </h2>
             <PopularPlansList />
-          </div>
-
-          <div className="flex w-full flex-col">
-            <h2 className="text-lg font-semibold text-zinc-900">
-              최근 대화내역
-            </h2>
-            <ChatHistoryList />
           </div>
         </div>
       </section>
