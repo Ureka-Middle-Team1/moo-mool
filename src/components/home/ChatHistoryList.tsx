@@ -34,7 +34,6 @@ export default function ChatHistoryList() {
               </CardContent>
             </Card>
           )}
-
           {sessions?.map((s, idx) => (
             <Card
               key={idx}
