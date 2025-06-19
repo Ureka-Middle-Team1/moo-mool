@@ -7,16 +7,26 @@ import { useEffect, useRef, useState } from "react";
 import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 import { motion, AnimatePresence } from "framer-motion";
 import { NearbyUser } from "@/types/Nearby";
+import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 
 export default function NearbyPage() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
+  const { data: myProfile } = useGetUserCharacterProfile(userId);
 
   const [users, setUsers] = useState<NearbyUser[]>([]);
+  const [interactedUserIds, setInteractedUserIds] = useState<Set<String>>(
+    new Set()
+  );
   const myIdRef = useRef<string | null>(null);
 
-  // 컴포넌트 상단에 추가
+  // ✅ 일반 사용자 위치 고정용
   const positionCache = useRef<
+    Map<string, { angle: number; distance: number }>
+  >(new Map());
+
+  // ✅ 클릭된 사용자 위치 저장용
+  const clickedUserPositions = useRef<
     Map<string, { angle: number; distance: number }>
   >(new Map());
 
@@ -38,6 +48,28 @@ export default function NearbyPage() {
       <div className="p-4 text-center text-gray-500">로그인이 필요합니다</div>
     );
   }
+
+  const handleUserClick = (userId: string, clickedType?: string) => {
+    const myType = myProfile?.type;
+    if (!clickedType || !myType) return;
+
+    if (clickedType === myType) {
+      console.log("타입 일치 - 아이콘 사라짐");
+      setInteractedUserIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.add(userId);
+
+        // ✅ 클릭 시점의 위치 저장
+        const currentPos = positionCache.current.get(userId);
+        if (currentPos) {
+          clickedUserPositions.current.set(userId, currentPos);
+        }
+
+        console.log("클릭된 사용자", interactedUserIds);
+        return newSet;
+      });
+    }
+  };
 
   return (
     <>
@@ -72,12 +104,17 @@ export default function NearbyPage() {
         {/* 주변 사용자 표시 */}
         <AnimatePresence>
           {users.map((user) => {
-            let position = positionCache.current.get(user.userId);
+            const wasClicked = interactedUserIds.has(user.userId);
 
+            // ✅ 클릭된 경우: clickedUserPositions에 있는 위치 사용
+            let position = wasClicked
+              ? clickedUserPositions.current.get(user.userId)
+              : positionCache.current.get(user.userId);
+
+            // ✅ 위치 캐싱 (랜덤 생성은 최초 1회만)
             if (!position) {
               const angle = Math.random() * 360;
-              const distance = Math.random() * 30 + 40; // [40 ~ 70] 정도 vw 단위
-
+              const distance = Math.random() * 30 + 40;
               position = { angle, distance };
               positionCache.current.set(user.userId, position);
             }
@@ -93,6 +130,8 @@ export default function NearbyPage() {
                   userId={user.userId}
                   angle={position.angle}
                   distance={position.distance}
+                  onClick={(type) => handleUserClick(user.userId, type)}
+                  isEmptyStamp={wasClicked} // ✅ 클릭된 유저는 empty_stamp로
                 />
               </motion.div>
             );
