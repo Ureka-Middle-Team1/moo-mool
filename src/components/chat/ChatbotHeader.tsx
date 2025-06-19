@@ -78,7 +78,7 @@ export default function Header({ title = "챗봇" }: HeaderProps) {
       </Button>
       <div className="text-center text-sm font-semibold">{title}</div>
       <div className="absolute right-4">
-        <HamburgerMenu />
+        <HamburgerMenu onAvatarClick={() => {}} />
       </div>
     </div>
   );
