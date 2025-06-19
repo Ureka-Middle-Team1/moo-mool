@@ -7,12 +7,17 @@ import { useEffect, useRef, useState } from "react";
 import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 import { motion, AnimatePresence } from "framer-motion";
 import { NearbyUser } from "@/types/Nearby";
+import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 
 export default function NearbyPage() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
+  const { data: myProfile } = useGetUserCharacterProfile(userId);
 
   const [users, setUsers] = useState<NearbyUser[]>([]);
+  const [interactedUserIds, setInteractedUserIds] = useState<Set<String>>(
+    new Set()
+  );
   const myIdRef = useRef<string | null>(null);
 
   // 컴포넌트 상단에 추가
@@ -38,6 +43,18 @@ export default function NearbyPage() {
       <div className="p-4 text-center text-gray-500">로그인이 필요합니다</div>
     );
   }
+
+  const handleUserClick = (userId: string, clickedType?: string) => {
+    const myType = myProfile?.type;
+    if (!clickedType || !myType) return;
+
+    if (clickedType === myType) {
+      console.log("타입 일치 - 아이콘 사라짐");
+      setInteractedUserIds((prev) => new Set(prev).add(userId));
+    } else {
+      console.log("타입 불일치");
+    }
+  };
 
   return (
     <>
@@ -93,6 +110,9 @@ export default function NearbyPage() {
                   userId={user.userId}
                   angle={position.angle}
                   distance={position.distance}
+                  onClick={(type) => {
+                    handleUserClick(user.userId, type);
+                  }}
                 />
               </motion.div>
             );
