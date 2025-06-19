@@ -2,7 +2,7 @@
 
 import { Dispatch, SetStateAction } from "react";
 import { SortTarget } from "@/types/sort";
-import SortFilterPanel from "./SortFilterPanel";
+import SortFilterPanel, { OTTType } from "./SortFilterPanel";
 import { UINetworkType } from "@/types/network";
 
 interface StickySortFilterProps {
@@ -12,6 +12,8 @@ interface StickySortFilterProps {
   setSortOrder: Dispatch<SetStateAction<"asc" | "desc">>;
   sortTarget: SortTarget | null;
   setSortTarget: Dispatch<SetStateAction<SortTarget | null>>;
+  selectedOttList: OTTType[];
+  setSelectedOttList: Dispatch<SetStateAction<OTTType[]>>;
 }
 
 export default function StickySortFilter({
@@ -21,6 +23,8 @@ export default function StickySortFilter({
   setSortOrder,
   sortTarget,
   setSortTarget,
+  selectedOttList,
+  setSelectedOttList,
 }: StickySortFilterProps) {
   return (
     <div className="sticky top-[0rem] z-10">
@@ -31,6 +35,8 @@ export default function StickySortFilter({
         setSortOrder={setSortOrder}
         sortTarget={sortTarget}
         setSortTarget={setSortTarget}
+        selectedOttList={selectedOttList}
+        setSelectedOttList={setSelectedOttList}
       />
     </div>
   );

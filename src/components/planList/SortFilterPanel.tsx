@@ -1,8 +1,15 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
-import { SortTarget } from "@/types/sort";
+import { Dispatch, SetStateAction, useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { SortTarget } from "@/types/sort";
+
+export type OTTType =
+  | "NETFLIX"
+  | "YOUTUBE_PREMIUM"
+  | "DISNEY+"
+  | "WAVVE"
+  | "TVING";
 
 interface SortFilterPanelProps {
   selectedNetwork: "LTE" | "5G" | null;
@@ -11,6 +18,8 @@ interface SortFilterPanelProps {
   setSortOrder: Dispatch<SetStateAction<"asc" | "desc">>;
   sortTarget: SortTarget | null;
   setSortTarget: Dispatch<SetStateAction<SortTarget | null>>;
+  selectedOttList: OTTType[];
+  setSelectedOttList: Dispatch<SetStateAction<OTTType[]>>;
 }
 
 export default function SortFilterPanel({
@@ -20,10 +29,22 @@ export default function SortFilterPanel({
   setSortOrder,
   sortTarget,
   setSortTarget,
+  selectedOttList,
+  setSelectedOttList,
 }: SortFilterPanelProps) {
-  const filterOptions = [
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+
+  const networkOptions = [
     { key: "LTE", label: "LTE" },
     { key: "5G", label: "5G" },
+  ];
+
+  const ottOptions = [
+    { key: "NETFLIX", label: "넷플릭스" },
+    { key: "YOUTUBE_PREMIUM", label: "유튜브 프리미엄" },
+    { key: "DISNEY_PLUS", label: "디즈니+" },
+    { key: "WAVVE", label: "웨이브" },
+    { key: "TVING", label: "티빙" },
   ];
 
   const sortOptions = [
@@ -36,41 +57,22 @@ export default function SortFilterPanel({
     { key: "dataAmountMb", label: "월 데이터량" },
     { key: "voiceMinutes", label: "부가 통화" },
     { key: "overageSpeedMbps", label: "속도" },
+    { key: "smsIncluded", label: "혜택 가치" },
     { key: "subscriptionServices", label: "혜택 수" },
   ];
 
   const baseClass =
-    "rounded-md border px-3 py-2 backdrop-blur-sm bg-white/30 text-sm text-black w-full appearance-none";
+    "rounded-md border px-3 py-2 backdrop-blur-sm bg-white/30 text-sm text-black w-full appearance-none text-left";
 
   return (
-    <div className="flex w-full justify-end px-4 py-4">
-      {/* 내부 정렬용 컨테이너 */}
+    <div className="flex w-auto justify-start px-4 py-4">
       <div className="inline-flex gap-4">
         <div className="relative w-[6rem]">
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
             className={baseClass}>
-            <option value="desc">높은 순</option>
-            <option value="asc">낮은 순</option>
-          </select>
-          <ChevronDown className="pointer-events-none absolute top-2.5 right-3 h-4 w-4 text-gray-500" />
-        </div>
-
-        {/* Network Filter Dropdown */}
-        <div className="relative w-[6rem]">
-          <select
-            value={selectedNetwork ?? ""}
-            onChange={(e) =>
-              setSelectedNetwork(
-                e.target.value === "" ? null : (e.target.value as "LTE" | "5G")
-              )
-            }
-            className={baseClass}>
-            <option value="" disabled hidden>
-              네트워크
-            </option>
-            {filterOptions.map(({ key, label }) => (
+            {sortOptions.map(({ key, label }) => (
               <option key={key} value={key}>
                 {label}
               </option>
@@ -79,8 +81,7 @@ export default function SortFilterPanel({
           <ChevronDown className="pointer-events-none absolute top-2.5 right-3 h-4 w-4 text-gray-500" />
         </div>
 
-        {/* Sort Order Dropdown */}
-        <div className="relative w-[6rem]">
+        <div className="relative w-[8rem]">
           <select
             value={sortTarget ?? ""}
             onChange={(e) =>
@@ -99,6 +100,62 @@ export default function SortFilterPanel({
             ))}
           </select>
           <ChevronDown className="pointer-events-none absolute top-2.5 right-3 h-4 w-4 text-gray-500" />
+        </div>
+
+        <div className="relative w-[7rem]">
+          <button
+            onClick={() => setShowFilterMenu(!showFilterMenu)}
+            className={baseClass}>
+            필터링
+          </button>
+          <ChevronDown className="pointer-events-none absolute top-2.5 right-3 h-4 w-4 text-gray-500" />
+
+          {showFilterMenu && (
+            <div className="absolute right-0 z-10 mt-2 w-[18rem] space-y-4 rounded-md border bg-white p-4 shadow-lg">
+              <div>
+                <div className="mb-2 text-sm font-bold">네트워크</div>
+                <div className="flex gap-2">
+                  {networkOptions.map(({ key, label }) => (
+                    <button
+                      key={key}
+                      className={`rounded-md border px-2 py-1 text-sm ${
+                        selectedNetwork === key ? "bg-yellow-300" : "bg-white"
+                      }`}
+                      onClick={() => setSelectedNetwork(key as "LTE" | "5G")}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-2 text-sm font-bold">OTT 혜택</div>
+                <div className="flex flex-wrap gap-2">
+                  {ottOptions.map(({ key, label }) => (
+                    <button
+                      key={key}
+                      className={`rounded-md border px-2 py-1 text-sm ${
+                        selectedOttList.includes(key as OTTType)
+                          ? "bg-yellow-300"
+                          : "bg-white"
+                      }`}
+                      onClick={() => {
+                        const isSelected = selectedOttList.includes(
+                          key as OTTType
+                        );
+                        setSelectedOttList(
+                          isSelected
+                            ? selectedOttList.filter((v) => v !== key)
+                            : [...selectedOttList, key as OTTType]
+                        );
+                      }}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
