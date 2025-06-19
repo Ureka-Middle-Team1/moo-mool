@@ -38,7 +38,7 @@ export default function TestHomePage() {
       <div className="flex justify-between px-3">
         <img src="/assets/icons/logo.png" alt="logo" className="w-20" />
         <div className="pt-5">
-          <HamburgerMenu />
+          <HamburgerMenu onAvatarClick={() => {}} />
         </div>
       </div>
 

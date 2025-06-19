@@ -18,7 +18,7 @@ export default function NearbyHeader() {
       </button>
       <span className="text-sm font-semibold">주변 친구 찾기</span>
       <div className="absolute right-4">
-        <HamburgerMenu />
+        <HamburgerMenu onAvatarClick={() => {}} />
       </div>
     </div>
   );
