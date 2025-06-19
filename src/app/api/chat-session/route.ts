@@ -20,10 +20,23 @@ export async function GET(req: NextRequest) {
         id: true,
         summary: true,
         created_at: true,
+        plan: {
+          // Plan 테이블을 prisma 객체에서 ChatSession 테이블과 관계 지어놓은 필드
+          select: {
+            name: true,
+          },
+        },
       },
       orderBy: { created_at: "desc" },
       take: 5,
     });
+
+    const response = sessions.map((session) => ({
+      id: session.id,
+      summary: session.summary,
+      created_at: session.created_at,
+      name: session.plan?.name ?? null,
+    }));
 
     return NextResponse.json(sessions);
   } catch (err) {
@@ -32,9 +45,10 @@ export async function GET(req: NextRequest) {
   }
 }
 
+// 채팅 내역을 DB에 저장하는 POST API
 export async function POST(req: NextRequest) {
   try {
-    const { userId, messages, summary } = await req.json();
+    const { userId, messages, summary, planId } = await req.json();
 
     if (!userId || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -48,6 +62,7 @@ export async function POST(req: NextRequest) {
         user_id: userId,
         messages: JSON.stringify(messages),
         summary, // 자동 생성된 summary 사용
+        plan_id: planId,
       },
     });
 

@@ -29,7 +29,9 @@ export default function ChatMessage({
         />
         <div className="flex flex-col">
           <span className="mb-1 text-xs text-gray-800">무너</span>
-          <TypingMessage fullText={message.content} />
+          {message.content.trim() !== "" && ( // type이 "plan"인 메시지에 대해 content가 비어 있다면 TypeMessage 출력 X
+            <TypingMessage fullText={message.content} />
+          )}
           <div className="flex w-full flex-col py-3">
             <PlanCard {...message.planData} />
           </div>

@@ -7,6 +7,8 @@ import HamburgerMenu from "../common/HamburgerMenu";
 import { useChatStore } from "@/store/useChatStore";
 import { usePostChatbotSummary } from "@/hooks/usePostChatbotSummary";
 import { useSession } from "next-auth/react";
+import { useFreeTalkStore } from "@/store/useFreeTalkStore";
+import { useTendencyStore } from "@/store/useTendencyStore";
 
 type HeaderProps = {
   title: string;
@@ -20,12 +22,15 @@ export default function Header({ title = "챗봇" }: HeaderProps) {
 
   const { data: session } = useSession(); // 로그인 정보 가져오기
   const { messages } = useChatStore();
+  const { resetTendency } = useTendencyStore();
   const {
     setCurrentQuestionId,
     setHasRecommended,
     currentQuestionId,
     hasRecommended,
+    clearMessages,
   } = useChatStore(); // 현재 questionId를 이용해서 챗봇에서 현재 상태 판단
+  const { clear } = useFreeTalkStore();
   const { mutate: chatHistorySummary } = usePostChatbotSummary();
 
   const handleClick = () => {
@@ -39,6 +44,9 @@ export default function Header({ title = "챗봇" }: HeaderProps) {
         chatHistorySummary({ userId: session?.user.id, messages }); // 요약 수행하고 저장소에 저장
         setCurrentQuestionId(0);
         setHasRecommended(false);
+        clearMessages(); // useChatStore의 메시지 삭제
+        clear(); // useFreeTalkStore의 메시지 모두 삭제
+        resetTendency(); // userTendencyInfo도 초기화
       }
       router.back();
     }
