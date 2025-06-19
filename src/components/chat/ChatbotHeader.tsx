@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, X } from "lucide-react";
 import { Button } from "../ui/button";
+import HamburgerMenu from "../common/HamburgerMenu";
 import { useChatStore } from "@/store/useChatStore";
 import { usePostChatbotSummary } from "@/hooks/usePostChatbotSummary";
 import { useSession } from "next-auth/react";
@@ -48,7 +49,10 @@ export default function Header({ title = "챗봇" }: HeaderProps) {
       <Button className="absolute left-2" variant="ghost" onClick={handleClick}>
         {isVoiceMode ? <ArrowLeft size={20} /> : <X size={20} />}
       </Button>
-      <span className="text-center text-sm font-semibold">{title}</span>
+      <div className="text-center text-sm font-semibold">{text}</div>
+      <div className="absolute right-4">
+        <HamburgerMenu />
+      </div>
     </div>
   );
 }
