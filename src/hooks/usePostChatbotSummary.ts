@@ -13,7 +13,6 @@ type ChatbotSummaryInput = {
 // 채팅 다 끝내고, 추천까지 받았을 때, 해당 Hook을 사용해 요약 진행
 export const usePostChatbotSummary = () => {
   const { mutate: submitChatSummary } = usePostChatSession();
-  const { getLastBotMessage } = useChatStore.getState(); // 리렌더링 필요 X, 대화 내역 마지막 질문만 받아오면 됨, 그리고 그것은 요금제 추천 정보임
 
   return useMutation({
     mutationFn: async ({ messages, userId, planId }: ChatbotSummaryInput) => {
