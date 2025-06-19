@@ -8,6 +8,7 @@ import PlanListCard from "@/components/planList/PlanListCard";
 import { useInfinitePlans } from "@/hooks/useInfinitePlans";
 import { getScoreContext } from "@/utils/planScore";
 import PlanListTrigger from "@/components/planList/PlanListTrigger";
+import { PlanDBApiResponse } from "@/types/PlanData";
 
 const getEnumNetworkType = (
   type: UINetworkType | null
@@ -29,14 +30,20 @@ export default function PlanListPage() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfinitePlans(sortTarget, sortOrder, selectedNetwork);
 
-  const allPlans = data?.pages.flat() ?? [];
+  const planMap = new Map<number, PlanDBApiResponse>();
+  data?.pages.forEach((page) => {
+    page.data.forEach((plan) => {
+      planMap.set(plan.id, plan);
+    });
+  });
+  const allPlans = Array.from(planMap.values());
   const scoreContext = allPlans.length > 0 ? getScoreContext(allPlans) : null;
 
   useEffect(() => {
-    if (listRef.current) {
-      listRef.current.scrollIntoView({ behavior: "smooth" });
+    if (!data || data.pages.length === 1) {
+      listRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [data]);
+  }, []);
 
   if (status === "pending" || !scoreContext) {
     return (
@@ -51,33 +58,6 @@ export default function PlanListPage() {
     );
   }
 
-  const mappedNetwork = getEnumNetworkType(selectedNetwork);
-  let filteredPlans = allPlans;
-  if (mappedNetwork) {
-    filteredPlans = filteredPlans.filter(
-      (plan) => plan.networkType === mappedNetwork
-    );
-  }
-
-  const sortedPlans = sortTarget
-    ? [...filteredPlans].sort((a, b) => {
-        if (sortTarget === "subscriptionServices") {
-          const aLen = Array.isArray(a.subscriptionServices)
-            ? a.subscriptionServices.length
-            : 0;
-          const bLen = Array.isArray(b.subscriptionServices)
-            ? b.subscriptionServices.length
-            : 0;
-          return sortOrder === "asc" ? aLen - bLen : bLen - aLen;
-        }
-        const aVal = a[sortTarget] as number | null;
-        const bVal = b[sortTarget] as number | null;
-        return sortOrder === "asc"
-          ? (aVal ?? 0) - (bVal ?? 0)
-          : (bVal ?? 0) - (aVal ?? 0);
-      })
-    : filteredPlans;
-
   return (
     <div className="relative space-y-6 p-4" ref={listRef}>
       <SortFilterPanel
@@ -90,7 +70,7 @@ export default function PlanListPage() {
       />
 
       <div className="space-y-4">
-        {sortedPlans.map((plan) => (
+        {allPlans.map((plan) => (
           <PlanListCard key={plan.id} plan={plan} />
         ))}
       </div>
