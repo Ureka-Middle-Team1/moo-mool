@@ -49,7 +49,7 @@ export default function Header({ title = "챗봇" }: HeaderProps) {
       <Button className="absolute left-2" variant="ghost" onClick={handleClick}>
         {isVoiceMode ? <ArrowLeft size={20} /> : <X size={20} />}
       </Button>
-      <div className="text-center text-sm font-semibold">{text}</div>
+      <div className="text-center text-sm font-semibold">{title}</div>
       <div className="absolute right-4">
         <HamburgerMenu />
       </div>
