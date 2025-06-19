@@ -14,10 +14,21 @@ const serviceMap: Record<string, PlanDetailData["benefits"][number]> = {
     description:
       "이 요금제와 함께 유튜브 프리미엄 3개월 구독권을 무료로 누려보세요",
   },
-  WATCHA: {
-    imageSrc: "/assets/ott/watcha.jpg",
-    title: "왓챠 3개월",
-    description: "이 요금제와 함께 왓챠 3개월 구독권을 무료로 누려보세요",
+  "DISNEY+": {
+    imageSrc: "/assets/ott/disney.jpg",
+    title: "디지니 플러스 3개월",
+    description:
+      "이 요금제와 함께 디지니 플러스 3개월 구독권을 무료로 누려보세요",
+  },
+  WAVVE: {
+    imageSrc: "/assets/ott/wavve.png",
+    title: "웨이브 3개월",
+    description: "이 요금제와 함께 웨이브 3개월 구독권을 무료로 누려보세요",
+  },
+  TVING: {
+    imageSrc: "/assets/ott/tving.png",
+    title: "티빙 3개월",
+    description: "이 요금제와 함께 티빙 3개월 구독권을 무료로 누려보세요",
   },
 };
 

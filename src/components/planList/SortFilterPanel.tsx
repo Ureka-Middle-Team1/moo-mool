@@ -20,17 +20,24 @@ export default function SortFilterPanel({
   sortTarget,
   setSortTarget,
 }: SortFilterPanelProps) {
+  const baseClass =
+    "rounded-md border px-2 py-1 backdrop-blur-sm bg-white/30 text-sm text-black";
+
   return (
     <div className="space-y-2">
       <div className="text-sm font-semibold">정렬 기준</div>
       <div className="flex gap-2">
         <button
-          className={`rounded-md border px-2 py-1 ${sortOrder === "asc" ? "bg-yellow-200" : "bg-gray-100"}`}
+          className={`${baseClass} ${
+            sortOrder === "asc" ? "ring-2 ring-yellow-300" : ""
+          }`}
           onClick={() => setSortOrder("asc")}>
           낮은 순
         </button>
         <button
-          className={`rounded-md border px-2 py-1 ${sortOrder === "desc" ? "bg-yellow-200" : "bg-gray-100"}`}
+          className={`${baseClass} ${
+            sortOrder === "desc" ? "ring-2 ring-yellow-300" : ""
+          }`}
           onClick={() => setSortOrder("desc")}>
           높은 순
         </button>
@@ -40,12 +47,16 @@ export default function SortFilterPanel({
       <div className="flex gap-2">
         <button
           onClick={() => setSelectedNetwork("LTE")}
-          className={`rounded-md border px-2 py-1 ${selectedNetwork === "LTE" ? "bg-yellow-200" : "bg-gray-100"}`}>
+          className={`${baseClass} ${
+            selectedNetwork === "LTE" ? "ring-2 ring-yellow-300" : ""
+          }`}>
           LTE
         </button>
         <button
           onClick={() => setSelectedNetwork("5G")}
-          className={`rounded-md border px-2 py-1 ${selectedNetwork === "5G" ? "bg-yellow-200" : "bg-gray-100"}`}>
+          className={`${baseClass} ${
+            selectedNetwork === "5G" ? "ring-2 ring-yellow-300" : ""
+          }`}>
           5G
         </button>
       </div>
@@ -63,7 +74,9 @@ export default function SortFilterPanel({
           <button
             key={key}
             onClick={() => setSortTarget(key as SortTarget)}
-            className={`rounded-md border px-2 py-1 ${sortTarget === key ? "bg-yellow-300" : "bg-gray-100"}`}>
+            className={`${baseClass} ${
+              sortTarget === key ? "ring-2 ring-yellow-400" : ""
+            }`}>
             {label}
           </button>
         ))}
