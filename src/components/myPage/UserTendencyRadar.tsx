@@ -195,10 +195,6 @@ export default function UserTendencyRadar() {
         display: false,
       },
     },
-    animation: {
-      duration: 1500,
-      easing: "easeOutBounce",
-    },
   };
 
   return (
