@@ -11,6 +11,7 @@ import PlanListTrigger from "@/components/planList/PlanListTrigger";
 import { PlanDBApiResponse } from "@/types/PlanData";
 import HomeHeader from "@/components/home/HomeHeader";
 import TopGradient from "@/components/planDetail/TopGradient";
+import MyPageModal from "@/components/myPage/MyPageModal";
 
 const getEnumNetworkType = (
   type: UINetworkType | null
@@ -21,6 +22,7 @@ const getEnumNetworkType = (
 };
 
 export default function PlanListPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
   const [sortTarget, setSortTarget] = useState<SortTarget | null>(null);
@@ -64,11 +66,9 @@ export default function PlanListPage() {
     <div className="flex flex-col items-center" ref={listRef}>
       <TopGradient />
       <section className="z-1 flex h-[85%] w-[90%] flex-col items-center">
-        <HomeHeader
-          onAvatarClick={() => {
-            console.log("아바타 클릭");
-          }}
-        />
+        <HomeHeader onAvatarClick={() => setIsModalOpen(true)} />
+        {/* 마이페이지 Modal */}
+        <MyPageModal open={isModalOpen} onOpenChange={setIsModalOpen} />
         <StickySortFilter
           selectedNetwork={selectedNetwork}
           setSelectedNetwork={setSelectedNetwork}

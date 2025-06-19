@@ -8,8 +8,10 @@ import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 import { motion, AnimatePresence } from "framer-motion";
 import { NearbyUser } from "@/types/Nearby";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
+import MyPageModal from "@/components/myPage/MyPageModal";
 
 export default function NearbyPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const { data: myProfile } = useGetUserCharacterProfile(userId);
@@ -73,7 +75,9 @@ export default function NearbyPage() {
 
   return (
     <>
-      <NearbyHeader />
+      <NearbyHeader onAvatarClick={() => setIsModalOpen(true)} />
+      {/* 마이페이지 Modal */}
+      <MyPageModal open={isModalOpen} onOpenChange={setIsModalOpen} />
       <div className="relative flex h-screen items-center justify-center overflow-hidden bg-white">
         {/* 배경 파동 원형 */}
         {[20, 40, 60, 90, 110, 130].map((r, idx) => (
