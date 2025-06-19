@@ -2,14 +2,15 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { client } from "@/lib/axiosInstance";
 
 export default function CheckUserTypePage() {
   const router = useRouter();
 
   useEffect(() => {
     const check = async () => {
-      const res = await fetch("/api/auth/is-new-user");
-      const data = await res.json();
+      const res = await client.get("/auth/is-new-user");
+      const data = await res.data;
       if (data.isNew) {
         router.replace("/onboarding");
       } else {
