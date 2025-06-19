@@ -43,7 +43,7 @@ export function useNearbySocket(
       };
 
       sendLocation();
-      intervalId = setInterval(sendLocation, 5000);
+      intervalId = setInterval(sendLocation, 1000);
     };
     socket.onmessage = (event) => {
       try {
