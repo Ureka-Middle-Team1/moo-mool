@@ -23,7 +23,7 @@ export default function HomeHeader({ onAvatarClick }: Props) {
   );
 
   const handleLogin = () => {
-    signIn("kakao", { callbackUrl });
+    signIn("kakao", { callbackUrl: "/check-user-type" });
   };
 
   return (
