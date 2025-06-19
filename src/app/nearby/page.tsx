@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { NearbyUser } from "@/types/Nearby";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
+import { client } from "@/lib/axiosInstance";
 
 export default function NearbyPage() {
   const { data: session } = useSession();
@@ -34,6 +35,35 @@ export default function NearbyPage() {
     if (userId) myIdRef.current = userId;
   }, [userId]);
 
+  // ✅ 초대 수 전송 함수 정의
+  const sendInviteCount = async () => {
+    if (userId && interactedUserIds.size > 0) {
+      try {
+        const res = await client.post("/user/invite-multiple", {
+          inviterId: userId,
+          count: interactedUserIds.size,
+        });
+        console.log("✅ 초대한 사용자 수 반영 완료:", res.data);
+        // optional: alert("초대한 수 반영 완료!");
+      } catch (err) {
+        console.error("❌ 초대한 사용자 수 반영 실패:", err);
+      }
+    }
+  };
+
+  // ✅ 페이지 이탈 감지 및 처리
+  useEffect(() => {
+    const handleLeave = () => {
+      sendInviteCount(); // async 아님, 위에서 Axios로 처리되도록 수정
+    };
+
+    window.addEventListener("pagehide", handleLeave); // ✅ 모바일 브라우저 포함 안전
+    return () => {
+      handleLeave();
+      window.removeEventListener("pagehide", handleLeave);
+    };
+  }, [userId, interactedUserIds]);
+
   // ✅ WebSocket 연결 및 메시지 처리
   useEffect(() => {
     if (!userId || !userInfo) {
@@ -44,27 +74,28 @@ export default function NearbyPage() {
     const socket = new WebSocket(process.env.NEXT_PUBLIC_WSS_SERVER_URL!);
     wsRef.current = socket;
 
-    socket.onopen = () => {
-      const sendLocation = () => {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            if (wsRef.current?.readyState === WebSocket.OPEN) {
-              wsRef.current.send(
-                JSON.stringify({
-                  type: "location_update",
-                  userId,
-                  userName: userInfo.name,
-                  lat: latitude,
-                  lng: longitude,
-                })
-              );
-            }
-          },
-          (err) => console.error("❌ 위치 에러:", err)
-        );
-      };
+    const sendLocation = () => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          if (wsRef.current?.readyState === WebSocket.OPEN) {
+            wsRef.current.send(
+              JSON.stringify({
+                type: "location_update",
+                userId,
+                userName: userInfo.name,
+                lat: latitude,
+                lng: longitude,
+              })
+            );
+          }
+        },
+        (err) => console.error("❌ 위치 에러:", err)
+      );
+    };
 
+    socket.onopen = () => {
+      console.log("websocket 연결됨");
       sendLocation();
       const intervalId = setInterval(sendLocation, 1000);
       return () => clearInterval(intervalId);
@@ -103,6 +134,22 @@ export default function NearbyPage() {
     console.log("NearByPage 초기 세팅 완료");
 
     return () => {
+      // ✅ 페이지 이탈 시 초대 수 증가 요청
+      console.log("✅ ✅ ✅ ✅ 스탬프 개수", interactedUserIds.size);
+      if (userId && interactedUserIds.size > 0) {
+        client
+          .post("/user/invite-multiple", {
+            inviterId: userId,
+            count: interactedUserIds.size,
+          })
+          .then((res) => {
+            console.log("✅ 초대한 사용자 수 반영 완료:", res.data);
+          })
+          .catch((err) => {
+            console.error("❌ 초대한 사용자 수 반영 실패:", err);
+          });
+      }
+
       socket.close();
     };
   }, [userId, userInfo]);
