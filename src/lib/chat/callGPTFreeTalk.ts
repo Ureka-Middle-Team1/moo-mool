@@ -44,21 +44,33 @@ export async function callGPTFreeTalk(
   const safeSummary = lastSummary ?? ""; // lastSummary가 null일 경우에는 공백
   const matches = [...reply.matchAll(summaryRegexGlobal)];
 
-  console.log("매치되는 것: ", matches);
+  // 1. 기존 summary → Map<string, string>
+  const summaryMap = new Map(
+    safeSummary
+      .split(",")
+      .map((entry) => entry.trim())
+      .filter(Boolean)
+      .map((entry) => {
+        const [key, value] = entry.split(":");
+        return [key.trim(), value.trim()];
+      })
+  );
 
+  // 2. 새 항목 추가 or 기존 값 업데이트
   for (const [, key, value] of matches) {
-    const alreadyHas = new RegExp(`(?:^|\\+|,)\\s*${key}:${value}`).test(
-      safeSummary
-    );
-    if (!alreadyHas) {
-      updateTendency({ [key]: value });
-      const newEntry = `${key}:${value}`;
-      const updatedSummary = safeSummary
-        ? `${safeSummary}, +${newEntry}`
-        : newEntry;
-      setLastSummary(updatedSummary);
+    const currentValue = summaryMap.get(key);
+    if (currentValue !== value) {
+      summaryMap.set(key, value); // 기존과 달라졌거나 없으면 업데이트
+      updateTendency({ [key]: value }); // Zustand에도 업데이트
     }
   }
+
+  // 3. Map → string 직렬화
+  const updatedSummary = Array.from(summaryMap.entries())
+    .map(([k, v]) => `${k}:${v}`)
+    .join(", ");
+
+  setLastSummary(updatedSummary);
 
   // 응답에서 문장만 출력
   const cleanedReply = reply.replace(summaryRegexGlobal, "").trim();
