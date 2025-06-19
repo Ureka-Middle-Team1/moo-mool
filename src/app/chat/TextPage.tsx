@@ -15,7 +15,7 @@ export default function TextPage() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const { messages } = useChatStore();
+  const { messages, currentQuestionId } = useChatStore();
 
   // 메시지 추가될 때 스크롤 아래로 이동
   useEffect(() => {
