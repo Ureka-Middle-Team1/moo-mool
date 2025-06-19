@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/axiosInstance";
 
+// Chat Session을 불러오는 Hook
 export const useGetChatSession = (sessionId: number | null) => {
   return useQuery({
     queryKey: ["chatSession", sessionId],

@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { PlanDBApiResponse } from "@/types/PlanData";
+import Image from "next/image";
 
 interface PlanListCardProps {
   plan: PlanDBApiResponse;
@@ -56,8 +57,32 @@ export default function PlanListCard({ plan }: PlanListCardProps) {
 
       {Array.isArray(subscriptionServices) &&
         subscriptionServices.length > 0 && (
-          <div className="mt-2 text-sm leading-relaxed text-gray-800">
-            혜택: {subscriptionServices.join(", ")}
+          <div className="mt-3 flex items-center">
+            {subscriptionServices.map((service, index) => {
+              const imageSrcMap: Record<string, string> = {
+                NETFLIX: "/assets/ott/netflix.jpg",
+                YOUTUBE_PREMIUM: "/assets/ott/youtubePremium.png",
+                "DISNEY+": "/assets/ott/disney.jpg",
+                WAVVE: "/assets/ott/wavve.png",
+                TVING: "/assets/ott/tving.png",
+              };
+
+              const imageSrc = imageSrcMap[service];
+
+              return imageSrc ? (
+                <Image
+                  key={service}
+                  src={imageSrc}
+                  alt={service}
+                  width={32}
+                  height={32}
+                  className={`rounded-full border-2 border-white object-cover ${
+                    index !== 0 ? "-ml-3" : ""
+                  }`}
+                  title={service}
+                />
+              ) : null;
+            })}
           </div>
         )}
     </div>

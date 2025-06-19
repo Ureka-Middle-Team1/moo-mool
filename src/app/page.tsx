@@ -7,19 +7,26 @@ import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const pathname = usePathname();
+
+  // 로그인 상태면 홈으로 자동 리다이렉트
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/home");
+    }
+  }, [status, router]);
 
   const handleLogin = () => {
-    signIn("kakao", { callbackUrl: pathname });
+    signIn("kakao", { callbackUrl: "/check-user-type" });
   };
 
   const handleExplore = () => {
-    session ? router.push("/home") : router.push("/onboarding");
+    router.push("/onboarding");
   };
 
   const tmp = () => {
