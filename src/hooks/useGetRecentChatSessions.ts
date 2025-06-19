@@ -9,11 +9,11 @@ export type ChatSession = {
   created_at: string;
 };
 
-export const useRecentChatSessions = (userId?: string) => {
+export const useGetRecentChatSessions = (userId?: string) => {
   return useQuery<ChatSession[]>({
     queryKey: ["chatSessions", userId],
     queryFn: async () => {
-      const res = await client.get(`/api/chat-sessions?userId=${userId}`);
+      const res = await client.get(`chat-session?userId=${userId}`);
       return res.data;
     },
     enabled: !!userId, // userId 없을 때는 호출 안함

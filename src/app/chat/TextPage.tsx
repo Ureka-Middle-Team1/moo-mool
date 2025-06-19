@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import ChatMessageList from "@/components/chat/ChatMessageList";
 import ChatInputBox from "@/components/chat/ChatInputBox";
 import { useChatStore } from "@/store/useChatStore";
+import { useChatStreamingStore } from "@/store/useChatStreamingStore";
+import { useHandleAnswer } from "@/hooks/useHandleAnswer";
+import { handleFreeTalkAnswer } from "@/lib/chat/handleFreeTalkAnswer";
 import QuickReplyList from "@/components/chat/QuickReplyList";
 import { useChatSubmit } from "@/hooks/useChatSubmit";
 
@@ -13,9 +16,13 @@ export default function TextPage() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const { messages } = useChatStore();
+  const isSubmittingRef = useRef(false);
+  const isStreaming = useChatStreamingStore((state) => state.isStreaming);
 
-  // 스크롤 아래로 이동
+  const { handleNormalizedAnswer } = useHandleAnswer();
+  const { messages, currentQuestionId, setCurrentQuestionId } = useChatStore();
+
+  // 메시지 추가될 때 스크롤 아래로 이동
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);

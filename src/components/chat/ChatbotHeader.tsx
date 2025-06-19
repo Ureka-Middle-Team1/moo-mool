@@ -12,7 +12,7 @@ type HeaderProps = {
   title: string;
 };
 
-export default function Header({ title }: HeaderProps) {
+export default function Header({ title = "챗봇" }: HeaderProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
