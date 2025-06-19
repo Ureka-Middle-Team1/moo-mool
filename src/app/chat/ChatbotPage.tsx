@@ -15,12 +15,9 @@ export default function ChatbotPage() {
   useWatchRecommendationTrigger();
 
   return (
-    <div className="relative flex h-full w-full max-w-[430px] flex-col bg-pink-100">
-      <div className="sticky top-0 z-10 w-full bg-white">
-        <Header />
-      </div>
-
-      <div className="min-h-0 flex-1">
+    <div className="flex h-screen flex-col bg-pink-100">
+      <Header title="챗봇" />
+      <div className="flex flex-1 flex-col overflow-hidden">
         {mode === "text" ? <TextPage /> : <VoicePage />}
       </div>
     </div>

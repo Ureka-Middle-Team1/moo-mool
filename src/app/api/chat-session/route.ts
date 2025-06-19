@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId, messages } = await req.json();
+    const { userId, messages, summary } = await req.json();
 
     if (!userId || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -42,9 +42,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    // summary 생성 로직
-    const summary = "예시 요약본";
 
     const created = await prisma.chatSession.create({
       data: {

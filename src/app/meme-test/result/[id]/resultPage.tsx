@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import Header from "@/components/meme/Header";
 import SuspenseImage from "@/components/meme/SuspenseImage";
 import { useChatStore } from "@/store/useChatStore";
-import { useSixTypeRecommendPlan } from "@/hooks/useSixTypeRecommendPlan";
+import { useGetSixTypeRecommendPlan } from "@/hooks/useGetSixTypeRecommendPlan";
 import PlanCard from "@/components/chat/PlanCard";
 
 export default function ResultPage({ encryptedId }: { encryptedId: string }) {
@@ -27,7 +27,7 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
     mutate: fetchRecommendPlan,
     isPending,
     error,
-  } = useSixTypeRecommendPlan();
+  } = useGetSixTypeRecommendPlan();
 
   const decryptedId = encryptedId
     ? decrypt(decodeURIComponent(encryptedId))
@@ -221,13 +221,52 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
           </button>
         </div>
 
-        <div className="mt-10 flex w-full flex-col items-center rounded-lg p-4 text-[14px]">
-          <ShareSection
-            title="내 결과 공유하기"
-            count={data?.sharedCount || 0}
-            id={decryptedId}
-            shareUrl={`/meme-test/result/${encryptedId}`}
-          />
+        <div className="mt-10 flex w-[100%] flex-col items-center rounded-lg p-4 text-[14px]">
+          <div className="mb-2 flex flex-col items-center">
+            <p
+              style={{ fontFamily: "kkubulim" }}
+              className="relative z-10 mb-2 inline-block text-xl">
+              <span className="relative z-10 inline-block text-xl">
+                <span
+                  className="absolute bottom-[0.3em] left-0 -z-10 h-[0.26em] w-full bg-pink-400"
+                  aria-hidden="true"
+                />
+                테스트 결과 공유
+              </span>
+              하고, <br />
+              히든 프로필 획득하자!
+            </p>
+          </div>
+          <div className="relative w-full">
+            <SuspenseImage
+              src="/assets/icons/stamp_area.png"
+              alt="도장 미션"
+              width={400}
+              height={200}
+              className="mx-auto w-full"
+            />
+          </div>
+          <div className="mt-4 flex w-[90%] flex-col items-center justify-between">
+            <ShareSection
+              title="내 결과 공유하기"
+              count={data?.sharedCount || 0}
+              id={decryptedId}
+              shareUrl={`/meme-test/result/${encryptedId}`}
+            />
+            <div className="rounded-md p-2 text-[11px] leading-tight text-gray-800">
+              <ul className="list-disc space-y-1 text-left">
+                <li>본 이벤트는 "무물"에 로그인한 회원에 한해 적용됩니다.</li>
+                <li>
+                  테스트를 공유받은 사용자가 해당 링크를 통해 테스트를 완료한
+                  경우, 공유한 회원에게 도장이 1회 지급됩니다.
+                </li>
+                <li>
+                  도장은 로그인된 계정에 자동으로 누적되며, 일정 개수 이상 모일
+                  경우 프로필이 단계별로 업그레이드됩니다.
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         <div
