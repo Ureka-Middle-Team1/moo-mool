@@ -44,9 +44,9 @@ export async function POST(req: Request) {
 
   // GPT API 요청을 위한 메시지 구성
   const gptMessages = [
-    { role: "system", content: lastSummary ? `${lastSummary}` : "" }, //
     { role: "system", content: systemPrompt },
-    ...(recentMessages ?? []), // recentMessages는 [{role, content}] 형태로 되어 있음
+    ...(lastSummary ? [{ role: "assistant", content: lastSummary }] : []),
+    ...(recentMessages ?? []),
     { role: "user", content: userMessage },
   ];
 
@@ -55,10 +55,12 @@ export async function POST(req: Request) {
     const response = await axios.post(
       url,
       {
-        model: "gpt-4.1-nano",
+        model: "gpt-4.1-mini",
         messages: gptMessages,
-        temperature: 0.8,
-        max_tokens: 200,
+        temperature: 0.7,
+        max_tokens: 300,
+        presence_penalty: 0.1,
+        frequency_penalty: 0.1,
       },
       {
         headers: {

@@ -7,7 +7,7 @@ import { useSmartChoiceRecommendation } from "./useSmartChoiceRecommendation";
 import { useEffect } from "react";
 
 // 밈테스트 결과를 이용해서 Smart Choice API request body 형태로 변환한 다음, 요청을 받아오는 Hook
-export function useSixTypeRecommendPlan() {
+export function useGetSixTypeRecommendPlan() {
   const { data: session, status } = useSession();
   const { mutate: smartChoiceRecommend } = useSmartChoiceRecommendation();
 
