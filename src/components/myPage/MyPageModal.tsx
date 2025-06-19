@@ -19,7 +19,7 @@ import { PlanDetailData } from "@/types/planDetail";
 import { useSession } from "next-auth/react";
 import TypeLevel from "./TypeLevel";
 import { useUserStore } from "@/store/userStore";
-import UserTendencyRadar from "../home/UserTendencyRadar";
+import UserTendencyRadar from "./UserTendencyRadar";
 
 type Props = {
   open: boolean;
@@ -116,14 +116,14 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
 
         {/* 스크롤 영역 */}
         <div className="scrollbar-hide relative z-0 -mt-2 flex-1 overflow-x-hidden overflow-y-auto">
-          <div className="pointer-events-none sticky top-0 z-10 -mt-3 h-6 bg-gradient-to-b from-white to-transparent" />
+          <div className="pointer-events-none sticky -top-1 z-10 -mt-7 h-4 bg-gradient-to-b from-white to-transparent" />
           <TypeLevel
             invitedCount={useUserStore.getState().invitedCount}
             typeName={userType}
           />
           <UserStamp />
-          <div className="mt-10 flex w-full flex-col gap-3">
-            <h2 className="text-lg font-semibold text-zinc-900">콘텐츠 성향</h2>
+          <div className="mt-7 flex w-full flex-col">
+            <h2 className="text-lg text-zinc-900">콘텐츠 성향</h2>
             <Suspense fallback={<div>성향 분석 불러오는 중...</div>}>
               <UserTendencyRadar />
             </Suspense>

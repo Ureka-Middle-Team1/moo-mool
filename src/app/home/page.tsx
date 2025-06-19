@@ -4,7 +4,7 @@ import { Suspense, useState } from "react";
 import HomeHeader from "@/components/home/HomeHeader";
 import HomeRecommendedPlan from "@/components/home/HomeRecommendedPlan";
 import PopularPlansList from "@/components/home/PopularPlansList";
-import UserTendencyRadar from "@/components/home/UserTendencyRadar";
+import UserTendencyRadar from "@/components/myPage/UserTendencyRadar";
 import TopGradient from "@/components/planDetail/TopGradient";
 import MyPageModal from "@/components/myPage/MyPageModal";
 import { useSession } from "next-auth/react";
