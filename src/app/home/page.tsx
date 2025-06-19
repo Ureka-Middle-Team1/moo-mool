@@ -10,6 +10,7 @@ import TopGradient from "@/components/planDetail/TopGradient";
 import MyPageModal from "@/components/myPage/MyPageModal";
 import { useSession } from "next-auth/react";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
+import ChatHistoryList from "@/components/home/ChatHistoryList";
 
 export default function HomePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,6 +56,13 @@ export default function HomePage() {
               요즘 뜨는 요금제
             </h2>
             <PopularPlansList />
+          </div>
+
+          <div className="flex w-full flex-col">
+            <h2 className="text-lg font-semibold text-zinc-900">
+              최근 대화내역
+            </h2>
+            <ChatHistoryList />
           </div>
         </div>
       </section>

@@ -16,13 +16,18 @@ export default function PlanListTrigger({
   isFetchingNextPage,
 }: PlanListTriggerProps) {
   const { ref, inView } = useInView({
-    threshold: 0.5,
+    threshold: 0.1,
   });
+
+  let timeout: NodeJS.Timeout;
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
+      timeout = setTimeout(() => {
+        fetchNextPage();
+      }, 100); //아주 짧은 debounce 느낌
     }
+    return () => clearTimeout(timeout);
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (

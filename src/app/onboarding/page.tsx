@@ -102,11 +102,7 @@ export default function onBoardingPage() {
         direction: "right",
       }));
     } else {
-      if (!session) {
-        signIn("kakao", { callbackUrl });
-      } else {
-        router.push("/home");
-      }
+      router.push("/home");
     }
   };
 
