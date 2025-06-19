@@ -5,7 +5,6 @@ import { ArrowLeft, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useChatStore } from "@/store/useChatStore";
 import { usePostChatbotSummary } from "@/hooks/usePostChatbotSummary";
-import { usePostChatSession } from "@/hooks/usePostChatSession";
 import { useSession } from "next-auth/react";
 
 type HeaderProps = {

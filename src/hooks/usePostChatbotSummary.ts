@@ -14,7 +14,6 @@ export const usePostChatbotSummary = () => {
 
   return useMutation({
     mutationFn: async ({ messages }: ChatbotSummaryInput) => {
-      console.log("채팅 요약 진행 중..");
       const res = await client.post(
         "/chat-summary",
         {
