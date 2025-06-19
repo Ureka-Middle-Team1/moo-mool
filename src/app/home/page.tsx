@@ -34,7 +34,7 @@ export default function HomePage() {
           <FeatureBannerSlider />
           <div className="flex w-full flex-col">
             <h2 className="pl-1 text-lg font-semibold text-gray-900">
-              최근 대화내역
+              💬 최근 대화내역
             </h2>
             <ChatHistoryList />
           </div>
@@ -45,7 +45,7 @@ export default function HomePage() {
 
           <div className="flex w-full flex-col">
             <h2 className="pl-1 text-lg font-semibold text-gray-900">
-              요즘 뜨는 요금제
+              🔥 요즘 뜨는 요금제
             </h2>
             <PopularPlansList />
           </div>
