@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
+import { Spinner } from "@/components/ui/spinner";
 
 interface PlanListTriggerProps {
   fetchNextPage: () => void;
@@ -31,11 +32,7 @@ export default function PlanListTrigger({
 
   return (
     <div ref={ref} className="flex h-10 w-full items-center justify-center">
-      {isFetchingNextPage && (
-        <span className="animate-pulse text-sm text-gray-500">
-          📦 불러오는 중...
-        </span>
-      )}
+      {isFetchingNextPage && <Spinner size="small" className="text-pink-400" />}
     </div>
   );
 }
