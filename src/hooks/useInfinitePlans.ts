@@ -3,7 +3,12 @@ import axios from "axios";
 import { PlanDBApiResponse } from "@/types/PlanData";
 import { SortTarget } from "@/types/sort";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 5;
+
+interface InfinitePlanResponse {
+  data: PlanDBApiResponse[];
+  hasNext: boolean;
+}
 
 interface FetchParams {
   pageParam?: number;
@@ -17,7 +22,7 @@ const fetchPlans = async ({
   sortTarget,
   sortOrder,
   selectedNetwork,
-}: FetchParams): Promise<PlanDBApiResponse[]> => {
+}: FetchParams): Promise<InfinitePlanResponse> => {
   const params = new URLSearchParams();
 
   params.append("page", pageParam.toString());
@@ -27,7 +32,9 @@ const fetchPlans = async ({
   if (selectedNetwork === "5G") params.append("network", "FIVE_G");
   else if (selectedNetwork === "LTE") params.append("network", "LTE");
 
-  const res = await axios.get(`/api/plan/page?${params.toString()}`);
+  const res = await axios.get<InfinitePlanResponse>(
+    `/api/plan/page?${params.toString()}`
+  );
   return res.data;
 };
 
@@ -38,10 +45,10 @@ export function useInfinitePlans(
 ) {
   return useInfiniteQuery({
     queryKey: ["infinitePlans", sortTarget, sortOrder, selectedNetwork],
-    queryFn: ({ pageParam }) =>
+    queryFn: ({ pageParam = 0 }) =>
       fetchPlans({ pageParam, sortTarget, sortOrder, selectedNetwork }),
     getNextPageParam: (lastPage, allPages) =>
-      lastPage.length < PAGE_SIZE ? undefined : allPages.length,
+      lastPage.hasNext ? allPages.length : undefined,
     initialPageParam: 0,
   });
 }

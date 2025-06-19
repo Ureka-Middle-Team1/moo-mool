@@ -12,9 +12,9 @@ export default function LayoutWrapper({
   const pathname = usePathname();
 
   // 챗봇 버튼을 보여줄 경로 설정
-  const visiblePaths = ["/plandetail", "/home"];
-  const shouldShowChatbot = visiblePaths.some((path) =>
-    pathname.startsWith(path)
+  const visiblePathPatterns = [/^\/plandetail/, /^\/home/, /^\/chat\/[^/]+$/];
+  const shouldShowChatbot = visiblePathPatterns.some((pattern) =>
+    pattern.test(pathname)
   );
 
   return (

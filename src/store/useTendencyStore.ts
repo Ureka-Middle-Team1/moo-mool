@@ -17,7 +17,7 @@ const defaultState: UserTendencyInfo = {
   age: "",
   type: "",
   dis: "",
-  subscribe: "NONE", // 구독 서비스 관련
+  subscribe: "", // 구독 서비스 관련
 };
 
 // 새로 고침해도 userTendencyInfo가 저장 되도록 persist 옵션 추가
