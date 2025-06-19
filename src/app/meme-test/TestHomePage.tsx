@@ -1,5 +1,6 @@
 "use client";
 
+import HamburgerMenu from "@/components/common/HamburgerMenu";
 import ShareSection from "@/components/meme/shareSection";
 import { useAnimatedCount } from "@/hooks/useAnimatedCount";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
@@ -34,8 +35,11 @@ export default function TestHomePage() {
 
   return (
     <div className="flex h-full w-full flex-col bg-pink-200 px-0">
-      <div className="flex items-start px-3">
+      <div className="flex justify-between px-3">
         <img src="/assets/icons/logo.png" alt="logo" className="w-20" />
+        <div className="pt-5">
+          <HamburgerMenu />
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col items-center justify-center">
