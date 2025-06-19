@@ -19,6 +19,8 @@ interface TendencyBarChartProps {
   rawData: number[] | [number[], number[]];
   name: string;
   labels?: string[];
+  colors?: string[];
+  height?: number;
 }
 
 const TendencyBarChart = ({
@@ -26,6 +28,8 @@ const TendencyBarChart = ({
   rawData,
   name,
   labels = ["월정액", "데이터", "속도", "음성통화", "문자"],
+  colors = ["rgba(255, 188, 31, 0.6)", "rgba(255, 99, 132, 0.6)"],
+  height = 320,
 }: TendencyBarChartProps) => {
   const [chartKey, setChartKey] = useState<number | null>(null);
 
@@ -45,7 +49,7 @@ const TendencyBarChart = ({
           label: name,
           data: [...(data as [number[], number[]])[0]],
           rawData: [...(rawData as [number[], number[]])[0]],
-          backgroundColor: "rgba(255, 188, 31, 0.6)",
+          backgroundColor: colors[0],
           borderWidth: 0,
           categoryPercentage: 0.4,
           barPercentage: 0.6,
@@ -54,7 +58,7 @@ const TendencyBarChart = ({
           label: "내 요금제",
           data: [...(data as [number[], number[]])[1]],
           rawData: [...(rawData as [number[], number[]])[1]],
-          backgroundColor: "rgba(255, 99, 132, 0.6)",
+          backgroundColor: colors[1],
           borderWidth: 0,
           categoryPercentage: 0.4,
           barPercentage: 0.6,
@@ -65,7 +69,7 @@ const TendencyBarChart = ({
           label: name,
           data: [...(data as number[])],
           rawData: [...(rawData as number[])],
-          backgroundColor: "rgba(255, 188, 31, 0.6)",
+          backgroundColor: colors[0],
           borderWidth: 0,
           categoryPercentage: 0.4,
           barPercentage: 0.6,
@@ -73,7 +77,7 @@ const TendencyBarChart = ({
       ];
 
   return (
-    <div className="w-full" style={{ height: 320 }}>
+    <div className="w-full" style={{ height }}>
       <Bar
         key={chartKey}
         data={{ labels, datasets }}
