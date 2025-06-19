@@ -1,8 +1,8 @@
 "use client";
 
 import { PlanDetailData } from "@/types/planDetail";
-import TendencyRadarChart from "@/components/chart/PlanDetailRadarChart";
 import TendencyBarChart from "@/components/chart/PlanDetailBarChart";
+import RadarFlipCard from "@/components/planDetail/RadarFlipCard";
 
 interface PlanChartsProps {
   data: PlanDetailData;
@@ -10,15 +10,14 @@ interface PlanChartsProps {
 }
 
 export default function PlanCharts({ data, mode }: PlanChartsProps) {
-  const isRounded = true;
-
   return (
-    <div className="w-full max-w-md space-y-8">
-      <div className="h-80 w-full">
-        <TendencyRadarChart
-          isRounded={isRounded}
-          data={mode === "basic" ? data.radar : [data.radar, data.compare]}
+    <div className="flex w-full flex-col items-center space-y-8">
+      <div className="flex h-80 w-full max-w-md items-center justify-center">
+        <RadarFlipCard
+          radar={mode === "basic" ? data.radar : [data.radar, data.compare]}
+          raw={mode === "basic" ? data.raw : [data.raw, data.compareRaw]}
           name={data.name}
+          mode={mode}
         />
       </div>
 
