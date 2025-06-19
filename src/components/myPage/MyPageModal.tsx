@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +19,7 @@ import { PlanDetailData } from "@/types/planDetail";
 import { useSession } from "next-auth/react";
 import TypeLevel from "./TypeLevel";
 import { useUserStore } from "@/store/userStore";
+import UserTendencyRadar from "../home/UserTendencyRadar";
 
 type Props = {
   open: boolean;
@@ -42,8 +43,7 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
   );
 
   useEffect(() => {
-    if (!open) return;
-    if (!session?.user?.id) return;
+    if (!open || !session?.user?.id) return;
 
     async function fetchUserPlan() {
       try {
@@ -101,39 +101,69 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
       open={open}
       onOpenChange={onOpenChange}
       aria-label="마이페이지 모달">
-      <DialogContent className="w-[387px] max-w-md rounded-xl bg-white p-6">
+      <DialogContent className="flex h-[80vh] w-[387px] max-w-md flex-col overflow-hidden rounded-xl bg-white p-6">
         <VisuallyHidden asChild>
           <DialogTitle>마이페이지</DialogTitle>
         </VisuallyHidden>
         <DialogDescription className="sr-only">
           나의 요금제 설정 및 정보를 확인할 수 있는 모달
         </DialogDescription>
-        <UserProfile invitedCount={useUserStore.getState().invitedCount} />
-        <TypeLevel
-          invitedCount={useUserStore.getState().invitedCount}
-          typeName={userType}
-        />
-        <UserStamp />
 
-        <div className="mt-1 flex items-center justify-between">
-          <div className="flex w-full flex-col">
-            <label htmlFor="plan" className="text-lg">
-              나의 요금제
-            </label>
-            <select
-              id="plan"
-              value={selectedPlanId}
-              onChange={handlePlanChange}
-              className="mt-4 block rounded-md border border-gray-300 bg-yellow-100 p-2 text-sm shadow-sm"
-              disabled={loading || isPlansLoading}>
-              <option value="">현재 사용중인 요금제를 선택해주세요</option>
-              {plans.map((plan) => (
-                <option key={plan.id} value={plan.id.toString()}>
-                  {plan.name}
-                </option>
-              ))}
-            </select>
+        {/* 고정 영역 */}
+        <div className="relative shrink-0">
+          <UserProfile invitedCount={useUserStore.getState().invitedCount} />
+        </div>
+
+        {/* 스크롤 영역 */}
+        <div className="scrollbar-hide relative z-0 -mt-2 flex-1 overflow-x-hidden overflow-y-auto">
+          <div className="pointer-events-none sticky top-0 z-10 -mt-3 h-6 bg-gradient-to-b from-white to-transparent" />
+          <TypeLevel
+            invitedCount={useUserStore.getState().invitedCount}
+            typeName={userType}
+          />
+          <UserStamp />
+          <div className="mt-10 flex w-full flex-col gap-3">
+            <h2 className="text-lg font-semibold text-zinc-900">콘텐츠 성향</h2>
+            <Suspense fallback={<div>성향 분석 불러오는 중...</div>}>
+              <UserTendencyRadar />
+            </Suspense>
           </div>
+
+          <div className="mt-4 flex items-center justify-between">
+            <div className="flex w-full flex-col">
+              <label htmlFor="plan" className="text-lg">
+                나의 요금제
+              </label>
+              <select
+                id="plan"
+                value={selectedPlanId}
+                onChange={handlePlanChange}
+                className="mt-4 block rounded-md border border-gray-300 bg-yellow-100 p-2 text-sm shadow-sm"
+                disabled={loading || isPlansLoading}>
+                <option value="">현재 사용중인 요금제를 선택해주세요</option>
+                {plans.map((plan) => (
+                  <option key={plan.id} value={plan.id.toString()}>
+                    {plan.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {planChartData && (
+            <div className="mt-4 w-full max-w-full overflow-x-hidden">
+              <TendencyBarChart
+                data={planChartData.bar}
+                rawData={planChartData.raw}
+                name={planChartData.name}
+                colors={[
+                  "rgba(241, 145, 187, 0.6)",
+                  "rgba(241, 145, 187, 0.6)",
+                ]}
+                height={260}
+              />
+            </div>
+          )}
 
           {error && (
             <p className="mt-2 text-sm text-red-500">
@@ -141,19 +171,6 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
             </p>
           )}
         </div>
-
-        {/* 차트 표시 */}
-        {planChartData && (
-          <div className="mt-1 w-full">
-            <TendencyBarChart
-              data={planChartData.bar}
-              rawData={planChartData.raw}
-              name={planChartData.name}
-              colors={["rgba(241, 145, 187, 0.6)", "rgba(241, 145, 187, 0.6)"]}
-              height={260}
-            />
-          </div>
-        )}
       </DialogContent>
     </Dialog>
   );
