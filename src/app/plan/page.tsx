@@ -59,7 +59,15 @@ export default function PlanListPage() {
   }
 
   return (
-    <div className="relative space-y-6 p-4" ref={listRef}>
+    <div
+      className="relative space-y-6 bg-gradient-to-r from-pink-100 to-yellow-100 p-4"
+      ref={listRef}>
+      <img
+        src="/assets/icons/logo.png"
+        alt="로고"
+        className="absolute top-4 left-4 h-16 w-auto drop-shadow-md"
+      />
+      <div className="mt-18" />
       <SortFilterPanel
         selectedNetwork={selectedNetwork}
         setSelectedNetwork={setSelectedNetwork}
