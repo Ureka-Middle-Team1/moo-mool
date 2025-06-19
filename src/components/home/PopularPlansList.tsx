@@ -1,6 +1,6 @@
 "use client";
 
-import PlanCard from "../chat/PlanCard";
+import PlanListCard from "../planList/PlanListCard";
 import { useGetTopRecommendedPlans } from "@/hooks/useGetTopRecommendedPlans";
 import {
   Carousel,
@@ -22,20 +22,18 @@ export default function PopularPlansList() {
             <CarouselItem
               key={plan.id}
               className="flex basis-[95%] justify-center pl-4">
-              <PlanCard
-                id={plan.id}
-                name={plan.name}
-                data={
-                  plan.dataAmountMb === 0
-                    ? "무제한"
-                    : `${(plan.dataAmountMb / 1024).toFixed(1)}GB`
-                }
-                voice={
-                  plan.voiceMinutes === -1 ? "무제한" : `${plan.voiceMinutes}분`
-                }
-                sms={plan.smsIncluded ? "포함" : "없음"}
-                price={`월 ${plan.price.toLocaleString()}원`}
-                tel={plan.networkType}
+              <PlanListCard
+                plan={{
+                  id: plan.id,
+                  name: plan.name,
+                  price: plan.price,
+                  dataAmountMb: plan.dataAmountMb,
+                  overageSpeedMbps: plan.overageSpeedMbps,
+                  voiceMinutes: plan.voiceMinutes,
+                  smsIncluded: plan.smsIncluded,
+                  networkType: plan.networkType,
+                  subscriptionServices: plan.subscriptionServices || [],
+                }}
               />
             </CarouselItem>
           ))}
