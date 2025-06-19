@@ -3,9 +3,9 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
-  const userId = params.userId;
+  const { userId } = await params; //핵심 수정 (15.3.3 대응
 
   try {
     const profile = await prisma.userCharacterProfile.findUnique({
