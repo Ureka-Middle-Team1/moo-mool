@@ -9,6 +9,7 @@ import { useHandleAnswer } from "@/hooks/useHandleAnswer";
 import { handleFreeTalkAnswer } from "@/lib/chat/handleFreeTalkAnswer";
 import QuickReplyList from "@/components/chat/QuickReplyList";
 import { useChatSubmit } from "@/hooks/useChatSubmit";
+import ChatProgressToast from "@/components/chat/ChatProgressRoadmap";
 
 // "텍스트"로 챗봇 기능을 사용하는 페이지
 export default function TextPage() {
@@ -39,6 +40,7 @@ export default function TextPage() {
 
   return (
     <div className="flex h-full flex-1 flex-col overflow-hidden">
+      <ChatProgressToast currentQuestionId={currentQuestionId} />
       <ChatMessageList messages={messages} bottomRef={bottomRef} />
       <QuickReplyList onSubmit={handleSubmit} />
       <ChatInputBox
