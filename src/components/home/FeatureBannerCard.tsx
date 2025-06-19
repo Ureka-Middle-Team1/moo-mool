@@ -12,7 +12,7 @@ export default function FeatureBannerCard({
   image,
 }: FeatureBannerCardProps) {
   return (
-    <div className="w-full">
+    <div className="h-full w-full">
       <div className="relative flex w-full flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-br from-[#E0FFE8] via-[#F0FAFF] to-[#FFFCEB] px-8 py-5 shadow-md sm:flex-row sm:items-center">
         {/* 텍스트 영역 */}
         <div className="z-10 max-w-[60%]">
