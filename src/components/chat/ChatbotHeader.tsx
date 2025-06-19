@@ -32,22 +32,41 @@ export default function Header({ title = "챗봇" }: HeaderProps) {
   const { clear } = useFreeTalkStore();
   const { mutate: chatHistorySummary } = usePostChatbotSummary();
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (isVoiceMode) {
       router.push("/chat");
     } else {
       if (currentQuestionId === 12 && hasRecommended) {
         if (!session?.user?.id) return;
 
-        // "텍스트 모드"에서 결과 추천까지 받은 상태에서, 뒤로 가기 버튼 눌렀을 경우
-        chatHistorySummary({ userId: session?.user.id, messages }); // 요약 수행하고 저장소에 저장
-        setCurrentQuestionId(0);
-        setHasRecommended(false);
-        clearMessages(); // useChatStore의 메시지 삭제
-        clear(); // useFreeTalkStore의 메시지 모두 삭제
-        resetTendency(); // userTendencyInfo도 초기화
+        const currentMessages = useChatStore.getState().messages;
+        const lastBotMsg = currentMessages
+          .reverse()
+          .find((m) => m.role === "bot");
+        const planId = lastBotMsg?.planData?.id ?? 5;
+
+        try {
+          // 모든 작업 순차적으로 수행
+          await chatHistorySummary({
+            userId: session.user.id,
+            messages,
+            planId,
+          });
+          setCurrentQuestionId(0);
+          setHasRecommended(false);
+          clearMessages();
+          clear();
+          resetTendency();
+
+          // 모든 작업 후에 뒤로가기
+          router.back();
+        } catch (error) {
+          console.error("chatHistorySummary 실패:", error);
+        }
+      } else {
+        // 조건을 만족하지 않는 경우엔 그냥 뒤로 가기
+        router.back();
       }
-      router.back();
     }
   };
 

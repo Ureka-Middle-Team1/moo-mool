@@ -15,8 +15,9 @@ export default function ChatHistoryList() {
     <section className="flex w-full flex-col items-center px-4">
       <Carousel className="relative mx-auto w-full max-w-md">
         <CarouselContent className="-ml-4 flex-nowrap space-x-4 px-5 py-5">
-          {sessions?.map((s) => (
+          {sessions?.map((s, idx) => (
             <Card
+              key={idx}
               className="min-w-full flex-shrink-0 cursor-pointer flex-col justify-center rounded-xl bg-white shadow-md"
               onClick={() => router.push(`/chat/${s.id}`)}>
               {/* 해당 Section은 "AI 요약 제목"을 띄울 것임 */}

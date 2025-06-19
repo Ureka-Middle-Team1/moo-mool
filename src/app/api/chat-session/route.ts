@@ -38,7 +38,8 @@ export async function GET(req: NextRequest) {
       name: session.plan?.name ?? null,
     }));
 
-    return NextResponse.json(sessions);
+    // return
+    return NextResponse.json(response);
   } catch (err) {
     console.error("[CHAT_SESSION_LIST_ERROR]", err);
     return NextResponse.json({ error: "서버 오류" }, { status: 500 });
