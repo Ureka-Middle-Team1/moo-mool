@@ -5,6 +5,7 @@ import PlanCard from "./PlanCard";
 import TypingMessage from "./TypingMessage";
 import { useChatStore } from "@/store/useChatStore";
 import QuickReplyList from "./QuickReplyList";
+import PlanListCard from "../planList/PlanListCard";
 
 interface ChatMessageProps {
   message: Message;
