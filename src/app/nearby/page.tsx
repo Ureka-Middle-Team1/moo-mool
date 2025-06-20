@@ -1,7 +1,7 @@
 "use client";
 
 import NearbyHeader from "@/components/nearby/NearbyHeader";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,6 +16,11 @@ export default function NearbyPage() {
   const { isModalOpen, setModalOpen, openModal } = useModalStore();
   const { data: session } = useSession();
   const userId = session?.user?.id;
+
+  if (!session) {
+    signIn("kakao", { callbackUrl: "/nearby" });
+  }
+
   const { data: myProfile } = useGetUserCharacterProfile(userId);
   const { data: userInfo } = useGetUserInfo(userId);
 
