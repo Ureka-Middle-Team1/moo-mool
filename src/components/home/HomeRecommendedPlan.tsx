@@ -29,7 +29,7 @@ export default function HomeRecommendedPlan() {
         📌 나의 추천 요금제
       </h2>
 
-      <div className="flex w-[18rem] items-center justify-center">
+      <div className="flex w-[19rem] items-center justify-center">
         {isLoadingAll ? (
           <PlanListCardSkeleton />
         ) : userId && planData && !planError ? (

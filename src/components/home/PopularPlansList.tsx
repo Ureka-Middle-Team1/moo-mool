@@ -41,9 +41,7 @@ export default function PopularPlansList() {
       <Carousel className="relative mx-auto w-full max-w-md">
         <CarouselContent className="-ml-4 px-5 py-5">
           {data.map((plan, idx) => (
-            <CarouselItem
-              key={plan.id}
-              className="flex basis-[95%] justify-center pl-4">
+            <CarouselItem key={plan.id} className="flex justify-center pl-4">
               <PlanListCard plan={plan} hideBenefits={true} />
             </CarouselItem>
           ))}
