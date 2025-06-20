@@ -45,6 +45,7 @@ export default function HomeRecommendedPlan() {
             networkType: planData.networkType,
             subscriptionServices: planData.subscriptionServices || [],
           }}
+          hideBenefits={true}
         />
       </div>
     </div>

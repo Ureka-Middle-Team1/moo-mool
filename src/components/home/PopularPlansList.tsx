@@ -34,6 +34,7 @@ export default function PopularPlansList() {
                   networkType: plan.networkType,
                   subscriptionServices: plan.subscriptionServices || [],
                 }}
+                hideBenefits={true}
               />
             </CarouselItem>
           ))}
