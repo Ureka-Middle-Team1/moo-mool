@@ -105,6 +105,14 @@ export default function NearbyContent({ session }: { session: any }) {
 
     socket.onopen = () => {
       console.log("websocket 연결됨");
+
+      // 접속 알림 전송
+      socket.send(
+        JSON.stringify({
+          type: "user_join",
+          userId,
+        })
+      );
       sendLocation();
       const intervalId = setInterval(sendLocation, 1000);
       return () => clearInterval(intervalId);

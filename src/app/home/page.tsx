@@ -1,26 +1,62 @@
 "use client";
 export const dynamic = "force-dynamic";
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import HomeHeader from "@/components/home/HomeHeader";
 import HomeRecommendedPlan from "@/components/home/HomeRecommendedPlan";
 import PopularPlansList from "@/components/home/PopularPlansList";
-import UserTendencyRadar from "@/components/myPage/UserTendencyRadar";
 import TopGradient from "@/components/planDetail/TopGradient";
 import MyPageModal from "@/components/myPage/MyPageModal";
 import { useSession } from "next-auth/react";
-import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { useModalStore } from "@/store/useModalStore";
 import ChatHistoryList from "@/components/home/ChatHistoryList";
 import FeatureBannerSlider from "@/components/home/FeatureBannerSlider";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
   const { isModalOpen, setModalOpen, openModal } = useModalStore();
-  const { data: session, status } = useSession();
-  const userId = session?.user?.id;
+  const router = useRouter();
+  const socketRef = useRef<WebSocket | null>(null);
 
-  const { data: userInfo, isLoading: userLoading } = useGetUserInfo(
-    userId ?? ""
-  );
+  useEffect(() => {
+    const socket = new WebSocket(process.env.NEXT_PUBLIC_WSS_SERVER_URL!);
+    socketRef.current = socket;
+
+    socket.onopen = () => {
+      console.log("✅ HomePage WebSocket 연결됨");
+
+      socket.send(
+        JSON.stringify({
+          type: "home_ready",
+        })
+      );
+    };
+
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+
+      console.log("메세지 전달", message);
+
+      if (message.type === "nearby_user_joined") {
+        // ✅ 알림 표시
+        const confirm = window.confirm("누군가 무물에 함께 접속했습니다!\n");
+        if (confirm) {
+          router.push("/nearby");
+        }
+      }
+    };
+
+    socket.onerror = (e) => {
+      console.error("WebSocket 에러:", e);
+    };
+
+    socket.onclose = () => {
+      console.log("❌ HomePage WebSocket 연결 종료");
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, [router]);
 
   return (
     <div className="flex flex-col items-center">
