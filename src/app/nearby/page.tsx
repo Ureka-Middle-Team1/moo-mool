@@ -1,47 +1,184 @@
 "use client";
 
 import NearbyHeader from "@/components/nearby/NearbyHeader";
-import { useNearbySocket } from "@/hooks/useNearbySocket";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 import { motion, AnimatePresence } from "framer-motion";
 import { NearbyUser } from "@/types/Nearby";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
+import { useGetUserInfo } from "@/hooks/useGetUserInfo";
+import { client } from "@/lib/axiosInstance";
 
 export default function NearbyPage() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const { data: myProfile } = useGetUserCharacterProfile(userId);
+  const { data: userInfo } = useGetUserInfo(userId);
 
   const [users, setUsers] = useState<NearbyUser[]>([]);
-  const [interactedUserIds, setInteractedUserIds] = useState<Set<String>>(
+  const [interactedUserIds, setInteractedUserIds] = useState<Set<string>>(
     new Set()
   );
+
   const myIdRef = useRef<string | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
 
-  // ✅ 일반 사용자 위치 고정용
-  const positionCache = useRef<
-    Map<string, { angle: number; distance: number }>
-  >(new Map());
-
-  // ✅ 클릭된 사용자 위치 저장용
-  const clickedUserPositions = useRef<
-    Map<string, { angle: number; distance: number }>
-  >(new Map());
+  const positionCache = useRef(
+    new Map<string, { angle: number; distance: number }>()
+  );
+  const clickedUserPositions = useRef(
+    new Map<string, { angle: number; distance: number }>()
+  );
 
   useEffect(() => {
-    if (userId) {
-      myIdRef.current = userId;
-    }
+    if (userId) myIdRef.current = userId;
   }, [userId]);
 
-  useNearbySocket((users: NearbyUser[]) => {
-    // 내 userId는 제외
-    const filtered = users.filter((u) => u.userId !== myIdRef.current);
+  // ✅ 초대 수 전송 함수 정의
+  const sendInviteCount = async () => {
+    if (userId && interactedUserIds.size > 0) {
+      try {
+        const res = await client.post("/user/invite-multiple", {
+          inviterId: userId,
+          count: interactedUserIds.size,
+        });
+        console.log("✅ 초대한 사용자 수 반영 완료:", res.data);
+        // optional: alert("초대한 수 반영 완료!");
+      } catch (err) {
+        console.error("❌ 초대한 사용자 수 반영 실패:", err);
+      }
+    }
+  };
 
-    setUsers(filtered); // 현재 반경 내 사용자 목록 업데이트
-  }, userId);
+  // ✅ 페이지 이탈 감지 및 처리
+  useEffect(() => {
+    const handleLeave = () => {
+      sendInviteCount(); // async 아님, 위에서 Axios로 처리되도록 수정
+    };
+
+    window.addEventListener("pagehide", handleLeave); // ✅ 모바일 브라우저 포함 안전
+    return () => {
+      handleLeave();
+      window.removeEventListener("pagehide", handleLeave);
+    };
+  }, [userId, interactedUserIds]);
+
+  // ✅ WebSocket 연결 및 메시지 처리
+  useEffect(() => {
+    if (!userId || !userInfo) {
+      console.log("websoket 연결 중");
+      return;
+    }
+
+    const socket = new WebSocket(process.env.NEXT_PUBLIC_WSS_SERVER_URL!);
+    wsRef.current = socket;
+
+    const sendLocation = () => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          if (wsRef.current?.readyState === WebSocket.OPEN) {
+            wsRef.current.send(
+              JSON.stringify({
+                type: "location_update",
+                userId,
+                userName: userInfo.name,
+                lat: latitude,
+                lng: longitude,
+              })
+            );
+          }
+        },
+        (err) => console.error("❌ 위치 에러:", err)
+      );
+    };
+
+    socket.onopen = () => {
+      console.log("websocket 연결됨");
+      sendLocation();
+      const intervalId = setInterval(sendLocation, 1000);
+      return () => clearInterval(intervalId);
+    };
+
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+
+      console.log("message", message);
+
+      if (message.type === "nearby_users") {
+        const filtered = message.nearbyUsers.filter(
+          (u: NearbyUser) => u.userId !== myIdRef.current
+        );
+        setUsers(filtered);
+      }
+
+      if (message.type === "click_notice") {
+        const fromName = message.fromUserName || message.fromUserId;
+        const toName = message.toUserName || userInfo?.name || message.toUserId;
+
+        if (fromName && toName) {
+          alert(`${fromName}님이 ${toName}님을 클릭했습니다`);
+        }
+      }
+    };
+
+    socket.onerror = (e) => {
+      console.error("WebSocket 에러 발생:", e);
+    };
+
+    socket.onclose = () => {
+      console.log("❌ WebSocket 연결 종료됨");
+    };
+
+    console.log("NearByPage 초기 세팅 완료");
+
+    return () => {
+      // ✅ 페이지 이탈 시 초대 수 증가 요청
+      console.log("✅ ✅ ✅ ✅ 스탬프 개수", interactedUserIds.size);
+      if (userId && interactedUserIds.size > 0) {
+        client
+          .post("/user/invite-multiple", {
+            inviterId: userId,
+            count: interactedUserIds.size,
+          })
+          .then((res) => {
+            console.log("✅ 초대한 사용자 수 반영 완료:", res.data);
+          })
+          .catch((err) => {
+            console.error("❌ 초대한 사용자 수 반영 실패:", err);
+          });
+      }
+
+      socket.close();
+    };
+  }, [userId, userInfo]);
+
+  const handleUserClick = (targetId: string, clickedType?: string) => {
+    const myType = myProfile?.type;
+    if (!clickedType || !myType || !wsRef.current || !userInfo?.name) {
+      console.log("아직 세팅 다 안됨");
+      return;
+    }
+
+    if (clickedType === myType) {
+      const pos = positionCache.current.get(targetId);
+      if (pos) clickedUserPositions.current.set(targetId, pos);
+      setInteractedUserIds((prev) => new Set(prev).add(targetId));
+      console.log("아이콘 클릭");
+      // ✅ WebSocket 상태 확인 후 클릭 전송
+      if (wsRef.current.readyState === WebSocket.OPEN) {
+        wsRef.current.send(
+          JSON.stringify({
+            type: "user_click",
+            fromUserId: userId,
+            fromUserName: userInfo?.name,
+            toUserId: targetId,
+          })
+        );
+      }
+    }
+  };
 
   if (!userId) {
     return (
@@ -49,33 +186,10 @@ export default function NearbyPage() {
     );
   }
 
-  const handleUserClick = (userId: string, clickedType?: string) => {
-    const myType = myProfile?.type;
-    if (!clickedType || !myType) return;
-
-    if (clickedType === myType) {
-      console.log("타입 일치 - 아이콘 사라짐");
-      setInteractedUserIds((prev) => {
-        const newSet = new Set(prev);
-        newSet.add(userId);
-
-        // ✅ 클릭 시점의 위치 저장
-        const currentPos = positionCache.current.get(userId);
-        if (currentPos) {
-          clickedUserPositions.current.set(userId, currentPos);
-        }
-
-        console.log("클릭된 사용자", interactedUserIds);
-        return newSet;
-      });
-    }
-  };
-
   return (
     <>
       <NearbyHeader />
       <div className="relative flex h-screen items-center justify-center overflow-hidden bg-white">
-        {/* 배경 파동 원형 */}
         {[20, 40, 60, 90, 110, 130].map((r, idx) => (
           <div
             key={`circle-${r}`}
@@ -91,27 +205,23 @@ export default function NearbyPage() {
           />
         ))}
 
-        {/* 나 표시 (크기 크게 + 보정 위치) */}
+        {/* 나 */}
         <motion.div
           key={`nearby-me`}
-          initial={{ scale: 0, opacity: 0 }} // 처음엔 작고 투명하게
-          animate={{ scale: 1, opacity: 1 }} // 등장 시 커지면서 나타남
-          transition={{ type: "spring", stiffness: 120, damping: 12 }} // 자연스러운 스프링 효과
-        >
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 120, damping: 12 }}>
           <NearbyUserAvatar userId={userId} angle={0} distance={0} isMe />
         </motion.div>
 
-        {/* 주변 사용자 표시 */}
+        {/* 주변 유저 */}
         <AnimatePresence>
-          {users.map((user) => {
+          {users.map((user, idx) => {
             const wasClicked = interactedUserIds.has(user.userId);
-
-            // ✅ 클릭된 경우: clickedUserPositions에 있는 위치 사용
             let position = wasClicked
               ? clickedUserPositions.current.get(user.userId)
               : positionCache.current.get(user.userId);
 
-            // ✅ 위치 캐싱 (랜덤 생성은 최초 1회만)
             if (!position) {
               const angle = Math.random() * 360;
               const distance = Math.random() * 30 + 40;
@@ -121,7 +231,7 @@ export default function NearbyPage() {
 
             return (
               <motion.div
-                key={`nearby-${user.userId}`}
+                key={`nearby-${user.userId}-${idx}`} // ✅ 중복 키 방지
                 initial={{ scale: 0.5, opacity: 0, y: 10 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.5, opacity: 0, y: 10 }}
@@ -131,7 +241,7 @@ export default function NearbyPage() {
                   angle={position.angle}
                   distance={position.distance}
                   onClick={(type) => handleUserClick(user.userId, type)}
-                  isEmptyStamp={wasClicked} // ✅ 클릭된 유저는 empty_stamp로
+                  isEmptyStamp={wasClicked}
                 />
               </motion.div>
             );
