@@ -11,6 +11,7 @@ import PlanListTrigger from "@/components/planList/PlanListTrigger";
 import { PlanDBApiResponse } from "@/types/PlanData";
 import HomeHeader from "@/components/home/HomeHeader";
 import TopGradient from "@/components/planDetail/TopGradient";
+import { OTTType } from "@/components/planList/SortFilterPanel";
 import MyPageModal from "@/components/myPage/MyPageModal";
 import { useModalStore } from "@/store/useModalStore";
 
@@ -32,8 +33,10 @@ export default function PlanListPage() {
     null
   );
 
+  const [selectedOttList, setSelectedOttList] = useState<OTTType[]>([]);
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
-    useInfinitePlans(sortTarget, sortOrder, selectedNetwork);
+    useInfinitePlans(sortTarget, sortOrder, selectedNetwork, selectedOttList);
 
   const planMap = new Map<number, PlanDBApiResponse>();
   data?.pages.forEach((page) => {
@@ -66,7 +69,7 @@ export default function PlanListPage() {
   return (
     <div className="flex flex-col items-center" ref={listRef}>
       <TopGradient />
-      <section className="z-1 flex h-[85%] w-[90%] flex-col items-center">
+      <section className="z-1 flex h-[90%] w-[90%] flex-col items-center">
         <HomeHeader onAvatarClick={openModal} />
         {/* 마이페이지 Modal */}
         <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
@@ -77,6 +80,8 @@ export default function PlanListPage() {
           setSortOrder={setSortOrder}
           sortTarget={sortTarget}
           setSortTarget={setSortTarget}
+          selectedOttList={selectedOttList}
+          setSelectedOttList={setSelectedOttList}
         />
 
         <div className="space-y-4">

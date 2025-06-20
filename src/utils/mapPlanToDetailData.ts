@@ -50,7 +50,8 @@ function normalize(value: number, min: number, max: number) {
 
 export function mapPlanToDetailData(
   plan: PlanDBApiResponse,
-  context: ScoreContext
+  context: ScoreContext,
+  comparePlan?: PlanDBApiResponse
 ): PlanDetailData {
   const priceScore = normalize(plan.price, 0, 105000);
   const dataScore = normalize(plan.dataAmountMb ?? 0, 0, 300000);
@@ -68,8 +69,25 @@ export function mapPlanToDetailData(
     plan.smsIncluded ?? 0,
   ];
 
-  const compareArray = [40, 82, 84, 43, 59];
-  const compareRawArray = [30000, 50000, 1000, 250, 10000];
+  const compare = comparePlan
+    ? [
+        normalize(comparePlan.price, 0, 105000),
+        normalize(comparePlan.dataAmountMb ?? 0, 0, 300000),
+        normalize(comparePlan.overageSpeedMbps ?? 0, 0, 8000),
+        normalize(comparePlan.voiceMinutes ?? 0, 0, 400),
+        normalize(comparePlan.smsIncluded ?? 0, 0, 45200),
+      ]
+    : [];
+
+  const compareRaw = comparePlan
+    ? [
+        comparePlan.price,
+        comparePlan.dataAmountMb ?? 0,
+        comparePlan.overageSpeedMbps ?? 0,
+        comparePlan.voiceMinutes ?? 0,
+        comparePlan.smsIncluded ?? 0,
+      ]
+    : [];
 
   return {
     name: plan.name,
@@ -78,8 +96,8 @@ export function mapPlanToDetailData(
     radar: scoreArray,
     bar: scoreArray,
     raw: rawArray,
-    compare: compareArray,
-    compareRaw: compareRawArray,
+    compare,
+    compareRaw,
     benefits: getBenefits(plan.subscriptionServices),
   };
 }

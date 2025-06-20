@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { client } from "@/lib/axiosInstance";
+
 import { PlanDBApiResponse } from "@/types/PlanData";
 import { SortTarget } from "@/types/sort";
 
@@ -15,6 +16,7 @@ interface FetchParams {
   sortTarget?: SortTarget | null;
   sortOrder?: "asc" | "desc";
   selectedNetwork?: "LTE" | "5G" | null;
+  selectedOttList?: string[];
 }
 
 const fetchPlans = async ({
@@ -22,6 +24,7 @@ const fetchPlans = async ({
   sortTarget,
   sortOrder,
   selectedNetwork,
+  selectedOttList,
 }: FetchParams): Promise<InfinitePlanResponse> => {
   const params = new URLSearchParams();
 
@@ -32,8 +35,12 @@ const fetchPlans = async ({
   if (selectedNetwork === "5G") params.append("network", "FIVE_G");
   else if (selectedNetwork === "LTE") params.append("network", "LTE");
 
-  const res = await axios.get<InfinitePlanResponse>(
-    `/api/plan/page?${params.toString()}`
+  if (selectedOttList && selectedOttList.length > 0) {
+    params.append("ott", selectedOttList.join(","));
+  }
+
+  const res = await client.get<InfinitePlanResponse>(
+    `/plan/list?${params.toString()}`
   );
   return res.data;
 };
@@ -41,12 +48,25 @@ const fetchPlans = async ({
 export function useInfinitePlans(
   sortTarget: SortTarget | null,
   sortOrder: "asc" | "desc",
-  selectedNetwork: "LTE" | "5G" | null
+  selectedNetwork: "LTE" | "5G" | null,
+  selectedOttList: string[]
 ) {
   return useInfiniteQuery({
-    queryKey: ["infinitePlans", sortTarget, sortOrder, selectedNetwork],
+    queryKey: [
+      "infinitePlans",
+      sortTarget,
+      sortOrder,
+      selectedNetwork,
+      selectedOttList,
+    ],
     queryFn: ({ pageParam = 0 }) =>
-      fetchPlans({ pageParam, sortTarget, sortOrder, selectedNetwork }),
+      fetchPlans({
+        pageParam,
+        sortTarget,
+        sortOrder,
+        selectedNetwork,
+        selectedOttList,
+      }),
     getNextPageParam: (lastPage, allPages) =>
       lastPage.hasNext ? allPages.length : undefined,
     initialPageParam: 0,

@@ -78,7 +78,7 @@ export default function HamburgerMenu({ onAvatarClick }: Props) {
             챗봇
           </button>
           <button
-            onClick={() => handleNavigate("/plan")}
+            onClick={() => handleNavigate("/planlist")}
             className="text-md hover:text-primary block font-semibold">
             요금제 리스트
           </button>

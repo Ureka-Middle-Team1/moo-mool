@@ -3,4 +3,5 @@ export type SortTarget =
   | "dataAmountMb"
   | "voiceMinutes"
   | "overageSpeedMbps"
-  | "subscriptionServices";
+  | "subscriptionServices"
+  | "smsIncluded";
