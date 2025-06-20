@@ -19,7 +19,7 @@ export default function ChatbotPage() {
 
   return (
     <div className="flex h-screen flex-col bg-[#FFF6F6]">
-      <Header title="챗봇" />
+      <Header title="챗봇" onAvatarClick={() => openModal} />
       <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
       <div className="flex flex-1 flex-col overflow-hidden">
         {mode === "text" ? <TextPage /> : <VoicePage />}
