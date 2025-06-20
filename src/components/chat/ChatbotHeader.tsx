@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, X } from "lucide-react";
 import { Button } from "../ui/button";
 import HamburgerMenu from "../common/HamburgerMenu";
@@ -9,6 +9,7 @@ import { usePostChatbotSummary } from "@/hooks/usePostChatbotSummary";
 import { useSession } from "next-auth/react";
 import { useFreeTalkStore } from "@/store/useFreeTalkStore";
 import { useTendencyStore } from "@/store/useTendencyStore";
+import { useChatModeStore } from "@/store/useChatModeStore";
 
 type HeaderProps = {
   title: string;
@@ -17,8 +18,7 @@ type HeaderProps = {
 
 export default function Header({ title = "챗봇", onAvatarClick }: HeaderProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const mode = searchParams.get("mode");
+  const { mode, setMode } = useChatModeStore();
   const isVoiceMode = mode === "voice";
 
   const { data: session } = useSession(); // 로그인 정보 가져오기
@@ -36,7 +36,7 @@ export default function Header({ title = "챗봇", onAvatarClick }: HeaderProps)
 
   const handleClick = async () => {
     if (isVoiceMode) {
-      router.push("/chat");
+      setMode("text");
     } else {
       if (currentQuestionId === 12 && hasRecommended) {
         if (!session?.user?.id) return;
