@@ -1,6 +1,6 @@
 "use client";
 export const dynamic = "force-dynamic";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import HomeHeader from "@/components/home/HomeHeader";
 import HomeRecommendedPlan from "@/components/home/HomeRecommendedPlan";
 import PopularPlansList from "@/components/home/PopularPlansList";
@@ -9,11 +9,12 @@ import TopGradient from "@/components/planDetail/TopGradient";
 import MyPageModal from "@/components/myPage/MyPageModal";
 import { useSession } from "next-auth/react";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
+import { useModalStore } from "@/store/useModalStore";
 import ChatHistoryList from "@/components/home/ChatHistoryList";
 import FeatureBannerSlider from "@/components/home/FeatureBannerSlider";
 
 export default function HomePage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isModalOpen, setModalOpen, openModal } = useModalStore();
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
 
@@ -26,10 +27,10 @@ export default function HomePage() {
       <TopGradient />
       <section className="z-1 flex h-[85%] w-[90%] flex-col items-center">
         <Suspense fallback={<div>성향 불러오는 중...</div>}>
-          <HomeHeader onAvatarClick={() => setIsModalOpen(true)} />
+          <HomeHeader onAvatarClick={openModal} />
         </Suspense>
         {/* 마이페이지 Modal */}
-        <MyPageModal open={isModalOpen} onOpenChange={setIsModalOpen} />
+        <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
         <div className="flex w-full flex-col gap-7 px-3 py-5">
           <FeatureBannerSlider />
           <div className="flex w-full flex-col">

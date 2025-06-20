@@ -3,14 +3,14 @@
 import HamburgerMenu from "@/components/common/HamburgerMenu";
 import ShareSection from "@/components/meme/shareSection";
 import MyPageModal from "@/components/myPage/MyPageModal";
+import { useModalStore } from "@/store/useModalStore";
 import { useAnimatedCount } from "@/hooks/useAnimatedCount";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 export default function TestHomePage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isModalOpen, setModalOpen, openModal } = useModalStore();
   const router = useRouter();
   const { data: session } = useSession();
   const { data, isLoading, isError } = useGetTypeRankQuery();
@@ -41,9 +41,9 @@ export default function TestHomePage() {
       <div className="flex justify-between px-3">
         <img src="/assets/icons/logo.png" alt="logo" className="w-20" />
         <div className="pt-5">
-          <HamburgerMenu onAvatarClick={() => setIsModalOpen(true)} />
+          <HamburgerMenu onAvatarClick={openModal} />
           {/* 마이페이지 Modal */}
-          <MyPageModal open={isModalOpen} onOpenChange={setIsModalOpen} />
+          <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
         </div>
       </div>
 
