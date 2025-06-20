@@ -1,4 +1,5 @@
 import { ParsedPlanWithID } from "@/types/Chat";
+import { JsonValue } from "@prisma/client/runtime/library";
 
 // DB로부터 가져온 정보를 바탕으로 ParsedPlanWithID으로 변환하는 planToParsedPlanWithID
 export function dbPlanToParsedPlanWithID(plan: {
@@ -9,8 +10,14 @@ export function dbPlanToParsedPlanWithID(plan: {
   overageSpeedMbps: number | null;
   voiceMinutes: number;
   smsIncluded: number;
-  subscriptionServices?: string[]; // 구독 서비스 정보 추가
+  subscriptionServices?: JsonValue; // 구독 서비스 정보 추가
 }): ParsedPlanWithID {
+  const services =
+    Array.isArray(plan.subscriptionServices) && // DB엔 subscriptionServies가 JsonValue -> string[]으로 변환
+    plan.subscriptionServices.every((item) => typeof item === "string")
+      ? (plan.subscriptionServices as string[])
+      : [];
+
   // 데이터 표시
   const data =
     plan.dataAmountMb === 999999
@@ -56,6 +63,6 @@ export function dbPlanToParsedPlanWithID(plan: {
     sms,
     price,
     tel,
-    subscriptionServices: plan.subscriptionServices || [], // 구독 서비스 정보 포함
+    subscriptionServices: services || [], // 구독 서비스 정보 포함
   };
 }
