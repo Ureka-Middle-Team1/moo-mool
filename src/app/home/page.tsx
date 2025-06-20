@@ -6,11 +6,14 @@ import HomeRecommendedPlan from "@/components/home/HomeRecommendedPlan";
 import PopularPlansList from "@/components/home/PopularPlansList";
 import TopGradient from "@/components/planDetail/TopGradient";
 import MyPageModal from "@/components/myPage/MyPageModal";
-import { useSession } from "next-auth/react";
 import { useModalStore } from "@/store/useModalStore";
 import ChatHistoryList from "@/components/home/ChatHistoryList";
 import FeatureBannerSlider from "@/components/home/FeatureBannerSlider";
 import { useRouter } from "next/navigation";
+import JoinAlertToast from "@/components/nearby/JoinAlertToast";
+import { toast } from "sonner";
+
+let toastId: string | number | null = null; // 중복 방지용
 
 export default function HomePage() {
   const { isModalOpen, setModalOpen, openModal } = useModalStore();
@@ -33,18 +36,22 @@ export default function HomePage() {
 
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-
       console.log("메세지 전달", message);
 
       if (message.type === "nearby_user_joined") {
-        // ✅ 알림 표시
-        const confirm = window.confirm("누군가 무물에 함께 접속했습니다!\n");
-        if (confirm) {
-          router.push("/nearby");
+        if (toastId === null) {
+          toastId = toast.custom((id) => <JoinAlertToast toastId={id} />, {
+            duration: 3000,
+            onAutoClose: () => {
+              toastId = null;
+            },
+            onDismiss: () => {
+              toastId = null;
+            },
+          });
         }
       }
     };
-
     socket.onerror = (e) => {
       console.error("WebSocket 에러:", e);
     };
