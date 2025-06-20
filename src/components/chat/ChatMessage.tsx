@@ -1,11 +1,11 @@
 "use client";
 
 import { Message } from "@/types/Chat";
-import PlanCard from "./PlanCard";
+import PlanListCard from "@/components/planList/PlanListCard";
 import TypingMessage from "./TypingMessage";
 import { useChatStore } from "@/store/useChatStore";
 import QuickReplyList from "./QuickReplyList";
-import PlanListCard from "../planList/PlanListCard";
+import { convertToPlanDBApiResponse } from "@/utils/planDataConverter";
 
 interface ChatMessageProps {
   message: Message;
@@ -34,7 +34,7 @@ export default function ChatMessage({
             <TypingMessage fullText={message.content} />
           )}
           <div className="flex w-full flex-col py-3">
-            <PlanCard {...message.planData} />
+            <PlanListCard plan={convertToPlanDBApiResponse(message.planData)} />
           </div>
         </div>
       </div>
