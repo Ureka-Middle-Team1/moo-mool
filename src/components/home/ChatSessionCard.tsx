@@ -15,7 +15,7 @@ export function ChatSessionCard({ id, summary, name }: ChatSessionCardProps) {
 
   return (
     <Card
-      className="w-[15rem] min-w-full flex-shrink-0 cursor-pointer flex-col justify-center rounded-2xl border border-gray-400 bg-white shadow-sm transition hover:shadow-md"
+      className="w-[16rem] min-w-full flex-shrink-0 cursor-pointer flex-col justify-center rounded-2xl border border-gray-400 bg-white shadow-sm transition hover:shadow-md"
       onClick={() => router.push(`/chat/${id}`)}>
       <CardHeader className="pb-2">
         <CardTitle className="line-clamp-2 text-base font-semibold text-zinc-800">

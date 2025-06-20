@@ -14,7 +14,7 @@ export function OngoingChatCard({ currentQuestionId }: OngoingChatCardProps) {
 
   return (
     <Card
-      className="min-w-full flex-shrink-0 flex-col justify-center rounded-xl bg-white shadow-md"
+      className="w-[17rem] flex-shrink-0 flex-col justify-center rounded-xl bg-white shadow-md"
       onClick={() => router.push(`/chat`)}>
       <CardHeader>
         <CardTitle className="truncate text-base font-semibold text-pink-600">

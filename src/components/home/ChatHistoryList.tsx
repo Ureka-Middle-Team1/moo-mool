@@ -24,9 +24,9 @@ export default function ChatHistoryList() {
   const loading = !userId || isLoading || isFetching;
 
   return (
-    <section className="flex w-full flex-col items-center px-4">
+    <section className="ml-5 flex flex-col items-center px-4 pl-4">
       <Carousel className="relative mx-auto w-full max-w-md">
-        <CarouselContent className="-ml-4 flex-nowrap space-x-4 px-5 py-5">
+        <CarouselContent className="flex-nowrap space-x-4 px-5 py-5">
           {/* ✅ 진행 중인 대화 카드 조건 분기 */}
           {shouldShowProgress &&
             (loading ? (
