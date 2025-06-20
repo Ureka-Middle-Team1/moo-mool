@@ -5,7 +5,6 @@ import { Carousel, CarouselContent } from "../ui/carousel";
 import { OngoingChatCard } from "./OngoingChatCard";
 import { ChatSessionCard } from "./ChatSessionCard";
 import { ChatSessionCardSkeleton } from "../skeleton/ChatSessionCardSkeleton";
-import { OngoingChatCardSkeleton } from "../skeleton/OngoingChatCardSkeleton"; // ✅ 필요 시
 
 export default function ChatHistoryList() {
   const { data: session } = useSession();
