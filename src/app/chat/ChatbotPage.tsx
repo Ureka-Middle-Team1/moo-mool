@@ -18,9 +18,8 @@ export default function ChatbotPage() {
   useWatchRecommendationTrigger();
 
   return (
-    <div className="flex h-screen flex-col bg-pink-100">
-      <Header title="챗봇" onAvatarClick={openModal} />
-      {/* 마이페이지 Modal */}
+    <div className="flex h-screen flex-col bg-[#FFF6F6]">
+      <Header title="챗봇" />
       <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
       <div className="flex flex-1 flex-col overflow-hidden">
         {mode === "text" ? <TextPage /> : <VoicePage />}
