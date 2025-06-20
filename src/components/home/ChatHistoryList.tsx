@@ -10,7 +10,7 @@ export default function ChatHistoryList() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
 
-  // 🧠 userId가 준비되기 전에도 skeleton 먼저 보여주기
+  //  userId가 준비되기 전에도 skeleton 먼저 보여주기
   const {
     data: sessions,
     isLoading,

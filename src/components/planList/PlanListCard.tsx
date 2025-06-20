@@ -43,19 +43,19 @@ export default function PlanListCard({
       <div className="text-lg font-bold">{name}</div>
 
       <div className="scrollbar-hide mt-2 flex w-full flex-nowrap gap-2 overflow-x-auto">
-        <Badge className="border-0 bg-blue-100 whitespace-nowrap text-blue-800">
+        <Badge className="border-0 bg-[#EEF2FF] whitespace-nowrap text-[#4F46E5]">
           {dataAmountMb === 0
             ? "무제한"
             : `${(dataAmountMb / 1024).toFixed(1)}GB`}
         </Badge>
-        <Badge className="border-0 bg-green-100 whitespace-nowrap text-green-800">
+        <Badge className="border-0 bg-[#ECFDF5] whitespace-nowrap text-[#059669]">
           {voiceMinutes === -1 ? "무제한" : `${voiceMinutes}분`}
         </Badge>
-        <Badge className="border-0 bg-purple-100 whitespace-nowrap text-purple-800">
+        <Badge className="border-0 bg-[#FFFBEB] whitespace-nowrap text-[#D97706]">
           속도 {overageSpeedMbps ?? 0}Mbps
         </Badge>
         {!hideBenefits && (
-          <Badge className="border-0 bg-pink-100 whitespace-nowrap text-pink-800">
+          <Badge className="border-0 bg-[#FEF2F2] whitespace-nowrap text-[#DC2626]">
             혜택 가치 {smsIncluded}
           </Badge>
         )}

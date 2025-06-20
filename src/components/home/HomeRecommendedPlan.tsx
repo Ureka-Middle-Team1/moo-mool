@@ -30,9 +30,9 @@ export default function HomeRecommendedPlan() {
       </h2>
 
       <div className="flex w-[19rem] items-center justify-center">
-        {isLoadingAll ? (
+        {isLoadingAll || !userId ? (
           <PlanListCardSkeleton />
-        ) : userId && planData && !planError ? (
+        ) : planData && !planError ? (
           <PlanListCard
             plan={{
               id: planData.id,
