@@ -192,16 +192,3 @@ body {
     display: none; /* Chrome, Safari */
   }
 }
-
-/* 카드 flip 애니메이션용 유틸리티 */
-.perspective {
-  perspective: 1000px;
-}
-
-.backface-hidden {
-  backface-visibility: hidden;
-}
-
-.rotate-y-180 {
-  transform: rotateY(180deg);
-}

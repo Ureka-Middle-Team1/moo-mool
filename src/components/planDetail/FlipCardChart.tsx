@@ -37,7 +37,8 @@ export default function FlipCardChart({
 
   return (
     <div
-      className="perspective h-80 w-full max-w-[360px]"
+      className="ml-[-1rem] h-80 w-full max-w-[360px] cursor-pointer"
+      style={{ perspective: "1000px" }}
       onClick={() => setFlipped(!flipped)}>
       <motion.div
         className="relative h-full w-full transition-transform duration-700"
@@ -52,8 +53,11 @@ export default function FlipCardChart({
 
         {/* 뒷면: 바 차트 */}
         <div
-          className="absolute h-full w-full rotate-y-180"
-          style={{ backfaceVisibility: "hidden" }}>
+          className="absolute h-full w-full"
+          style={{
+            transform: "rotateY(180deg)",
+            backfaceVisibility: "hidden",
+          }}>
           <TendencyBarChart data={barData} rawData={rawData} name={name} />
         </div>
       </motion.div>
