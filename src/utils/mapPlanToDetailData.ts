@@ -16,9 +16,9 @@ const serviceMap: Record<string, PlanDetailData["benefits"][number]> = {
   },
   "DISNEY+": {
     imageSrc: "/assets/ott/disney.jpg",
-    title: "디지니 플러스 3개월",
+    title: "디즈니 플러스 3개월",
     description:
-      "이 요금제와 함께 디지니 플러스 3개월 구독권을 무료로 누려보세요",
+      "이 요금제와 함께 디즈니 플러스 3개월 구독권을 무료로 누려보세요",
   },
   WAVVE: {
     imageSrc: "/assets/ott/wavve.png",
