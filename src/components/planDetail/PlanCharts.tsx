@@ -1,8 +1,6 @@
-"use client";
-
+import StaticStatsCard from "@/components/planDetail/StaticStatsCard";
+import FlipCardChart from "@/components/planDetail/FlipCardChart";
 import { PlanDetailData } from "@/types/planDetail";
-import TendencyBarChart from "@/components/chart/PlanDetailBarChart";
-import RadarFlipCard from "@/components/planDetail/RadarFlipCard";
 
 interface PlanChartsProps {
   data: PlanDetailData;
@@ -10,22 +8,32 @@ interface PlanChartsProps {
 }
 
 export default function PlanCharts({ data, mode }: PlanChartsProps) {
+  const isCompare = mode === "compare";
+
+  const raw = isCompare ? [data.raw, data.compareRaw] : data.raw;
+  const radar = isCompare ? [data.radar, data.compare] : data.radar;
+  const bar = isCompare ? [data.bar, data.compare] : data.bar;
+
+  const rawBase = isCompare ? data.raw : data.raw;
+  const rawCompare = isCompare ? data.compareRaw : [];
+
   return (
     <div className="flex w-full flex-col items-center space-y-8">
       <div className="flex h-80 w-full max-w-md items-center justify-center">
-        <RadarFlipCard
-          radar={mode === "basic" ? data.radar : [data.radar, data.compare]}
-          raw={mode === "basic" ? data.raw : [data.raw, data.compareRaw]}
-          name={data.name}
-          mode={mode}
+        <StaticStatsCard
+          raw={rawBase}
+          compareRaw={rawCompare}
+          isCompare={isCompare}
         />
       </div>
 
       <div className="ml-[2rem] h-80 w-[85%]">
-        <TendencyBarChart
-          data={mode === "basic" ? data.bar : [data.bar, data.compare]}
-          rawData={mode === "basic" ? data.raw : [data.raw, data.compareRaw]}
+        <FlipCardChart
+          radar={radar}
+          bar={bar}
+          raw={raw}
           name={data.name}
+          mode={mode}
         />
       </div>
     </div>
