@@ -10,7 +10,11 @@ const CharacterScene = dynamic(
   }
 );
 
-export default function VoicePage() {
+export default function VoicePage({
+  setMode,
+}: {
+  setMode: (mode: "text" | "voice") => void;
+}) {
   return (
     <div className="flex h-full flex-col items-center justify-between">
       <CharacterScene />
