@@ -13,7 +13,8 @@ import {
 import { useSession } from "next-auth/react";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import type { ChartOptions } from "chart.js";
-import EmptyRadarPlaceholder from "./EmptyRadarPlaceholder";
+import EmptyRadarPlaceholder from "../home/EmptyRadarPlaceholder";
+import { useEffect, useRef, useState } from "react";
 
 // Chart.js 등록
 ChartJS.register(
@@ -25,46 +26,88 @@ ChartJS.register(
   Legend
 );
 
+const iconSrcMap: Record<string, string> = {
+  SNS: "/assets/moono/sns-moono.png",
+  Youtube: "/assets/moono/youtube-moono.png",
+  Chat: "/assets/moono/chat-moono.png",
+  Calling: "/assets/moono/calling-moono.png",
+  Books: "/assets/moono/books-moono.png",
+  Saving: "/assets/moono/saving-moono.png",
+};
+
 export default function UserTendencyRadar() {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
 
   const { data, isLoading } = useGetUserCharacterProfile(userId ?? "");
 
-  const iconMap = {
-    SNS: "/assets/moono/sns-moono.png",
-    Youtube: "/assets/moono/youtube-moono.png",
-    Chat: "/assets/moono/chat-moono.png",
-    Calling: "/assets/moono/calling-moono.png",
-    Books: "/assets/moono/books-moono.png",
-    Saving: "/assets/moono/saving-moono.png",
-  };
+  // 이미지들을 저장할 ref
+  const loadedImages = useRef<Record<string, HTMLImageElement>>({});
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
-  const drawIconsPlugin = {
-    id: "drawIconsPlugin",
-    afterDraw: (chart: any) => {
-      const ctx = chart.ctx;
-      const rScale = chart.scales.r;
+  // 이미지 한 번만 로드
+  useEffect(() => {
+    let loadCount = 0;
+    const labels = Object.keys(iconSrcMap);
+
+    labels.forEach((label) => {
+      const img = new Image();
+      img.src = iconSrcMap[label];
+      img.onload = () => {
+        loadedImages.current[label] = img;
+        loadCount++;
+        if (loadCount === labels.length) {
+          setImagesLoaded(true);
+        }
+      };
+      img.onerror = () => {
+        // 에러시에도 카운트 올려서 무한 대기 방지
+        loadCount++;
+        if (loadCount === labels.length) {
+          setImagesLoaded(true);
+        }
+      };
+    });
+  }, []);
+
+  const drawTypeAndName = {
+    id: "drawTypeAndName",
+    afterDraw(chart: any) {
+      if (!imagesLoaded) return; // 이미지가 모두 로드된 후에만 그림
+
+      const {
+        ctx,
+        scales: { r },
+      } = chart;
+
       const labels = chart.data.labels;
+      if (!labels) return;
 
-      type IconLabel = keyof typeof iconMap;
+      const centerX = r.xCenter;
+      const centerY = r.yCenter;
+      const radius = r.drawingArea;
+      const imageSize = 45;
 
       labels.forEach((label: string, index: number) => {
-        const pos = rScale.getPointPositionForValue(index, rScale.max); // 라벨 위치 기준
-        const img = new Image();
-        img.src = iconMap[label as IconLabel];
+        const angle = r.getIndexAngle(index) - Math.PI / 2;
+        const x = centerX + (radius + 38) * Math.cos(angle);
+        const y = centerY + (radius + 38) * Math.sin(angle);
 
-        img.onload = () => {
-          const size = 36; // 원하시는 만큼 키우세요
-          const offsetY = -28; // 텍스트 위로 올리기 위한 y축 보정
+        const img = loadedImages.current[label];
+        if (img) {
           ctx.drawImage(
             img,
-            pos.x - size / 2,
-            pos.y - size / 2 + offsetY,
-            size,
-            size
+            x - imageSize / 2,
+            y - imageSize / 2 - 10,
+            imageSize,
+            imageSize
           );
-        };
+
+          ctx.font = "bold 14px Pretendard";
+          ctx.fillStyle = "#EB453F";
+          ctx.textAlign = "center";
+          ctx.fillText(label, x, y + imageSize / 2 + 4);
+        }
       });
     },
   };
@@ -73,9 +116,14 @@ export default function UserTendencyRadar() {
     return <div>로딩 중...</div>;
   }
 
+  if (!imagesLoaded) {
+    return <div>이미지 로딩 중...</div>;
+  }
+
   if (!userId || !data) {
     return <EmptyRadarPlaceholder />;
   }
+
   const radarData = {
     labels: ["SNS", "Youtube", "Chat", "Calling", "Books", "Saving"],
     datasets: [
@@ -102,18 +150,21 @@ export default function UserTendencyRadar() {
 
   const radarOptions: ChartOptions<"radar"> = {
     maintainAspectRatio: false,
+    layout: {
+      padding: {
+        top: 60,
+        bottom: 60,
+        left: 45,
+        right: 45,
+      },
+    },
     scales: {
       r: {
         beginAtZero: true,
         min: 0,
         max: 100,
         pointLabels: {
-          font: {
-            family: "Pretendard-Regular",
-            size: 15,
-            weight: "bold",
-          },
-          color: "#EB453F",
+          display: false,
         },
         grid: {
           color: "rgba(241, 145, 187, 0.2)",
@@ -144,18 +195,16 @@ export default function UserTendencyRadar() {
         display: false,
       },
     },
-    animation: {
-      duration: 1500,
-      easing: "easeOutBounce",
-    },
   };
 
   return (
-    <div className="mx-auto h-[300px] w-full max-w-xl">
+    <div
+      className="mx-auto h-[22rem] w-full max-w-xl"
+      style={{ overflow: "visible" }}>
       <Radar
         data={radarData}
         options={radarOptions}
-        plugins={[drawIconsPlugin]}
+        plugins={[drawTypeAndName]}
       />
     </div>
   );
