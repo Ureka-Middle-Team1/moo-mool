@@ -9,16 +9,21 @@ import { usePostChatbotSummary } from "@/hooks/usePostChatbotSummary";
 import { useSession } from "next-auth/react";
 import { useFreeTalkStore } from "@/store/useFreeTalkStore";
 import { useTendencyStore } from "@/store/useTendencyStore";
-import { useChatModeStore } from "@/store/useChatModeStore";
 
 type HeaderProps = {
-  title: string;
+  title?: string;
   onAvatarClick: () => void;
+  mode: "text" | "voice";
+  setMode: (mode: "text" | "voice") => void;
 };
 
-export default function Header({ title = "챗봇", onAvatarClick }: HeaderProps) {
+export default function ChatbotHeader({
+  title = "챗봇",
+  onAvatarClick,
+  mode,
+  setMode,
+}: HeaderProps) {
   const router = useRouter();
-  const { mode, setMode } = useChatModeStore();
   const isVoiceMode = mode === "voice";
 
   const { data: session } = useSession(); // 로그인 정보 가져오기
@@ -40,13 +45,12 @@ export default function Header({ title = "챗봇", onAvatarClick }: HeaderProps)
     } else {
       if (currentQuestionId === 12 && hasRecommended) {
         if (!session?.user?.id) return;
-
         const currentMessages = useChatStore.getState().messages;
         const lastBotMsg = currentMessages
+          .slice()
           .reverse()
           .find((m) => m.role === "bot");
         const planId = lastBotMsg?.planData?.id ?? 5;
-
         try {
           // 모든 작업 순차적으로 수행
           await chatHistorySummary({
