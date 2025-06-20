@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+
 import PlanInfo from "@/components/planDetail/PlanInfo";
 import PlanCharts from "@/components/planDetail/PlanCharts";
 import PlanBenefits from "@/components/planDetail/PlanBenefits";
@@ -8,12 +10,15 @@ import PlanDetailHeader from "@/components/planDetail/PlanDetailHeader";
 import TopGradient from "@/components/planDetail/TopGradient";
 import BottomGradient from "@/components/planDetail/BottomGradient";
 
-import { PlanDetailData } from "@/types/planDetail";
-import { useParams } from "next/navigation";
+import PlanInfoSkeleton from "@/components/skeleton/PlanInfoSkeleton";
+import PlanChartsSkeleton from "@/components/skeleton/PlanChartsSkeleton";
+import PlanBenefitsSkeleton from "@/components/skeleton/PlanBenefitsSkeleton";
+
 import { useGetPlanById } from "@/hooks/useGetPlanById";
 import { useGetMyPlan } from "@/hooks/useGetMyPlan";
-import { mapPlanToDetailData } from "@/utils/mapPlanToDetailData";
 import { getScoreContext } from "@/utils/planScore";
+import { mapPlanToDetailData } from "@/utils/mapPlanToDetailData";
+import { PlanDetailData } from "@/types/planDetail";
 
 export default function PlanDetailPage() {
   const params = useParams();
@@ -26,11 +31,7 @@ export default function PlanDetailPage() {
     error,
   } = useGetPlanById(isNaN(id) ? undefined : id);
 
-  const {
-    data: myPlanData,
-    isLoading: loadingMyPlan,
-    isError: errorMyPlan,
-  } = useGetMyPlan();
+  const { data: myPlanData, isLoading: loadingMyPlan } = useGetMyPlan();
 
   const myPlanId = myPlanData?.my_plan;
   const shouldCompare = !!myPlanId && !loadingMyPlan;
@@ -46,20 +47,30 @@ export default function PlanDetailPage() {
     setShowGradient(mode === "compare");
   }, [mode]);
 
-  if (loadingPlan || (mode === "compare" && loadingMyPlanDetail))
-    return <div className="p-4 text-gray-500">데이터 로딩 중...</div>;
+  const isLoadingContent =
+    loadingPlan || (mode === "compare" && loadingMyPlanDetail);
+
+  // 에러 또는 데이터 없음 처리
   if (isError) return <div className="p-4 text-red-500">{error.message}</div>;
-  if (!currentPlan) return <div className="p-4 text-gray-500">데이터 없음</div>;
+  if (!currentPlan && !loadingPlan)
+    return <div className="p-4 text-gray-500">데이터 없음</div>;
 
-  const scoreContext = getScoreContext(
-    shouldCompare && myPlanDetail ? [currentPlan, myPlanDetail] : [currentPlan]
-  );
+  const scoreContext = currentPlan
+    ? getScoreContext(
+        shouldCompare && myPlanDetail
+          ? [currentPlan, myPlanDetail]
+          : [currentPlan]
+      )
+    : null;
 
-  const planData: PlanDetailData = mapPlanToDetailData(
-    currentPlan,
-    scoreContext,
-    shouldCompare && myPlanDetail ? myPlanDetail : undefined
-  );
+  const planData: PlanDetailData | null =
+    currentPlan && scoreContext
+      ? mapPlanToDetailData(
+          currentPlan,
+          scoreContext,
+          shouldCompare && myPlanDetail ? myPlanDetail : undefined
+        )
+      : null;
 
   return (
     <>
@@ -67,14 +78,26 @@ export default function PlanDetailPage() {
       <main className="relative flex flex-col items-center space-y-8 overflow-hidden bg-gradient-to-b">
         <TopGradient />
         <section className="relative z-10 w-full space-y-[3rem]">
-          <PlanInfo
-            data={planData}
-            mode={mode}
-            onChangeMode={setMode}
-            disabled={!shouldCompare}
-          />
-          <PlanCharts data={planData} mode={mode} />
-          {planData.benefits.length > 0 ? (
+          {isLoadingContent || !planData ? (
+            <PlanInfoSkeleton />
+          ) : (
+            <PlanInfo
+              data={planData}
+              mode={mode}
+              onChangeMode={setMode}
+              disabled={!shouldCompare}
+            />
+          )}
+
+          {isLoadingContent || !planData ? (
+            <PlanChartsSkeleton />
+          ) : (
+            <PlanCharts data={planData} mode={mode} />
+          )}
+
+          {isLoadingContent || !planData ? (
+            <PlanBenefitsSkeleton />
+          ) : planData.benefits.length > 0 ? (
             <PlanBenefits benefits={planData.benefits} />
           ) : (
             <div className="h-12" />
