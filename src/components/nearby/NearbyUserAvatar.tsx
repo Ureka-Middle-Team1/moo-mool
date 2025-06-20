@@ -42,6 +42,9 @@ export default function NearbyUserAvatar({
 
     const handleTouch = () => {
       const myType = localStorage.getItem("myType"); // ✅ 내 타입 비교용 (임시 저장)
+      console.log("myType", myType);
+      console.log("profile.type, ", profile.type);
+
       if (myType && profile.type === myType) {
         triggerClick();
       } else {
@@ -58,6 +61,7 @@ export default function NearbyUserAvatar({
   // ✅ 클릭 (PC 또는 모바일 공통)
   const handleClickAvatar = () => {
     const myType = localStorage.getItem("myType");
+
     if (!isMe && profile?.type && profile.type === myType) {
       triggerClick();
     } else {
