@@ -20,7 +20,7 @@ import TypeLevel from "./TypeLevel";
 import { useUserStore } from "@/store/userStore";
 import UserTendencyRadar from "./UserTendencyRadar";
 import { useGetMyPlan } from "@/hooks/useGetMyPlan";
-import { useSetMyPlan } from "@/hooks/useSetMyPlan";
+import { usePostMyPlan } from "@/hooks/usePostMyPlan";
 
 type Props = {
   open: boolean;
@@ -48,17 +48,23 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
   const [selectedPlanId, setSelectedPlanId] = useState<string>("");
   const [userType, setUserType] = useState<string | null>(null);
 
-  const { loading: isSaving, error: saveError, savePlan } = useSetMyPlan();
+  const {
+    mutate: postMyPlan,
+    isPending: isSavingPlan,
+    error: saveError,
+  } = usePostMyPlan();
 
   const [planChartData, setPlanChartData] = useState<PlanDetailData | null>(
     null
   );
+
   // 모달 열릴 때마다 최신 데이터 불러오기
   useEffect(() => {
     if (open) {
       refetch();
     }
   }, [open, refetch]);
+
   // myPlanData 기반 상태 세팅
   useEffect(() => {
     if (!open || !session?.user?.id) return;
@@ -92,15 +98,21 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
   }, [selectedPlanId, plans, open]);
 
   // 요금제 변경 핸들러
-  const handlePlanChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handlePlanChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = e.target.value;
     setSelectedPlanId(selectedId);
 
-    try {
-      await savePlan(Number(selectedId));
-    } catch (err) {
-      console.error("요금제 저장 실패", err);
-    }
+    postMyPlan(
+      { planId: Number(selectedId) },
+      {
+        onSuccess: () => {
+          console.log("요금제 저장 성공");
+        },
+        onError: (err) => {
+          console.error("요금제 저장 실패", err);
+        },
+      }
+    );
   };
 
   return (
@@ -157,7 +169,7 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
                     value={selectedPlanId}
                     onChange={handlePlanChange}
                     className="mt-4 block rounded-md border border-gray-300 bg-yellow-100 p-2 text-sm shadow-sm"
-                    disabled={isSaving || isPlansLoading}>
+                    disabled={isSavingPlan || isPlansLoading}>
                     <option value="">
                       현재 사용중인 요금제를 선택해주세요
                     </option>
