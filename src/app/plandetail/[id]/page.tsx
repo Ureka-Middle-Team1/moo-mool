@@ -32,9 +32,8 @@ export default function PlanDetailPage() {
     isError: errorMyPlan,
   } = useGetMyPlan();
 
-  const myPlanId = myPlanData?.my_plan ?? undefined;
-  const shouldCompare =
-    !!myPlanData && myPlanId !== undefined && !loadingMyPlan;
+  const myPlanId = myPlanData?.my_plan;
+  const shouldCompare = !!myPlanId && !loadingMyPlan;
 
   const { data: myPlanDetail, isLoading: loadingMyPlanDetail } = useGetPlanById(
     shouldCompare ? myPlanId : undefined

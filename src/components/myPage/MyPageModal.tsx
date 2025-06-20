@@ -47,7 +47,7 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
 
     async function fetchUserPlan() {
       try {
-        const res = await axios.get("/api/user/my-plan");
+        const res = await axios.get("/user/my-plan");
         const userMyPlanId = res.data.my_plan;
         const userInvitedCount = res.data.invited_count;
         const userType = res.data.type;

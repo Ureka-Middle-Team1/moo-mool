@@ -3,6 +3,11 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { SortTarget } from "@/types/sort";
+import {
+  NETWORK_LABELS,
+  OTT_LABELS,
+  SORTTARGET_TO_LABEL,
+} from "@/constants/labels";
 
 export type OTTType =
   | "NETFLIX"
@@ -34,31 +39,27 @@ export default function SortFilterPanel({
 }: SortFilterPanelProps) {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
 
-  const networkOptions = [
-    { key: "LTE", label: "LTE" },
-    { key: "5G", label: "5G" },
-  ];
+  // 하드코딩 제거된 옵션들
+  const networkOptions = Object.entries(NETWORK_LABELS).map(([key, label]) => ({
+    key,
+    label,
+  }));
 
-  const ottOptions = [
-    { key: "NETFLIX", label: "넷플릭스" },
-    { key: "YOUTUBE_PREMIUM", label: "유튜브 프리미엄" },
-    { key: "DISNEY_PLUS", label: "디즈니+" },
-    { key: "WAVVE", label: "웨이브" },
-    { key: "TVING", label: "티빙" },
-  ];
+  const ottOptions = Object.entries(OTT_LABELS).map(([key, label]) => ({
+    key,
+    label,
+  }));
+
+  const targetOptions = Object.entries(SORTTARGET_TO_LABEL).map(
+    ([key, label]) => ({
+      key: key as SortTarget,
+      label,
+    })
+  );
 
   const sortOptions = [
     { key: "asc", label: "낮은 순" },
     { key: "desc", label: "높은 순" },
-  ];
-
-  const targetOptions: { key: SortTarget; label: string }[] = [
-    { key: "price", label: "가격" },
-    { key: "dataAmountMb", label: "월 데이터량" },
-    { key: "voiceMinutes", label: "부가 통화" },
-    { key: "overageSpeedMbps", label: "속도" },
-    { key: "smsIncluded", label: "혜택 가치" },
-    { key: "subscriptionServices", label: "혜택 수" },
   ];
 
   const baseClass =

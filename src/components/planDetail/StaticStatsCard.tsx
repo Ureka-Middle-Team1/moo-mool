@@ -1,7 +1,7 @@
-// components/planDetail/StaticStatsCard.tsx
 "use client";
 
 import { motion } from "framer-motion";
+import { LABELS } from "@/constants/labels";
 
 interface StaticStatsCardProps {
   raw: number[];
@@ -14,7 +14,7 @@ export default function StaticStatsCard({
   compareRaw = [],
   isCompare,
 }: StaticStatsCardProps) {
-  const labels = ["월정액", "데이터", "속도", "음성통화", "문자"];
+  const labels = LABELS;
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-xl bg-white shadow-md">

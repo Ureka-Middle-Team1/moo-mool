@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { client } from "@/lib/axiosInstance";
 
 interface MyPlanResponse {
   id: string;
@@ -13,7 +13,7 @@ export function useGetMyPlan() {
   return useQuery<MyPlanResponse>({
     queryKey: ["myPlan"],
     queryFn: async () => {
-      const response = await axios.get("/api/user/my-plan");
+      const response = await client.get("/user/my-plan");
       return response.data;
     },
     staleTime: 1000 * 60 * 3, // 3분

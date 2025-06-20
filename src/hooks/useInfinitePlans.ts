@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { client } from "@/lib/axiosInstance";
+
 import { PlanDBApiResponse } from "@/types/PlanData";
 import { SortTarget } from "@/types/sort";
 
@@ -38,8 +39,8 @@ const fetchPlans = async ({
     params.append("ott", selectedOttList.join(","));
   }
 
-  const res = await axios.get<InfinitePlanResponse>(
-    `/api/plan/page?${params.toString()}`
+  const res = await client.get<InfinitePlanResponse>(
+    `/plan/list?${params.toString()}`
   );
   return res.data;
 };
@@ -51,9 +52,21 @@ export function useInfinitePlans(
   selectedOttList: string[]
 ) {
   return useInfiniteQuery({
-    queryKey: ["infinitePlans", sortTarget, sortOrder, selectedNetwork, selectedOttList], // ✅ 키에 포함
+    queryKey: [
+      "infinitePlans",
+      sortTarget,
+      sortOrder,
+      selectedNetwork,
+      selectedOttList,
+    ],
     queryFn: ({ pageParam = 0 }) =>
-      fetchPlans({ pageParam, sortTarget, sortOrder, selectedNetwork, selectedOttList }), // ✅ 전달
+      fetchPlans({
+        pageParam,
+        sortTarget,
+        sortOrder,
+        selectedNetwork,
+        selectedOttList,
+      }),
     getNextPageParam: (lastPage, allPages) =>
       lastPage.hasNext ? allPages.length : undefined,
     initialPageParam: 0,
