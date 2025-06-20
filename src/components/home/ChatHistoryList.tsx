@@ -23,7 +23,9 @@ export default function ChatHistoryList() {
         <CarouselContent className="-ml-4 flex-nowrap space-x-4 px-5 py-5">
           {/* ✅ 진행중 카드 (맨 앞에 하나만 조건부 렌더링) */}
           {shouldShowProgress && (
-            <Card className="min-w-full flex-shrink-0 flex-col justify-center rounded-xl bg-white shadow-md">
+            <Card
+              className="min-w-full flex-shrink-0 flex-col justify-center rounded-xl bg-white shadow-md"
+              onClick={() => router.push(`/chat`)}>
               <CardHeader>
                 <CardTitle className="truncate text-base font-semibold text-pink-600">
                   진행 중인 대화
