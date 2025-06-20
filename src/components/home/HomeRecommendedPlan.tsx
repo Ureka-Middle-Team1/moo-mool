@@ -3,7 +3,6 @@
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { useGetPlanById } from "@/hooks/useGetPlanById";
 import { useSession } from "next-auth/react";
-import PlanCard from "../chat/PlanCard";
 import PlanListCard from "../planList/PlanListCard";
 
 export default function HomeRecommendedPlan() {
@@ -34,7 +33,20 @@ export default function HomeRecommendedPlan() {
         📌 나의 추천 요금제
       </h2>
       <div className="flex w-[18rem] items-center justify-center">
-        <PlanListCard key={planData.id} plan={planData} />
+        <PlanListCard
+          plan={{
+            id: planData.id,
+            name: planData.name,
+            price: planData.price,
+            dataAmountMb: planData.dataAmountMb,
+            overageSpeedMbps: planData.overageSpeedMbps,
+            voiceMinutes: planData.voiceMinutes,
+            smsIncluded: planData.smsIncluded,
+            networkType: planData.networkType,
+            subscriptionServices: planData.subscriptionServices || [],
+          }}
+          hideBenefits={true}
+        />
       </div>
     </div>
   );

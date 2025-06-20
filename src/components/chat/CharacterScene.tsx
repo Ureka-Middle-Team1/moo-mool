@@ -9,9 +9,10 @@ import { useChatStore } from "@/store/useChatStore";
 import { useTTSStore } from "@/store/useTTSStore";
 import { useEffect, useRef, useState } from "react";
 import SpeechBubble from "./SpeechBubble";
-import PlanCard from "./PlanCard";
+import PlanListCard from "@/components/planList/PlanListCard";
 import { AnimatePresence, motion } from "framer-motion";
 import { useStreamingText } from "@/hooks/useStreamingText";
+import { convertToPlanDBApiResponse } from "@/utils/planDataConverter";
 
 export default function CharacterScene() {
   const { speak, initAudio } = useTTS();
@@ -95,7 +96,9 @@ export default function CharacterScene() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="relative flex flex-col items-center">
             {/* 요금제 카드 */}
-            <PlanCard {...lastMessage.planData!} />
+            <PlanListCard
+              plan={convertToPlanDBApiResponse(lastMessage.planData!)}
+            />
           </motion.div>
         )}
       </AnimatePresence>

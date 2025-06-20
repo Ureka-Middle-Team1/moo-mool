@@ -9,6 +9,7 @@ export function dbPlanToParsedPlanWithID(plan: {
   overageSpeedMbps: number | null;
   voiceMinutes: number;
   smsIncluded: number;
+  subscriptionServices?: string[]; // 구독 서비스 정보 추가
 }): ParsedPlanWithID {
   // 데이터 표시
   const data =
@@ -55,5 +56,6 @@ export function dbPlanToParsedPlanWithID(plan: {
     sms,
     price,
     tel,
+    subscriptionServices: plan.subscriptionServices || [], // 구독 서비스 정보 포함
   };
 }
