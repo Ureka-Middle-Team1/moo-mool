@@ -12,6 +12,7 @@ import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { useModalStore } from "@/store/useModalStore";
 import ChatHistoryList from "@/components/home/ChatHistoryList";
 import FeatureBannerSlider from "@/components/home/FeatureBannerSlider";
+import ChatHistoryListSkeleton from "@/components/skeleton/ChatHistoryListSkeleton";
 
 export default function HomePage() {
   const { isModalOpen, setModalOpen, openModal } = useModalStore();
