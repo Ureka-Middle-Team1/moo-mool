@@ -8,8 +8,11 @@ import PlanListCard from "@/components/planList/PlanListCard";
 import { useInfinitePlans } from "@/hooks/useInfinitePlans";
 import { getScoreContext } from "@/utils/planScore";
 import PlanListTrigger from "@/components/planList/PlanListTrigger";
-import PlanListHeader from "@/components/planList/PlanListHeader";
 import { PlanDBApiResponse } from "@/types/PlanData";
+import HomeHeader from "@/components/home/HomeHeader";
+import TopGradient from "@/components/planDetail/TopGradient";
+import MyPageModal from "@/components/myPage/MyPageModal";
+import { useModalStore } from "@/store/useModalStore";
 
 const getEnumNetworkType = (
   type: UINetworkType | null
@@ -20,6 +23,7 @@ const getEnumNetworkType = (
 };
 
 export default function PlanListPage() {
+  const { isModalOpen, setModalOpen, openModal } = useModalStore();
   const listRef = useRef<HTMLDivElement>(null);
 
   const [sortTarget, setSortTarget] = useState<SortTarget | null>(null);
@@ -60,30 +64,33 @@ export default function PlanListPage() {
   }
 
   return (
-    <div
-      className="relative space-y-6 bg-gradient-to-r from-pink-100 to-yellow-100 p-4"
-      ref={listRef}>
-      <PlanListHeader />
-      <StickySortFilter
-        selectedNetwork={selectedNetwork}
-        setSelectedNetwork={setSelectedNetwork}
-        sortOrder={sortOrder}
-        setSortOrder={setSortOrder}
-        sortTarget={sortTarget}
-        setSortTarget={setSortTarget}
-      />
+    <div className="flex flex-col items-center" ref={listRef}>
+      <TopGradient />
+      <section className="z-1 flex h-[85%] w-[90%] flex-col items-center">
+        <HomeHeader onAvatarClick={openModal} />
+        {/* 마이페이지 Modal */}
+        <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
+        <StickySortFilter
+          selectedNetwork={selectedNetwork}
+          setSelectedNetwork={setSelectedNetwork}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          sortTarget={sortTarget}
+          setSortTarget={setSortTarget}
+        />
 
-      <div className="space-y-4">
-        {allPlans.map((plan) => (
-          <PlanListCard key={plan.id} plan={plan} />
-        ))}
-      </div>
+        <div className="space-y-4">
+          {allPlans.map((plan) => (
+            <PlanListCard key={plan.id} plan={plan} />
+          ))}
+        </div>
 
-      <PlanListTrigger
-        fetchNextPage={fetchNextPage}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
-      />
+        <PlanListTrigger
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+        />
+      </section>
     </div>
   );
 }

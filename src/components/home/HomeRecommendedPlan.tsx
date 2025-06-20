@@ -29,8 +29,8 @@ export default function HomeRecommendedPlan() {
   }
   return (
     <div className="flex w-full flex-col items-center justify-center gap-3">
-      <h2 className="text-zinc-900x flex w-full text-lg font-semibold">
-        나의 추천 요금제
+      <h2 className="text-gray-900x flex w-full pl-1 text-lg font-semibold">
+        📌 나의 추천 요금제
       </h2>
       <div className="flex w-[18rem] items-center justify-center">
         <PlanListCard
