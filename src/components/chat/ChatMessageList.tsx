@@ -2,21 +2,14 @@ import { Message } from "@/types/Chat";
 import ChatMessage from "./ChatMessage";
 import { useChatStore } from "@/store/useChatStore";
 import { AnimatePresence } from "framer-motion";
-import QuickReplyList from "./QuickReplyList";
-import { useChatSubmit } from "@/hooks/useChatSubmit";
 
 interface ChatMessageListProps {
   messages: Message[];
-  bottomRef?: React.RefObject<HTMLDivElement | null>;
-  isTyping: boolean;
+  bottomRef?: HTMLDivElement;
 }
 
-export default function ChatMessageList({
-  messages,
-  bottomRef,
-  isTyping,
-}: ChatMessageListProps) {
-  const { getLastBotMessage } = useChatStore();
+export default function ChatMessageList({ messages }: ChatMessageListProps) {
+  const { getLastBotMessage, isTyping } = useChatStore();
 
   const lastBot = getLastBotMessage();
   const isLastMessageBot = lastBot && messages[messages.length - 1] === lastBot;
@@ -41,7 +34,6 @@ export default function ChatMessageList({
             />
           )}
         </AnimatePresence>
-        <div ref={bottomRef} />
       </div>
     </div>
   );

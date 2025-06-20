@@ -15,7 +15,7 @@ export default function TextPage() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const quickReplyRef = useRef<HTMLDivElement>(null); // "정해진 답변" 리스트업 되는 영역
 
-  const { messages, currentQuestionId, isTyping } = useChatStore();
+  const { messages, currentQuestionId } = useChatStore();
 
   // 메시지 추가될 때 스크롤 아래로 이동
   useEffect(() => {
@@ -23,11 +23,13 @@ export default function TextPage() {
 
     const replyHeight = quickReplyRef.current.offsetHeight;
 
-    const elementTop =
-      bottomRef.current.getBoundingClientRect().top + window.scrollY;
-    const targetScroll = elementTop - replyHeight; // quickReply 영역을 고려해서 그만큼 위로 스크롤해야 함
+    setTimeout(() => {
+      const elementTop =
+        bottomRef.current!.getBoundingClientRect().top + window.scrollY;
+      const targetScroll = elementTop - replyHeight; // quickReply 영역을 고려해서 그만큼 위로 스크롤해야 함
 
-    window.scrollTo({ top: targetScroll, behavior: "smooth" });
+      window.scrollTo({ top: targetScroll, behavior: "smooth" });
+    }, 0); // 다음 이벤트 루프로 넘기기
   }, [messages]);
 
   // 텍스트 높이 자동 조절
@@ -43,12 +45,8 @@ export default function TextPage() {
   return (
     <div className="flex h-full flex-1 flex-col overflow-hidden">
       <ChatProgressToast currentQuestionId={currentQuestionId} />
-      <ChatMessageList
-        messages={messages}
-        bottomRef={bottomRef}
-        isTyping={isTyping}
-      />
-      <QuickReplyList onSubmit={handleSubmit} />
+      <ChatMessageList messages={messages} />
+      <QuickReplyList onSubmit={handleSubmit} bottomRef={bottomRef} />
       <ChatInputBox
         input={input}
         setInput={setInput}

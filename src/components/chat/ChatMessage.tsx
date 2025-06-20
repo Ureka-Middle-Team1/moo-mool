@@ -30,7 +30,7 @@ export default function ChatMessage({
         transition={{ duration: 0.2 }}
         layout
         className="mb-3 flex items-start justify-end gap-2">
-        <div className="max-w-[75%] rounded-tl-2xl rounded-br-2xl rounded-bl-2xl bg-[#FFF3B0] px-3 py-2 text-sm shadow-md">
+        <div className="max-w-[75%] rounded-tl-2xl rounded-br-2xl rounded-bl-2xl bg-[#FFF3B0] px-5 py-3 text-sm shadow-md">
           <div className="flex gap-1">
             {[0, 0.2, 0.4].map((delay, idx) => (
               <motion.span
