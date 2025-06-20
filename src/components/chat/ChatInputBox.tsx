@@ -1,6 +1,7 @@
 "use client";
 import { ArrowUp, Mic, Plus } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useChatStreamingStore } from "@/store/useChatStreamingStore";
 import { SubmitType } from "@/hooks/useChatSubmit";
 import debounce from "lodash.debounce"; // 디바운싱 편하게 해주는 객체 (설치 필요)
@@ -15,8 +16,6 @@ interface ChatInputBoxProps {
   disabled?: boolean;
   onTypingStart: () => void;
   onTypingEnd: () => void;
-  mode: "text" | "voice";
-  setMode: (mode: "text" | "voice") => void;
 }
 
 export default function ChatInputBox({
@@ -26,12 +25,11 @@ export default function ChatInputBox({
   textareaRef,
   onTypingStart,
   onTypingEnd,
-  mode,
-  setMode,
 }: ChatInputBoxProps) {
   const formRef = useRef<HTMLFormElement>(null); // 엔터키 중복 방지를 위한 ref
 
   const isStreaming = useChatStreamingStore((state) => state.isStreaming);
+  const { mode, setMode } = useChatModeStore();
 
   // 타이핑 끝 감지를 위한 debounce (1초 후에 타이핑 종료로 간주)
   const debounceTypingEnd = useCallback(
@@ -76,7 +74,6 @@ export default function ChatInputBox({
     onTypingEnd();
     debounceTypingEnd.cancel();
   };
-
   return (
     <form
       ref={formRef}

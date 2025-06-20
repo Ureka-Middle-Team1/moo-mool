@@ -9,11 +9,7 @@ import { useChatSubmit } from "@/hooks/useChatSubmit";
 import ChatProgressToast from "@/components/chat/ChatProgressRoadmap";
 
 // "텍스트"로 챗봇 기능을 사용하는 페이지
-export default function TextPage({
-  setMode,
-}: {
-  setMode: (mode: "text" | "voice") => void;
-}) {
+export default function TextPage() {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -48,8 +44,6 @@ export default function TextPage({
         setInput={setInput}
         onSubmit={handleSubmit}
         textareaRef={textareaRef}
-        mode="text"
-        setMode={setMode}
       />
     </div>
   );
