@@ -19,6 +19,21 @@ export default function RootLayout({
   return (
     <html lang="ko" className="h-full">
       <head>
+        {/* GA 스크립트 삽입 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-BVLC61P00M"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-BVLC61P00M', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
         <Script
           src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js"
           strategy="beforeInteractive"
