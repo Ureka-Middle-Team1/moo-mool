@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
 import TrendBar from "@/components/chart/TrendBar";
@@ -19,6 +19,7 @@ import { useChatStore } from "@/store/useChatStore";
 import { useGetSixTypeRecommendPlan } from "@/hooks/useGetSixTypeRecommendPlan";
 import PlanListCard from "@/components/planList/PlanListCard";
 import { convertToPlanDBApiResponse } from "@/utils/planDataConverter";
+import PlanListCardSkeleton from "@/components/skeleton/PlanListCardSkeleton";
 
 export default function ResultPage({ encryptedId }: { encryptedId: string }) {
   const router = useRouter();
@@ -173,9 +174,11 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
           <div className="flex w-full flex-col items-center gap-4 rounded-lg p-4">
             {/* 현재 요금제 관련 정보는 chat-storage(전역 저장소)에 저장되어 있음, 그것을 가져와 사용 중 */}
             {firstPlanMessage?.planData?.id !== undefined && (
-              <PlanListCard
-                plan={convertToPlanDBApiResponse(firstPlanMessage.planData)}
-              />
+              <Suspense fallback={<PlanListCardSkeleton />}>
+                <PlanListCard
+                  plan={convertToPlanDBApiResponse(firstPlanMessage.planData)}
+                />
+              </Suspense>
             )}
           </div>
           <div className="flex w-[90%] flex-col gap-4">
