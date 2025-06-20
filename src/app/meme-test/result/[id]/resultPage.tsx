@@ -17,7 +17,8 @@ import Header from "@/components/meme/Header";
 import SuspenseImage from "@/components/meme/SuspenseImage";
 import { useChatStore } from "@/store/useChatStore";
 import { useGetSixTypeRecommendPlan } from "@/hooks/useGetSixTypeRecommendPlan";
-import PlanCard from "@/components/chat/PlanCard";
+import PlanListCard from "@/components/planList/PlanListCard";
+import { convertToPlanDBApiResponse } from "@/utils/planDataConverter";
 
 export default function ResultPage({ encryptedId }: { encryptedId: string }) {
   const router = useRouter();
@@ -172,14 +173,8 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
           <div className="flex w-full flex-col items-center gap-4 rounded-lg p-4">
             {/* 현재 요금제 관련 정보는 chat-storage(전역 저장소)에 저장되어 있음, 그것을 가져와 사용 중 */}
             {firstPlanMessage?.planData?.id !== undefined && (
-              <PlanCard
-                id={firstPlanMessage.planData.id}
-                name={firstPlanMessage.planData.name ?? ""}
-                data={firstPlanMessage.planData.data ?? ""}
-                voice={firstPlanMessage.planData.voice ?? ""}
-                sms={firstPlanMessage.planData.sms ?? ""}
-                price={firstPlanMessage.planData.price ?? ""}
-                tel={firstPlanMessage.planData.tel ?? ""}
+              <PlanListCard
+                plan={convertToPlanDBApiResponse(firstPlanMessage.planData)}
               />
             )}
           </div>

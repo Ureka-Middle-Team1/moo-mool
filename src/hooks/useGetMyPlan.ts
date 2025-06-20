@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/axiosInstance";
 
-interface MyPlanResponse {
+interface MyPlanData {
   id: string;
   email: string;
   my_plan: number | null;
@@ -10,12 +10,13 @@ interface MyPlanResponse {
 }
 
 export function useGetMyPlan() {
-  return useQuery<MyPlanResponse>({
+  return useQuery<MyPlanData, Error>({
     queryKey: ["myPlan"],
     queryFn: async () => {
-      const response = await client.get("/user/my-plan");
-      return response.data;
+      const res = await client.get("/user/my-plan");
+      return res.data;
     },
-    staleTime: 1000 * 60 * 3, // 3분
+    staleTime: 0,
+    refetchOnWindowFocus: false,
   });
 }

@@ -7,9 +7,13 @@ import Image from "next/image";
 
 interface PlanListCardProps {
   plan: PlanDBApiResponse;
+  hideBenefits?: boolean;
 }
 
-export default function PlanListCard({ plan }: PlanListCardProps) {
+export default function PlanListCard({
+  plan,
+  hideBenefits = false,
+}: PlanListCardProps) {
   const router = useRouter();
   const {
     id,
@@ -38,21 +42,23 @@ export default function PlanListCard({ plan }: PlanListCardProps) {
       </div>
       <div className="text-lg font-bold">{name}</div>
 
-      <div className="scrollbar-hide mt-2 flex w-full flex-wrap gap-2 overflow-x-auto">
-        <Badge className="border-0 bg-yellow-100 whitespace-nowrap text-black">
+      <div className="scrollbar-hide mt-2 flex w-full flex-nowrap gap-2 overflow-x-auto">
+        <Badge className="border-0 bg-blue-100 whitespace-nowrap text-blue-800">
           {dataAmountMb === 0
             ? "무제한"
             : `${(dataAmountMb / 1024).toFixed(1)}GB`}
         </Badge>
-        <Badge className="border-0 bg-yellow-100 whitespace-nowrap text-black">
+        <Badge className="border-0 bg-green-100 whitespace-nowrap text-green-800">
           {voiceMinutes === -1 ? "무제한" : `${voiceMinutes}분`}
         </Badge>
-        <Badge className="border-0 bg-yellow-100 whitespace-nowrap text-black">
+        <Badge className="border-0 bg-purple-100 whitespace-nowrap text-purple-800">
           속도 {overageSpeedMbps ?? 0}Mbps
         </Badge>
-        <Badge className="border-0 bg-yellow-100 whitespace-nowrap text-black">
-          혜택 가치 {smsIncluded}
-        </Badge>
+        {!hideBenefits && (
+          <Badge className="border-0 bg-pink-100 whitespace-nowrap text-pink-800">
+            혜택 가치 {smsIncluded}
+          </Badge>
+        )}
       </div>
 
       {Array.isArray(subscriptionServices) &&

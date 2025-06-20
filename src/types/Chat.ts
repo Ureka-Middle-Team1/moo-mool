@@ -70,6 +70,7 @@ export interface ParsedPlan {
 // 요금제 정보를 DB로부터 받아올 때, id 또한 추가적으로 필요한 상황 -> 그럴 때 사용하는 ParsedPlanWithID
 export interface ParsedPlanWithID extends ParsedPlan {
   id: number;
+  subscriptionServices?: string[]; // 구독 서비스 정보 추가
 }
 
 // 해당 내용은 Smart Choice API 요청 시에 리턴되는 값의 자료형

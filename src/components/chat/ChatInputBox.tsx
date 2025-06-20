@@ -1,10 +1,11 @@
 "use client";
-import { ArrowUp, Mic } from "lucide-react";
+import { ArrowUp, Mic, Plus } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useChatStreamingStore } from "@/store/useChatStreamingStore";
 import { SubmitType } from "@/hooks/useChatSubmit";
 import debounce from "lodash.debounce"; // 디바운싱 편하게 해주는 객체 (설치 필요)
+import { Button } from "../ui/button";
 
 interface ChatInputBoxProps {
   input: string;
@@ -72,32 +73,50 @@ export default function ChatInputBox({
     onTypingEnd();
     debounceTypingEnd.cancel();
   };
-
   return (
     <form
       ref={formRef}
       onSubmit={onSubmit}
-      className="rounded-t-2xl bg-[#FFEBAF] px-4 pt-3 pb-2">
-      <textarea
-        ref={textareaRef}
-        value={input}
-        onChange={handleChange}
-        onKeyUp={handleKeyUp}
-        onBlur={handleBlur}
-        placeholder="무너에게 물어봐!"
-        className="w-full resize-none bg-[#FFEBAF] text-sm placeholder-[#94A3B8] focus:outline-none"
-      />
-      <div className="mt-2 flex justify-end gap-3">
-        <button
-          type="button"
-          className="text-[#94A3B8]"
-          disabled={isStreaming}
-          onClick={handleMicClick}>
-          <Mic size={20} />
-        </button>
-        <button type="submit" className="text-[#94A3B8]" disabled={isStreaming}>
-          <ArrowUp size={20} />
-        </button>
+      className="w-full border-t border-gray-200 bg-gray-100 px-3 py-3">
+      <div className="flex items-center gap-2 rounded-full bg-[#F2F2F2] px-3 py-2">
+        {/* 입력창 */}
+        <textarea
+          ref={textareaRef}
+          value={input}
+          onChange={handleChange}
+          onKeyUp={handleKeyUp}
+          onBlur={handleBlur}
+          placeholder="무너에게 물어봐!"
+          rows={1}
+          className="flex-1 resize-none bg-transparent text-sm placeholder-gray-400 focus:outline-none"
+        />
+
+        {/* 버튼들 */}
+        <div className="flex gap-1">
+          {/* Mic 버튼 (고정 색상) */}
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="rounded-full bg-pink-300 text-gray-100"
+            disabled={isStreaming}
+            onClick={handleMicClick}>
+            <Mic className="h-5 w-5" />
+          </Button>
+
+          {/* 전송 버튼 (조건부 색상 변경) */}
+          <Button
+            type="submit"
+            size="icon"
+            className={`rounded-full p-1 transition-colors ${
+              input.trim().length > 0 && !isStreaming
+                ? "bg-pink-300 text-white"
+                : "bg-white text-gray-400"
+            }`}
+            disabled={isStreaming || input.trim().length === 0}>
+            <ArrowUp className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
     </form>
   );

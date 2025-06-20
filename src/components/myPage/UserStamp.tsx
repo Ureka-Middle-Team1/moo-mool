@@ -38,7 +38,7 @@ export default function UserStamp() {
   }, [invitedCount]);
 
   return (
-    <div className="mx-auto grid w-fit grid-cols-5 gap-2">
+    <div className="mx-auto grid w-fit grid-cols-5 gap-3">
       {Array.from({ length: STAMP_TOTAL }).map((_, index) => {
         const isFilled = index < invitedCount;
 
@@ -48,7 +48,7 @@ export default function UserStamp() {
             ref={(el) => {
               stampRefs.current[index] = el;
             }}
-            className="relative flex h-13 w-13 items-center justify-center">
+            className="relative flex h-13 w-13 flex-col items-center justify-center">
             <img
               style={{ backfaceVisibility: "hidden" }}
               src={
@@ -57,8 +57,19 @@ export default function UserStamp() {
                   : "/assets/stamps/stamp_gray.svg"
               }
               alt="stamp"
-              className="object-unset h-12 w-12"
+              className="object-unset h-10 w-10"
             />
+            {(index === 4 || index === 9) && (
+              <img
+                src={
+                  isFilled
+                    ? "/assets/stamps/levelup_red.svg"
+                    : "/assets/stamps/levelup_gray.svg"
+                }
+                alt="level up"
+                className="absolute -bottom-3 w-[60px]"
+              />
+            )}
           </div>
         );
       })}
