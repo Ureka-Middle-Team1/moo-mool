@@ -2,16 +2,21 @@
 
 import TagBadge from "./TagBadge";
 import PlanModeToggle from "./PlanModeToggle";
+import { PlanDetailData } from "@/types/planDetail";
 
 interface PlanInfoProps {
   data: PlanDetailData;
   mode: "basic" | "compare";
   onChangeMode: (mode: "basic" | "compare") => void;
+  disabled: boolean;
 }
 
-import { PlanDetailData } from "@/types/planDetail";
-
-export default function PlanInfo({ data, mode, onChangeMode }: PlanInfoProps) {
+export default function PlanInfo({
+  data,
+  mode,
+  onChangeMode,
+  disabled,
+}: PlanInfoProps) {
   return (
     <div className="px-8">
       <h1 className="pt-5 text-[1.75rem] leading-snug font-bold [word-break:keep-all] text-gray-900">
@@ -25,7 +30,7 @@ export default function PlanInfo({ data, mode, onChangeMode }: PlanInfoProps) {
         ))}
       </div>
 
-      <PlanModeToggle mode={mode} onChange={onChangeMode} />
+      <PlanModeToggle mode={mode} onChange={onChangeMode} disabled={disabled} />
     </div>
   );
 }

@@ -11,6 +11,7 @@ import {
 import { Bar } from "react-chartjs-2";
 import { barChartOptions } from "./options/barChartOptions";
 import { useState, useEffect } from "react";
+import { LABELS } from "@/constants/labels";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
@@ -27,7 +28,7 @@ const TendencyBarChart = ({
   data,
   rawData,
   name,
-  labels = ["월정액", "데이터", "속도", "음성통화", "문자"],
+  labels = LABELS,
   colors = ["rgba(255, 188, 31, 0.6)", "rgba(255, 99, 132, 0.6)"],
   height = 320,
 }: TendencyBarChartProps) => {

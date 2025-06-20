@@ -13,6 +13,7 @@ import {
 } from "chart.js";
 import { Radar } from "react-chartjs-2";
 import { getRadarChartOptions } from "./options/radarChartOptions";
+import { LABELS } from "@/constants/labels";
 
 ChartJS.register(
   RadialLinearScale,
@@ -36,7 +37,7 @@ const TendencyRadarChart = ({
   isRounded,
   data,
   name,
-  labels = ["월정액", "데이터", "속도", "음성통화", "문자"],
+  labels = LABELS,
 }: TendencyRadarChartProps) => {
   const [chartKey, setChartKey] = useState<number | null>(null);
 
