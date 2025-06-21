@@ -8,6 +8,7 @@ import { NearbyUser } from "@/types/Nearby";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { client } from "@/lib/axiosInstance";
+import { useNearbyStore } from "@/hooks/useNearbyStore";
 
 export default function NearbyContent({ session }: { session: any }) {
   const userId = session?.user?.id ?? "";
@@ -21,7 +22,6 @@ export default function NearbyContent({ session }: { session: any }) {
 
   const myIdRef = useRef<string | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
-
   const positionCache = useRef(
     new Map<string, { angle: number; distance: number }>()
   );
@@ -33,10 +33,12 @@ export default function NearbyContent({ session }: { session: any }) {
     if (userId) myIdRef.current = userId;
   }, [userId]);
 
+  const { myType, setMyType } = useNearbyStore();
+
   // ✅ 내 타입을 localStorage에 저장
   useEffect(() => {
     if (myProfile?.type) {
-      localStorage.setItem("myType", myProfile.type);
+      setMyType(myProfile.type);
       console.log("✅ 내 타입 저장됨:", myProfile.type);
     }
   }, [myProfile?.type]);
