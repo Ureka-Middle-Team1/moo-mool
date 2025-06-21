@@ -7,9 +7,13 @@ import { AnimatePresence, motion } from "framer-motion";
 
 interface QuickReplyListProps {
   onSubmit?: (e?: SubmitType) => void;
+  bottomRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export default function QuickReplyList({ onSubmit }: QuickReplyListProps) {
+export default function QuickReplyList({
+  onSubmit,
+  bottomRef,
+}: QuickReplyListProps) {
   const { quickReplies, setQuickReplies } = useChatStore();
 
   if (quickReplies.length === 0) return null;
@@ -39,6 +43,7 @@ export default function QuickReplyList({ onSubmit }: QuickReplyListProps) {
             ))}
           </div>
         </div>
+        <div ref={bottomRef} /> {/* 스크롤 기준점 */}
       </motion.div>
     </AnimatePresence>
   );

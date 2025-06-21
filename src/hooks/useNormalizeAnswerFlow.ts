@@ -48,6 +48,7 @@ export function useNormalizeAnswerFlow() {
       }
 
       let contentToAppend: string; // useChatStore에 append할 메시지
+      console.log("정규화된 대답: ", data.normalizedValue);
 
       if (data.normalizedValue === "INVALID") {
         // 유효하지 않은 답변("INVALID"일 경우에..)일 경우, 재질문 텍스트 추가
@@ -60,7 +61,10 @@ export function useNormalizeAnswerFlow() {
 
       if (contentToAppend !== undefined) {
         // contentToAppend가 undefined가 아닌 경우에만.. (즉, 유효한 경우에만..)
-        appendMessage({ role: "bot", content: contentToAppend }); // appendMessage에 메시지 붙이기
+        setTimeout(() => {
+          // 사용자 문장 또한 isTyping이 true일 때 콜백 큐에 순차적으로 들어가 실행할 수 있도록, 여기도 setTimeout 해야 함
+          appendMessage({ role: "bot", content: contentToAppend }); // appendMessage에 메시지 붙이기
+        }, 0);
       }
       if (data.normalizedValue !== "INVALID" && nextId !== undefined) {
         // 유효하지 않은 답변이 아니고, nextId 또한 undefined가 아닐 경우, nextId로 currentQuestionId 갱신
