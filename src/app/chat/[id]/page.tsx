@@ -14,7 +14,7 @@ export default function ChatSessionDetailPage() {
   const sessionId = Number(id);
 
   const { data, isLoading, error } = useGetChatSession(sessionId);
-  const { isModalOpen, setModalOpen, openModal } = useModalStore();
+  const { isModalOpen, setModalOpen } = useModalStore();
 
   if (isLoading) return <p className="p-4">로딩 중...</p>;
   if (error || !data) return <p className="p-4">세션을 불러올 수 없습니다.</p>;
@@ -25,7 +25,7 @@ export default function ChatSessionDetailPage() {
   return (
     <div className="relative flex h-full w-full max-w-[430px] flex-col bg-pink-100">
       <div className="sticky top-0 z-10 w-full bg-white">
-        <Header title={data.summary} onAvatarClick={openModal} />
+        <Header title={data.summary} />
       </div>
       <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
       <ChatMessageList messages={parsedMessages} />
