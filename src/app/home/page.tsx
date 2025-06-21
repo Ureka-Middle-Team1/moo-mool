@@ -22,7 +22,7 @@ export default function HomePage() {
         </Suspense>
         {/* 마이페이지 Modal */}
         <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
-        <div className="flex w-full flex-col gap-7 px-3 py-5">
+        <div className="flex w-full flex-col gap-7 py-5">
           <FeatureBannerSlider />
           {/* Suspense로 감싸기 */}
           <div className="flex w-full flex-col">

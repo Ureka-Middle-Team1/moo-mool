@@ -12,15 +12,15 @@ export default function FeatureBannerCard({
   image,
 }: FeatureBannerCardProps) {
   return (
-    <div className="h-full w-full">
+    <div className="mr-1 ml-1 h-full w-full px-2">
       <div className="relative flex w-full flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-br from-[#E0FFE8] via-[#F0FAFF] to-[#FFFCEB] px-8 py-5 shadow-md sm:flex-row sm:items-center">
         {/* 텍스트 영역 */}
         <div className="z-10 max-w-[60%]">
-          <p className="text-xs text-gray-600">{subtitle}</p>
-          <h2 className="my-2 text-xl leading-tight font-bold whitespace-pre-line text-gray-800">
+          <p className="text-xs text-gray-800">{subtitle}</p>
+          <h2 className="my-2 text-lg leading-tight font-bold whitespace-pre-line text-gray-800">
             {title}
           </h2>
-          <p className="text-xs text-gray-600">{description}</p>
+          <p className="text-xs text-gray-800">{description}</p>
         </div>
 
         {/* 이미지 영역 */}
