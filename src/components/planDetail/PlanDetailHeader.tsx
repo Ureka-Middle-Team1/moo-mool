@@ -18,7 +18,7 @@ export default function PlanDetailHeader() {
       </button>
       <span className="text-sm font-semibold">요금제 상세 정보</span>
       <div className="absolute right-4">
-        <HamburgerMenu onAvatarClick={() => {}} />
+        <HamburgerMenu />
       </div>
     </div>
   );

@@ -7,13 +7,11 @@ import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 import { motion, AnimatePresence } from "framer-motion";
 import { NearbyUser } from "@/types/Nearby";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
-import MyPageModal from "@/components/myPage/MyPageModal";
-import { useModalStore } from "@/store/useModalStore";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { client } from "@/lib/axiosInstance";
+import HamburgerMenu from "@/components/common/HamburgerMenu"; // 추가
 
 export default function NearbyPage() {
-  const { isModalOpen, setModalOpen, openModal } = useModalStore();
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const { data: myProfile } = useGetUserCharacterProfile(userId);
@@ -38,7 +36,15 @@ export default function NearbyPage() {
     if (userId) myIdRef.current = userId;
   }, [userId]);
 
-  // ✅ 초대 수 전송 함수 정의
+  // ✅ 내 타입을 localStorage에 저장
+  useEffect(() => {
+    if (myProfile?.type) {
+      localStorage.setItem("myType", myProfile.type);
+      console.log("✅ 내 타입 저장됨:", myProfile.type);
+    }
+  }, [myProfile?.type]);
+
+  // 초대 수 전송 함수 정의
   const sendInviteCount = async () => {
     if (userId && interactedUserIds.size > 0) {
       try {
@@ -46,28 +52,28 @@ export default function NearbyPage() {
           inviterId: userId,
           count: interactedUserIds.size,
         });
-        console.log("✅ 초대한 사용자 수 반영 완료:", res.data);
+        console.log(" 초대한 사용자 수 반영 완료:", res.data);
         // optional: alert("초대한 수 반영 완료!");
       } catch (err) {
-        console.error("❌ 초대한 사용자 수 반영 실패:", err);
+        console.error(" 초대한 사용자 수 반영 실패:", err);
       }
     }
   };
 
-  // ✅ 페이지 이탈 감지 및 처리
+  // 페이지 이탈 감지 및 처리
   useEffect(() => {
     const handleLeave = () => {
       sendInviteCount(); // async 아님, 위에서 Axios로 처리되도록 수정
     };
 
-    window.addEventListener("pagehide", handleLeave); // ✅ 모바일 브라우저 포함 안전
+    window.addEventListener("pagehide", handleLeave); // 모바일 브라우저 포함 안전
     return () => {
       handleLeave();
       window.removeEventListener("pagehide", handleLeave);
     };
   }, [userId, interactedUserIds]);
 
-  // ✅ WebSocket 연결 및 메시지 처리
+  // WebSocket 연결 및 메시지 처리
   useEffect(() => {
     if (!userId || !userInfo) {
       console.log("websoket 연결 중");
@@ -137,8 +143,7 @@ export default function NearbyPage() {
     console.log("NearByPage 초기 세팅 완료");
 
     return () => {
-      // ✅ 페이지 이탈 시 초대 수 증가 요청
-      console.log("✅ ✅ ✅ ✅ 스탬프 개수", interactedUserIds.size);
+      //  페이지 이탈 시 초대 수 증가 요청
       if (userId && interactedUserIds.size > 0) {
         client
           .post("/user/invite-multiple", {
@@ -191,9 +196,8 @@ export default function NearbyPage() {
 
   return (
     <>
-      <NearbyHeader onAvatarClick={openModal} />
-      {/* 마이페이지 Modal */}
-      <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
+      {/* 헤더에 HamburgerMenu 포함 */}
+      <NearbyHeader />
       <div className="relative flex h-screen items-center justify-center overflow-hidden bg-white">
         {[20, 40, 60, 90, 110, 130].map((r, idx) => (
           <div
