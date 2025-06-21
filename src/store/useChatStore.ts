@@ -24,6 +24,10 @@ interface ChatStore {
   // 선택지 버튼 상태
   quickReplies: string[];
   setQuickReplies: (replies: string[]) => void;
+
+  // ChatInput에 타이핑 하는 상태 추적
+  isTyping: boolean;
+  setIsTyping: (val: boolean) => void;
 }
 
 // 상태 관리
@@ -60,6 +64,10 @@ export const useChatStore = create<ChatStore>()(
       // 선택지 버튼 상태 (localStorage 저장 X)
       quickReplies: ["자연스럽게 대화할래", "정확한 추천 받고 싶어"],
       setQuickReplies: (replies) => set({ quickReplies: replies }),
+
+      // typing하는 상태 (localStorage 저장 X)
+      isTyping: false,
+      setIsTyping: (val) => set({ isTyping: val }),
     }),
     {
       name: "chat-storage", // localStorage key

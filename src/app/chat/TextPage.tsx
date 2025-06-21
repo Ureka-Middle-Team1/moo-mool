@@ -11,15 +11,23 @@ import ChatProgressToast from "@/components/chat/ChatProgressRoadmap";
 // "텍스트"로 챗봇 기능을 사용하는 페이지
 export default function TextPage() {
   const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const quickReplyRef = useRef<HTMLDivElement>(null); // "정해진 답변" 리스트업 되는 영역
 
-  const { messages, currentQuestionId } = useChatStore();
+  const { messages, currentQuestionId, isTyping } = useChatStore();
 
   // 메시지 추가될 때 스크롤 아래로 이동
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (!bottomRef.current || !quickReplyRef.current) return;
+
+    const replyHeight = quickReplyRef.current.offsetHeight;
+
+    const elementTop =
+      bottomRef.current.getBoundingClientRect().top + window.scrollY;
+    const targetScroll = elementTop - replyHeight; // quickReply 영역을 고려해서 그만큼 위로 스크롤해야 함
+
+    window.scrollTo({ top: targetScroll, behavior: "smooth" });
   }, [messages]);
 
   // 텍스트 높이 자동 조절
@@ -35,12 +43,14 @@ export default function TextPage() {
   return (
     <div className="flex h-full flex-1 flex-col overflow-hidden">
       <ChatProgressToast currentQuestionId={currentQuestionId} />
-      <ChatMessageList messages={messages} bottomRef={bottomRef} />
+      <ChatMessageList
+        messages={messages}
+        bottomRef={bottomRef}
+        isTyping={isTyping}
+      />
       <QuickReplyList onSubmit={handleSubmit} />
       <ChatInputBox
         input={input}
-        onTypingStart={() => setIsTyping(true)} // 타이핑 시작할 때
-        onTypingEnd={() => setIsTyping(false)} // 타이핑 끝냈을 때
         setInput={setInput}
         onSubmit={handleSubmit}
         textareaRef={textareaRef}
