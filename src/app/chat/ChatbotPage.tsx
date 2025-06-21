@@ -7,19 +7,21 @@ import VoicePage from "./VoicePage";
 import { useWatchRecommendationTrigger } from "@/hooks/useWatchRecommendationTrigger";
 import { useModalStore } from "@/store/useModalStore";
 import MyPageModal from "@/components/myPage/MyPageModal";
+import { useChatStore } from "@/store/useChatStore";
 
 type Mode = "text" | "voice";
 
 export default function ChatbotPage() {
   const searchParams = useSearchParams();
   const { isModalOpen, setModalOpen, openModal } = useModalStore();
+  const chatSummary = useChatStore((state) => state.chatSummary);
   const mode = (searchParams.get("mode") as Mode) || "text";
 
   useWatchRecommendationTrigger();
 
   return (
     <div className="flex h-screen flex-col bg-pink-100">
-      <Header title="챗봇" onAvatarClick={() => openModal} />
+      <Header title={chatSummary || "챗봇"} onAvatarClick={() => openModal} />
       <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
       <div className="flex flex-1 flex-col overflow-hidden">
         {mode === "text" ? <TextPage /> : <VoicePage />}
