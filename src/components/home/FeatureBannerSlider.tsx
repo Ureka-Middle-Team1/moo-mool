@@ -8,13 +8,13 @@ const featureBannerList = [
   {
     subtitle: "요금제 성향, 재미로 풀어봐요!",
     title: "당신은 ‘팝콘 무너’?\n테스트하고 유형 확인!",
-    description: "밈 테스트로 성향을 알아보세요.",
+    description: "요금제 성향, 재미로 풀어봐요",
     image: "/assets/banner/meme-test.png",
   },
   {
     subtitle: "이 근처, 나랑 비슷한 사람?",
     title: "근처 사용자와\n요금제 비교해보세요!",
-    description: "실시간 요금제 트렌드를 공유해요.",
+    description: "이 근처, 나랑 비슷한 사람?",
     image: "/assets/banner/nearby.png",
   },
   {
