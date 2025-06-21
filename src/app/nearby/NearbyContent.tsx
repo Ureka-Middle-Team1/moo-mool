@@ -9,6 +9,8 @@ import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { client } from "@/lib/axiosInstance";
 import { useNearbyStore } from "@/hooks/useNearbyStore";
+import { useInviteMultiple } from "@/hooks/useInviteMultiple";
+import { error } from "console";
 
 export default function NearbyContent({ session }: { session: any }) {
   const userId = session?.user?.id ?? "";
@@ -43,19 +45,22 @@ export default function NearbyContent({ session }: { session: any }) {
     }
   }, [myProfile?.type]);
 
+  const { mutate: inviteMultiple } = useInviteMultiple();
+
   // 초대 수 전송 함수 정의
-  const sendInviteCount = async () => {
+  const sendInviteCount = () => {
     if (userId && interactedUserIds.size > 0) {
-      try {
-        const res = await client.post("/user/invite-multiple", {
-          inviterId: userId,
-          count: interactedUserIds.size,
-        });
-        console.log(" 초대한 사용자 수 반영 완료:", res.data);
-        // optional: alert("초대한 수 반영 완료!");
-      } catch (err) {
-        console.error(" 초대한 사용자 수 반영 실패:", err);
-      }
+      inviteMultiple(
+        { inviterId: userId, count: interactedUserIds.size },
+        {
+          onSuccess: (data) => {
+            console.log("✅ 초대한 사용자 수 반영 완료:", data);
+          },
+          onError: (error) => {
+            console.error("❌ 초대한 사용자 수 반영 실패:", error);
+          },
+        }
+      );
     }
   };
 
