@@ -1,37 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
+import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth"; // next-auth 설정 경로 확인
 import { prisma } from "@/lib/prisma";
-import { use } from "react";
 
 export async function POST(req: NextRequest) {
-  try {
-    // 세션 가져오기
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const session = await getServerSession(authOptions);
 
-    const { planId } = await req.json();
-    if (!planId || typeof planId !== "number") {
-      return NextResponse.json({ error: "Invalid planId" }, { status: 400 });
-    }
-
-    // DB 업데이트: user.my_plan에 planId 저장
-    await prisma.user.update({
-      where: { id: session.user.id },
-      data: { my_plan: planId },
-    });
-
-    console.log(
-      `요금제 저장 성공 planId: ${planId}, userId: ${session.user.id}`
+  // 미들웨어에서 인증을 통과했지만, 세션 정보가 없는 경우 서버 오류로 처리
+  if (!session?.user?.id) {
+    console.error(
+      "set-my-plan: middleware passed but session or user id is missing."
     );
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("요금제 저장 실패:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+
+  const userId = session.user.id;
+  const { planId } = await req.json();
+
+  if (!planId) {
+    return NextResponse.json({ error: "Plan ID is required" }, { status: 400 });
+  }
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { my_plan: planId },
+    });
+    return NextResponse.json(updatedUser);
+  } catch (error) {
+    console.error("Error setting my plan:", error);
+    return NextResponse.json(
+      { error: "Failed to set my plan" },
       { status: 500 }
     );
   }

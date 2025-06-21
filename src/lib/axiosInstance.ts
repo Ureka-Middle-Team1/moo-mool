@@ -1,14 +1,20 @@
 import axios from "axios";
 
+const baseURL =
+  typeof window === "undefined"
+    ? process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_API_URL
+      : "http://localhost:3000/api"
+    : "/api";
+
 /**
- *  기본 클라이언트 인스턴스
- *  인증이 필요하지 않은 요청에 사용됨.
+ * 인증이 필요하지 않은 공개적인 요청에 사용되는 axios 인스턴스.
  */
 export const client = axios.create({
-  baseURL: "/api", // 내부 API 라우트에 접근
+  baseURL,
   timeout: 30000,
   headers: { "Content-Type": "application/json", Accept: "application/json" },
-  withCredentials: false, // 쿠키 인증 진행 X, 공개 API이므로 불필요
+  withCredentials: true,
 });
 
 // 모든 API 요청 오류를 공통으로 처리하기 위한 전역 interceptor 활용
