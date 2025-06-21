@@ -28,6 +28,14 @@ interface ChatStore {
   // ChatInput에 타이핑 하는 상태 추적
   isTyping: boolean;
   setIsTyping: (val: boolean) => void;
+
+  // 채팅 후 summary를 저장하기 위함
+  chatSummary: string;
+  setChatSummary: (summaryRes: string) => void;
+
+  // 채팅 시에 추천받은 요금제의 planId (DB에 저장되어 있는 정보 가져온 것)
+  recommendedPlanId: number;
+  setRecommendedPlanId: (planId: number) => void;
 }
 
 // 상태 관리
@@ -68,6 +76,15 @@ export const useChatStore = create<ChatStore>()(
       // typing하는 상태 (localStorage 저장 X)
       isTyping: false,
       setIsTyping: (val) => set({ isTyping: val }),
+
+      // 채팅 후 summary를 저장하기 위함
+      chatSummary: "",
+      setChatSummary: (summaryRes: string) => set({ chatSummary: summaryRes }),
+
+      // 채팅 시에 추천받은 요금제의 planId (DB에 저장되어 있는 정보 가져온 것)
+      recommendedPlanId: 0,
+      setRecommendedPlanId: (planId: number) =>
+        set({ recommendedPlanId: planId }),
     }),
     {
       name: "chat-storage", // localStorage key
@@ -76,6 +93,8 @@ export const useChatStore = create<ChatStore>()(
         currentQuestionId: state.currentQuestionId,
         hasRecommended: state.hasRecommended,
         quickReplies: state.quickReplies,
+        chatSummary: state.chatSummary,
+        recommendedPlanId: state.recommendedPlanId,
       }),
     }
   )

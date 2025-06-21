@@ -48,6 +48,7 @@ export function useNormalizeAnswerFlow() {
       }
 
       let contentToAppend: string; // useChatStore에 append할 메시지
+      console.log("정규화된 대답: ", data.normalizedValue);
 
       if (data.normalizedValue === "INVALID") {
         // 유효하지 않은 답변("INVALID"일 경우에..)일 경우, 재질문 텍스트 추가

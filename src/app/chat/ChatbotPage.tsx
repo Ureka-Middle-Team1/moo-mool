@@ -11,14 +11,14 @@ import MyPageModal from "@/components/myPage/MyPageModal";
 type Mode = "text" | "voice";
 
 export default function ChatbotPage() {
-  const { isModalOpen, setModalOpen, openModal } = useModalStore();
   const searchParams = useSearchParams();
+  const { isModalOpen, setModalOpen, openModal } = useModalStore();
   const mode = (searchParams.get("mode") as Mode) || "text";
 
   useWatchRecommendationTrigger();
 
   return (
-    <div className="flex h-screen flex-col bg-[#FFF6F6]">
+    <div className="flex h-screen flex-col bg-pink-100">
       <Header title="챗봇" onAvatarClick={() => openModal} />
       <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
       <div className="flex flex-1 flex-col overflow-hidden">
