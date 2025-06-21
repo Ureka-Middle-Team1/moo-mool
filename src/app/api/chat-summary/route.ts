@@ -1,25 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { client } from "@/lib/axiosInstance";
-import { getPrompt } from "@/lib/chat/getPrompt";
 import fs from "fs/promises";
 import path from "path";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 
 // 사용자가 챗봇을 종료할 경우, 지금까지의 챗봇 대화 내역을 요약하기 위해 GPT 모델에 요청을 보내는 함수
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  const sessionUserId = session!.user.id;
-
   try {
-    const { userId, messages, planId } = await req.json();
+    const { messages } = await req.json();
 
-    // 인가: 요청한 userId가 로그인한 사용자의 것인지 확인
-    if (userId !== sessionUserId) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
-    if (!userId || typeof messages !== "string") {
+    if (typeof messages !== "string") {
       return NextResponse.json(
         { error: "messages 누락 또는 형식 오류" },
         { status: 400 }
