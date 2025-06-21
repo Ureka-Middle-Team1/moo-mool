@@ -10,13 +10,13 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 // import LoadingPage from "@/components/common/LoadingPage";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 import { useEffect, useState, useRef } from "react";
 
 export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { isLoading, isRedirecting, error } = useAuthRedirect();
+  const { status, isLoading, isAuthenticated } = useAuthRedirect();
   const [redirectPath, setRedirectPath] = useState("");
   const hasShownToast = useRef(false);
 
@@ -24,11 +24,11 @@ export default function Home() {
   useEffect(() => {
     const redirect = searchParams.get("redirect");
 
-    if (redirect && !hasShownToast.current) {
+    if (status === "unauthenticated" && redirect && !hasShownToast.current) {
       hasShownToast.current = true;
       setRedirectPath(redirect);
 
-      /* sonner 겹침 방지 위해 임시 주석처리
+      /*    // sonner 겹침 방지 위해 임시 주석처리
       // Toaster가 완전히 마운트될 때까지 약간의 지연
       setTimeout(() => {
         try {
@@ -44,8 +44,7 @@ export default function Home() {
           console.error("Toast 표시 실패:", error);
         }
       }, 100); // 100ms 지연
-      */
-
+*/
       // URL에서 파라미터 제거
       const newUrl = new URL(window.location.href);
       newUrl.searchParams.delete("redirect");
@@ -67,17 +66,15 @@ export default function Home() {
     console.log("랜딩페이지 무너 클릭");
   };
 
-  // 로딩 중이거나 리다이렉트 중일 때 로딩 페이지 표시
-  if (isLoading || isRedirecting) {
+  // 로딩 중이거나 인증된 사용자는 로딩 페이지 표시
+  if (isLoading || isAuthenticated) {
     return (
       /* 커스텀 로딩 페이지 추가 */
       // <LoadingPage
-      //   message={
-      //     isLoading ? "로그인 확인 중입니다..." : "페이지로 이동 중입니다..."
-      //   }
-      //   error={error}
+      //   message={isLoading ? "로그인 확인 중입니다..." : "페이지로 이동 중입니다..."}
+      //   error={null}
       // />
-      <div>로딩중...</div>
+      <div>{isLoading ? "로딩중..." : "페이지로 이동 중..."}</div>
     );
   }
 
