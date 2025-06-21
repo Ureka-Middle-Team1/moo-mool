@@ -14,14 +14,14 @@ export function OngoingChatCard({ currentQuestionId }: OngoingChatCardProps) {
 
   return (
     <Card
-      className="w-[12rem] flex-shrink-0 cursor-pointer flex-col justify-center rounded-xl border border-gray-300 bg-white px-1 py-3 shadow-sm"
-      onClick={() => router.push(`/chat`)}>
-      <CardHeader>
-        <CardTitle className="text-sm font-semibold text-pink-700">
+      onClick={() => router.push(`/chat`)}
+      className="my-1 ml-1 flex w-full max-w-[21rem] cursor-pointer flex-col justify-center rounded-xl border border-gray-300 bg-white p-4 shadow-sm">
+      <CardHeader className="p-0 pb-2">
+        <CardTitle className="text-sm font-semibold text-red-500">
           진행 중인 대화
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <NowChatProgressBar currentQuestionId={currentQuestionId} />
       </CardContent>
     </Card>

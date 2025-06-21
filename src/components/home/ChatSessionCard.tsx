@@ -15,15 +15,15 @@ export function ChatSessionCard({ id, summary, name }: ChatSessionCardProps) {
 
   return (
     <Card
-      className="w-[12rem] flex-shrink-0 cursor-pointer flex-col justify-center rounded-xl border border-gray-300 bg-white px-1 py-3 shadow-sm"
-      onClick={() => router.push(`/chat/${id}`)}>
-      <CardHeader>
-        <CardTitle className="truncate text-sm font-medium text-gray-900">
+      onClick={() => router.push(`/chat/${id}`)}
+      className="mx-1 my-1 flex w-full max-w-[20rem] cursor-pointer flex-col justify-center rounded-xl border border-gray-300 bg-white p-4 shadow-sm">
+      <CardHeader className="p-0 pb-1">
+        <CardTitle className="truncate text-sm font-semibold text-gray-900">
           {summary || "요약 없음"}
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <p className="truncate text-xs font-normal text-gray-700">
+      <CardContent className="p-0 pt-1">
+        <p className="truncate text-xs text-gray-600">
           {name || "요금제 제목 없음"}
         </p>
       </CardContent>
