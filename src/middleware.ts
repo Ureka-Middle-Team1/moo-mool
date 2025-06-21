@@ -1,25 +1,28 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-
   const { pathname } = req.nextUrl;
 
-  // 비회원이 접근 시 로그인 페이지로 리디렉션해야 하는 경로들
-  const protectedPaths = ["/chat", "/plan", "/nearby", "/plandetail"];
+  // 인증이 필요한 모든 경로 (페이지 + API)에 대해 토큰 유무를 먼저 검사
+  if (!token) {
+    // 1. 비로그인 상태에서 API 접근 시, 401 에러를 JSON으로 반환
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
 
-  // 현재 경로가 보호된 경로 중 하나로 시작하는지 확인
-  const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
-
-  if (isProtected && !token) {
-    const url = req.nextUrl.clone();
-    // 비회원일 경우 홈페이지로 리디렉션
-    url.pathname = "/";
-    return NextResponse.redirect(url);
+    // 2. 비로그인 상태에서 보호된 페이지 접근 시, 홈페이지로 리디렉션
+    const redirectUrl = new URL("/", req.url);
+    redirectUrl.searchParams.set("message", "login-required");
+    redirectUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(redirectUrl);
   }
 
+  // 인증된 사용자는 요청을 그대로 통과
   return NextResponse.next();
 }
 
