@@ -136,7 +136,7 @@ export default function NearbyContent({ session }: { session: any }) {
           {/* 설명 바 (absolute가 아니라 margin 대신 translate로 명확하게 띄우기) */}
           <div className="z-40 mb-[-3.5rem] translate-y-[-7rem]">
             <div className="inline-block rounded-full border border-gray-500 bg-black/70 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-md">
-              부스터까지 <span className="font-bold text-yellow-400">2명</span>{" "}
+              레벨업까지 <span className="font-bold text-yellow-400">2명</span>{" "}
               남음
             </div>
           </div>
