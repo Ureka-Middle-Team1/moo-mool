@@ -1,20 +1,31 @@
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 // ✅ 근거리 통신에서 stamp를 찍은 count만큼 invited_count를 증가시키는 API
 export async function POST(req: NextRequest) {
-  try {
-    const { inviterId, count } = await req.json();
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+  const userId = session.user.id;
 
-    if (!inviterId || typeof count !== "number") {
+  try {
+    const { count } = await req.json();
+
+    if (!userId || typeof count !== "number") {
       return NextResponse.json(
-        { error: "inviterId 또는 count 값이 잘못되었습니다." },
+        { error: "userId 또는 count 값이 잘못되었습니다." },
         { status: 400 }
       );
     }
 
     const updated = await prisma.user.update({
-      where: { id: inviterId },
+      where: { id: userId },
       data: {
         invited_count: {
           increment: count,
