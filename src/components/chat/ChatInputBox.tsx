@@ -25,7 +25,7 @@ export default function ChatInputBox({
   onTypingStart,
   onTypingEnd,
 }: ChatInputBoxProps) {
-  const formRef = useRef<HTMLFormElement>(null); // 엔터키 중복 방지를 위한 ref
+  const formRef = useRef<HTMLFormElement>(null);
 
   const router = useRouter();
   const isStreaming = useChatStreamingStore((state) => state.isStreaming);
