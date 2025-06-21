@@ -31,9 +31,11 @@ export default function HamburgerMenu({ onAvatarClick }: Props) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <button
+          onClick={() => {}}
+          className="flex h-10 w-10 items-center justify-center rounded-full p-0 transition hover:bg-gray-100">
           <Menu className="h-6 w-6" />
-        </Button>
+        </button>
       </SheetTrigger>
 
       <SheetContent

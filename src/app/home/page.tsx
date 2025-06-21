@@ -6,20 +6,12 @@ import HomeRecommendedPlan from "@/components/home/HomeRecommendedPlan";
 import PopularPlansList from "@/components/home/PopularPlansList";
 import TopGradient from "@/components/planDetail/TopGradient";
 import MyPageModal from "@/components/myPage/MyPageModal";
-import { useSession } from "next-auth/react";
-import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { useModalStore } from "@/store/useModalStore";
 import ChatHistoryList from "@/components/home/ChatHistoryList";
 import FeatureBannerSlider from "@/components/home/FeatureBannerSlider";
 
 export default function HomePage() {
   const { isModalOpen, setModalOpen, openModal } = useModalStore();
-  const { data: session, status } = useSession();
-  const userId = session?.user?.id;
-
-  const { data: userInfo, isLoading: userLoading } = useGetUserInfo(
-    userId ?? ""
-  );
 
   return (
     <div className="flex flex-col items-center">

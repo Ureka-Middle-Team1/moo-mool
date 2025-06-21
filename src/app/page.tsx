@@ -43,7 +43,7 @@ export default function Home() {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-between bg-gradient-to-b from-[#fff5f9] to-[#fdfbfb] px-6">
       {/* 중앙 로고 + 문구 */}
-      <div className="mt-48 flex flex-col items-center justify-center gap-4">
+      <div className="mt-55 flex flex-col items-center justify-center gap-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.7 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -57,7 +57,7 @@ export default function Home() {
           />
         </motion.div>
 
-        <div className="h-6 overflow-hidden text-center text-sm text-gray-500">
+        <div className="h-6 overflow-hidden text-center text-sm text-gray-700">
           <AnimatePresence mode="wait">
             <motion.p
               key={phrases[currentIndex]}
@@ -73,20 +73,19 @@ export default function Home() {
       </div>
 
       {/* 하단 버튼 */}
-      <div className="mb-10 flex w-full max-w-xs flex-col gap-3">
+      <div className="mb-15 flex w-full max-w-xs flex-col gap-3">
         {!session && (
           <Button
             onClick={handleLogin}
-            className="h-12 rounded-lg bg-black text-white hover:bg-zinc-800">
+            className="h-12 rounded-lg bg-[#FEE500] text-gray-800 shadow-md">
             카카오로 시작하기
           </Button>
         )}
-        <Button
+        <button
           onClick={handleExplore}
-          variant="outline"
-          className="h-12 rounded-lg border-gray-300 text-gray-700 hover:bg-gray-100">
-          둘러보기
-        </Button>
+          className="cursor-pointer text-sm text-gray-700">
+          {">"} 로그인 없이 둘러보기
+        </button>
       </div>
     </div>
   );

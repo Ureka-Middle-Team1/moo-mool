@@ -1,8 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
-import { signIn, useSession } from "next-auth/react";
 import HeadLogo from "../common/headlogo";
 import HamburgerMenu from "../common/HamburgerMenu";
 
