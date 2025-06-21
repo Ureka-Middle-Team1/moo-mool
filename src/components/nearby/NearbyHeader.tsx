@@ -5,11 +5,7 @@ import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import HamburgerMenu from "../common/HamburgerMenu";
 
-type Props = {
-  onAvatarClick: () => void;
-};
-
-export default function NearbyHeader({ onAvatarClick }: Props) {
+export default function NearbyHeader() {
   const router = useRouter();
 
   const handleClick = () => {
@@ -23,7 +19,7 @@ export default function NearbyHeader({ onAvatarClick }: Props) {
       </button>
       <span className="text-sm font-semibold">주변 친구 찾기</span>
       <div className="absolute right-4">
-        <HamburgerMenu onAvatarClick={onAvatarClick} />
+        <HamburgerMenu />
       </div>
     </div>
   );

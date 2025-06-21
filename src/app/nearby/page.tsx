@@ -7,13 +7,11 @@ import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 import { motion, AnimatePresence } from "framer-motion";
 import { NearbyUser } from "@/types/Nearby";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
-import MyPageModal from "@/components/myPage/MyPageModal";
-import { useModalStore } from "@/store/useModalStore";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { client } from "@/lib/axiosInstance";
+import HamburgerMenu from "@/components/common/HamburgerMenu"; // 추가
 
 export default function NearbyPage() {
-  const { isModalOpen, setModalOpen, openModal } = useModalStore();
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const { data: myProfile } = useGetUserCharacterProfile(userId);
@@ -198,9 +196,8 @@ export default function NearbyPage() {
 
   return (
     <>
-      <NearbyHeader onAvatarClick={openModal} />
-      {/* 마이페이지 Modal */}
-      <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
+      {/* 헤더에 HamburgerMenu 포함 */}
+      <NearbyHeader />
       <div className="relative flex h-screen items-center justify-center overflow-hidden bg-white">
         {[20, 40, 60, 90, 110, 130].map((r, idx) => (
           <div

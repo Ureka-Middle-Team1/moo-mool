@@ -12,10 +12,9 @@ import { useTendencyStore } from "@/store/useTendencyStore";
 
 type HeaderProps = {
   title: string;
-  onAvatarClick: () => void;
 };
 
-export default function Header({ title = "챗봇", onAvatarClick }: HeaderProps) {
+export default function Header({ title = "챗봇" }: HeaderProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const mode = searchParams.get("mode");
@@ -79,7 +78,7 @@ export default function Header({ title = "챗봇", onAvatarClick }: HeaderProps)
       </Button>
       <div className="text-center text-sm font-semibold">{title}</div>
       <div className="absolute right-4">
-        <HamburgerMenu onAvatarClick={onAvatarClick} />
+        <HamburgerMenu />
       </div>
     </div>
   );
