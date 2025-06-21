@@ -14,7 +14,7 @@ export default function HomePage() {
   const { isModalOpen, setModalOpen, openModal } = useModalStore();
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center bg-gray-50">
       <TopGradient />
       <section className="z-1 flex h-[85%] w-[90%] flex-col items-center">
         <Suspense fallback={<div>성향 불러오는 중...</div>}>
@@ -26,7 +26,7 @@ export default function HomePage() {
           <FeatureBannerSlider />
           {/* Suspense로 감싸기 */}
           <div className="flex w-full flex-col">
-            <h2 className="pl-1 text-lg font-semibold text-gray-900">
+            <h2 className="pl-3 text-lg font-semibold text-gray-900">
               💬 최근 대화내역
             </h2>
             <ChatHistoryList />
@@ -35,7 +35,7 @@ export default function HomePage() {
             <HomeRecommendedPlan />
           </Suspense>
           <div className="flex w-full flex-col">
-            <h2 className="pl-1 text-lg font-semibold text-gray-900">
+            <h2 className="pl-3 text-lg font-semibold text-gray-900">
               🔥 요즘 뜨는 요금제
             </h2>
             <PopularPlansList />

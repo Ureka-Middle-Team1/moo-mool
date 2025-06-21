@@ -54,7 +54,7 @@ export default function PlanListPage() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center" ref={listRef}>
+    <div className="flex flex-col items-center bg-gray-50" ref={listRef}>
       <TopGradient />
       <section className="z-1 flex h-[90%] w-[90%] flex-col items-center">
         <HomeHeader onAvatarClick={openModal} />
