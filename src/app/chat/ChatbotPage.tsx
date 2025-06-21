@@ -1,16 +1,13 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import Header from "@/components/chat/ChatbotHeader";
 import TextPage from "./TextPage";
 import VoicePage from "./VoicePage";
 import { useWatchRecommendationTrigger } from "@/hooks/useWatchRecommendationTrigger";
-
-type Mode = "text" | "voice";
+import { useChatModeStore } from "@/store/useChatModeStore";
+import Header from "@/components/chat/ChatbotHeader";
 
 export default function ChatbotPage() {
-  const searchParams = useSearchParams();
-  const mode = (searchParams.get("mode") as Mode) || "text";
+  const { mode } = useChatModeStore();
 
   useWatchRecommendationTrigger();
 
