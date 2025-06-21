@@ -17,7 +17,6 @@ export async function middleware(req: NextRequest) {
 
     // 2. 비로그인 상태에서 보호된 페이지 접근 시, 홈페이지로 리디렉션
     const redirectUrl = new URL("/", req.url);
-    redirectUrl.searchParams.set("message", "login-required");
     redirectUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(redirectUrl);
   }
