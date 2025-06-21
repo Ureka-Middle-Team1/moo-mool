@@ -132,14 +132,23 @@ export default function NearbyContent({ session }: { session: any }) {
         ))}
 
         {/* 나 */}
-        <motion.div
-          key={`nearby-me`}
-          initial="hidden"
-          animate="visible"
-          transition={{ type: "spring", stiffness: 120, damping: 12 }}
-          variants={bounceVariants}>
-          <NearbyUserAvatar userId={userId} angle={0} distance={0} isMe />
-        </motion.div>
+        <div className="relative flex flex-col items-center">
+          {/* 설명 바 (absolute가 아니라 margin 대신 translate로 명확하게 띄우기) */}
+          <div className="z-40 mb-[-3.5rem] translate-y-[-7rem]">
+            <div className="inline-block rounded-full border border-gray-500 bg-black/70 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-md">
+              부스터까지 <span className="font-bold text-yellow-400">2명</span>{" "}
+              남음
+            </div>
+          </div>
+
+          {/* 아바타 */}
+          <motion.div
+            variants={bounceVariants}
+            animate="visible"
+            initial={false}>
+            <NearbyUserAvatar userId={userId} angle={0} distance={0} isMe />
+          </motion.div>
+        </div>
 
         {/* 주변 유저 */}
         <AnimatePresence>
