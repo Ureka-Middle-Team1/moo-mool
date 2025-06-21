@@ -44,6 +44,7 @@ model Plan {
   networkType              NetworkType            @default(LTE)
   subscriptionServices     Json
   dataAmountMb             Float                  @default(0)
+  badges                   Json?
   chatSessions             ChatSession[]          @relation("SessionPlan")
   usersWithMyPlan          User[]                 @relation("MyPlan")
   usersWithRecommendedPlan User[]                 @relation("RecommendedPlan")
