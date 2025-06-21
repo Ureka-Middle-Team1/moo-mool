@@ -23,16 +23,24 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// 미들웨어를 적용할 경로를 지정합니다.
+// 미들웨어를 적용할 경로를 지정
 export const config = {
   matcher: [
-    /*
-     * 아래와 일치하는 경로를 제외한 모든 요청 경로에서 미들웨어를 실행합니다:
-     * - api (API 라우트)
-     * - _next/static (정적 파일)
-     * - _next/image (이미지 최적화 파일)
-     * - favicon.ico (파비콘 파일)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    // 페이지 경로 (모든 페이지)
+    "/chat/:path*",
+    "/nearby/:path*",
+    "/planlist/:path*",
+    "/meme-test/:id", // meme-test/[id] 테스트 페이지만 제한
+
+    // 인증이 필요한 API 경로
+    "/api/chat-freetalk",
+    "/api/chat-session/:path*",
+    "/api/chat-summary",
+    "/api/chatbot-plan",
+    "/api/user/my-plan",
+    "/api/user/set-my-plan",
+    "/api/user/invite-multiple",
+    "/api/user/tested-count",
+    "/api/user-character-profile/:path*",
   ],
 };
