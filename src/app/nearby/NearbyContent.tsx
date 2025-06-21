@@ -10,6 +10,7 @@ import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { useNearbyStore } from "@/hooks/useNearbyStore";
 import { useInviteMultiple } from "@/hooks/useInviteMultiple";
 import { useNearbySocket } from "@/hooks/useNearbySocket";
+import { bounceVariants } from "./animations";
 
 export default function NearbyContent({ session }: { session: any }) {
   const userId = session?.user?.id ?? "";
@@ -133,9 +134,10 @@ export default function NearbyContent({ session }: { session: any }) {
         {/* 나 */}
         <motion.div
           key={`nearby-me`}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 120, damping: 12 }}>
+          initial="hidden"
+          animate="visible"
+          transition={{ type: "spring", stiffness: 120, damping: 12 }}
+          variants={bounceVariants}>
           <NearbyUserAvatar userId={userId} angle={0} distance={0} isMe />
         </motion.div>
 
@@ -157,10 +159,11 @@ export default function NearbyContent({ session }: { session: any }) {
             return (
               <motion.div
                 key={`nearby-${user.userId}-${idx}`}
-                initial={{ scale: 0.5, opacity: 0, y: 10 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
+                initial="hidden"
+                animate="visible"
                 exit={{ scale: 0.5, opacity: 0, y: 10 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                variants={bounceVariants}>
                 <NearbyUserAvatar
                   userId={user.userId}
                   angle={position.angle}
