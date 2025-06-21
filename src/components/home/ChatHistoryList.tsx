@@ -59,18 +59,15 @@ export default function ChatHistoryList() {
         <div className="relative z-10 flex justify-center gap-x-6">
           {Array.from({ length: totalItems }).map((_, idx) => {
             const isCurrent = currentIndex === idx;
-            const isOngoing = shouldShowProgress && idx === 0;
 
             return (
               <button
                 key={`dot-${idx}`}
                 className={cn(
                   "h-4 w-4 rounded-full border shadow-sm transition-all duration-200",
-                  isOngoing
-                    ? "scale-110 border-red-500 bg-red-400" // 진행 중인 dot 강조
-                    : isCurrent
-                      ? "scale-105 bg-pink-300"
-                      : "border-pink-200 bg-pink-100"
+                  isCurrent
+                    ? "border-pink-500 bg-pink-400"
+                    : "border-pink-200 bg-pink-200"
                 )}
                 onClick={() => carouselApi?.scrollTo(idx)}
               />
