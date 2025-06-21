@@ -12,19 +12,9 @@ import { PlanDBApiResponse } from "@/types/PlanData";
 import HomeHeader from "@/components/home/HomeHeader";
 import TopGradient from "@/components/planDetail/TopGradient";
 import { OTTType } from "@/components/planList/SortFilterPanel";
-import MyPageModal from "@/components/myPage/MyPageModal";
-import { useModalStore } from "@/store/useModalStore";
-
-const getEnumNetworkType = (
-  type: UINetworkType | null
-): PrismaNetworkType | null => {
-  if (type === "5G") return "FIVE_G";
-  if (type === "LTE") return "LTE";
-  return null;
-};
+import HamburgerMenu from "@/components/common/HamburgerMenu";
 
 export default function PlanListPage() {
-  const { isModalOpen, setModalOpen, openModal } = useModalStore();
   const listRef = useRef<HTMLDivElement>(null);
 
   const [sortTarget, setSortTarget] = useState<SortTarget | null>(null);
@@ -70,9 +60,7 @@ export default function PlanListPage() {
     <div className="flex flex-col items-center" ref={listRef}>
       <TopGradient />
       <section className="z-1 flex h-[90%] w-[90%] flex-col items-center">
-        <HomeHeader onAvatarClick={openModal} />
-        {/* 마이페이지 Modal */}
-        <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
+        <HomeHeader />
         <StickySortFilter
           selectedNetwork={selectedNetwork}
           setSelectedNetwork={setSelectedNetwork}
