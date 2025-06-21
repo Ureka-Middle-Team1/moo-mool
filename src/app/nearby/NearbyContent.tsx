@@ -62,6 +62,9 @@ export default function NearbyContent({ session }: { session: any }) {
     };
   }, [userId, interactedUserIds]);
 
+  // 클릭 시 중복 alert 방지
+  const recentClickRef = useRef<Set<string>>(new Set());
+
   // WebSocket 훅 사용
   const wsRef = useNearbySocket({
     userId,
@@ -70,8 +73,11 @@ export default function NearbyContent({ session }: { session: any }) {
       const filtered = nearby.filter((u) => u.userId !== userId);
       setUsers(filtered);
     },
-    onClickNotice: (from, to) => {
-      alert(`${from}님이 ${to}님을 클릭했습니다`);
+    onClickNotice: (from, to, fromId) => {
+      if (!recentClickRef.current.has(fromId)) {
+        alert(`${from}님이 당신을 클릭했습니다`);
+        recentClickRef.current.add(fromId);
+      }
     },
   });
 

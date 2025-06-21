@@ -5,7 +5,11 @@ interface UseNearbySocketProps {
   userId?: string;
   userName?: string;
   onNearbyUsers: (users: NearbyUser[]) => void;
-  onClickNotice?: (fromName: string, toName: string) => void;
+  onClickNotice?: (
+    fromName: string,
+    toName: string,
+    fromUserId: string
+  ) => void;
   onUserJoin?: () => void;
 }
 
@@ -81,8 +85,10 @@ export function useNearbySocket({
         if (message.type === "click_notice") {
           const from = message.fromUserName || message.fromUserId;
           const to = message.toUserName || message.toUserId;
-          if (onClickNotice && from && to) {
-            onClickNotice(from, to);
+          const fromId = message.fromUserId;
+
+          if (onClickNotice && from && to && fromId) {
+            onClickNotice(from, to, fromId);
           }
         }
 
