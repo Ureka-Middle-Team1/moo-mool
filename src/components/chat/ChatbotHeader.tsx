@@ -73,7 +73,7 @@ export default function Header({ title = "챗봇", onAvatarClick }: HeaderProps)
   };
 
   return (
-    <div className="relative flex h-12 items-center justify-center bg-white/80 backdrop-blur-md">
+    <div className="relative z-20 flex h-12 items-center justify-center bg-white/80 backdrop-blur-md">
       <Button className="absolute left-2" variant="ghost" onClick={handleClick}>
         {isVoiceMode ? <ArrowLeft size={20} /> : <X size={20} />}
       </Button>

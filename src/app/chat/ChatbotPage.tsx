@@ -18,7 +18,7 @@ export default function ChatbotPage() {
   useWatchRecommendationTrigger();
 
   return (
-    <div className="flex h-screen flex-col bg-[#FFF6F6]">
+    <div className="flex h-screen flex-col bg-[#f9f4f4]">
       <Header title="챗봇" onAvatarClick={() => openModal} />
       <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
       <div className="flex flex-1 flex-col overflow-hidden">

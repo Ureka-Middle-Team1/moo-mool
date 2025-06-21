@@ -37,7 +37,7 @@ export default function ChatSessionDetailPage() {
   }
 
   return (
-    <div className="relative flex h-full w-full max-w-[430px] flex-col bg-pink-100">
+    <div className="relative flex h-full w-full max-w-[430px] flex-col bg-[#f9f4f4]">
       {/* 상단 Header */}
       <div className="sticky top-0 z-10 w-full bg-white">
         {isLoading ? (
