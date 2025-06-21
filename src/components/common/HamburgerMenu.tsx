@@ -68,7 +68,7 @@ export default function HamburgerMenu({ onAvatarClick }: Props) {
         {/* ✅ 메뉴 네비게이션 */}
         <nav className="space-y-4">
           <button
-            onClick={() => handleNavigate("/")}
+            onClick={() => handleNavigate("/home")}
             className="text-md hover:text-primary block font-semibold">
             홈
           </button>
