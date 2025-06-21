@@ -89,6 +89,7 @@ export default function ChatInputBox({
           placeholder="무너에게 물어봐!"
           rows={1}
           className="flex-1 resize-none bg-transparent text-sm placeholder-gray-400 focus:outline-none"
+          style={{ fontSize: "16px" }}
         />
 
         {/* 버튼들 */}
