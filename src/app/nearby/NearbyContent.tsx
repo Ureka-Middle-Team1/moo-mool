@@ -1,198 +1,96 @@
 "use client";
 
-import NearbyHeader from "@/components/nearby/NearbyHeader";
 import { useEffect, useRef, useState } from "react";
-import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { NearbyUser } from "@/types/Nearby";
+import NearbyHeader from "@/components/nearby/NearbyHeader";
+import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
-import { client } from "@/lib/axiosInstance";
 import { useNearbyStore } from "@/hooks/useNearbyStore";
 import { useInviteMultiple } from "@/hooks/useInviteMultiple";
-import { error } from "console";
+import { useNearbySocket } from "@/hooks/useNearbySocket";
 
 export default function NearbyContent({ session }: { session: any }) {
   const userId = session?.user?.id ?? "";
   const { data: myProfile } = useGetUserCharacterProfile(userId);
   const { data: userInfo } = useGetUserInfo(userId);
-
   const [users, setUsers] = useState<NearbyUser[]>([]);
   const [interactedUserIds, setInteractedUserIds] = useState<Set<string>>(
     new Set()
   );
 
-  const myIdRef = useRef<string | null>(null);
-  const wsRef = useRef<WebSocket | null>(null);
   const positionCache = useRef(
     new Map<string, { angle: number; distance: number }>()
   );
   const clickedUserPositions = useRef(
     new Map<string, { angle: number; distance: number }>()
   );
+  const { setMyType } = useNearbyStore();
+  const { mutate: inviteMultiple } = useInviteMultiple();
 
-  useEffect(() => {
-    if (userId) myIdRef.current = userId;
-  }, [userId]);
-
-  const { myType, setMyType } = useNearbyStore();
-
-  // ✅ 내 타입을 localStorage에 저장
+  // 내 타입을 글로벌 상태에 저장
   useEffect(() => {
     if (myProfile?.type) {
       setMyType(myProfile.type);
-      console.log("✅ 내 타입 저장됨:", myProfile.type);
+      console.log(" 내 타입 저장됨:", myProfile.type);
     }
   }, [myProfile?.type]);
 
-  const { mutate: inviteMultiple } = useInviteMultiple();
-
-  // 초대 수 전송 함수 정의
+  // 초대한 사용자 수 전송
   const sendInviteCount = () => {
     if (userId && interactedUserIds.size > 0) {
       inviteMultiple(
         { inviterId: userId, count: interactedUserIds.size },
         {
-          onSuccess: (data) => {
-            console.log("✅ 초대한 사용자 수 반영 완료:", data);
-          },
-          onError: (error) => {
-            console.error("❌ 초대한 사용자 수 반영 실패:", error);
-          },
+          onSuccess: (data) =>
+            console.log("✅ 초대한 사용자 수 반영 완료:", data),
+          onError: (error) =>
+            console.error("❌ 초대한 사용자 수 반영 실패:", error),
         }
       );
     }
   };
 
-  // 페이지 이탈 감지 및 처리
+  // 페이지 이탈 시 초대 수 전송
   useEffect(() => {
-    const handleLeave = () => {
-      sendInviteCount(); // async 아님, 위에서 Axios로 처리되도록 수정
-    };
-
-    window.addEventListener("pagehide", handleLeave); // 모바일 브라우저 포함 안전
+    const handleLeave = () => sendInviteCount();
+    window.addEventListener("pagehide", handleLeave);
     return () => {
       handleLeave();
       window.removeEventListener("pagehide", handleLeave);
     };
   }, [userId, interactedUserIds]);
 
-  // WebSocket 연결 및 메시지 처리
-  useEffect(() => {
-    if (!userId || !userInfo) {
-      console.log("websoket 연결 중");
-      return;
-    }
+  // WebSocket 훅 사용
+  const wsRef = useNearbySocket({
+    userId,
+    userName: userInfo?.name ?? "",
+    onNearbyUsers: (nearby) => {
+      const filtered = nearby.filter((u) => u.userId !== userId);
+      setUsers(filtered);
+    },
+    onClickNotice: (from, to) => {
+      alert(`${from}님이 ${to}님을 클릭했습니다`);
+    },
+  });
 
-    const socket = new WebSocket(process.env.NEXT_PUBLIC_WSS_SERVER_URL!);
-    wsRef.current = socket;
-
-    const sendLocation = () => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          if (wsRef.current?.readyState === WebSocket.OPEN) {
-            wsRef.current.send(
-              JSON.stringify({
-                type: "location_update",
-                userId,
-                userName: userInfo.name,
-                lat: latitude,
-                lng: longitude,
-              })
-            );
-          }
-        },
-        (err) => console.error("❌ 위치 에러:", err)
-      );
-    };
-
-    socket.onopen = () => {
-      console.log("websocket 연결됨");
-
-      // 접속 알림 전송
-      socket.send(
-        JSON.stringify({
-          type: "user_join",
-          userId,
-        })
-      );
-      sendLocation();
-      const intervalId = setInterval(sendLocation, 1000);
-      return () => clearInterval(intervalId);
-    };
-
-    socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-
-      console.log("message", message);
-
-      if (message.type === "nearby_users") {
-        const filtered = message.nearbyUsers.filter(
-          (u: NearbyUser) => u.userId !== myIdRef.current
-        );
-        setUsers(filtered);
-      }
-
-      if (message.type === "click_notice") {
-        const fromName = message.fromUserName || message.fromUserId;
-        const toName = message.toUserName || userInfo?.name || message.toUserId;
-
-        if (fromName && toName) {
-          alert(`${fromName}님이 ${toName}님을 클릭했습니다`);
-        }
-      }
-    };
-
-    socket.onerror = (e) => {
-      console.error("WebSocket 에러 발생:", e);
-    };
-
-    socket.onclose = () => {
-      console.log("❌ WebSocket 연결 종료됨");
-    };
-
-    console.log("NearByPage 초기 세팅 완료");
-
-    return () => {
-      //  페이지 이탈 시 초대 수 증가 요청
-      if (userId && interactedUserIds.size > 0) {
-        client
-          .post("/user/invite-multiple", {
-            inviterId: userId,
-            count: interactedUserIds.size,
-          })
-          .then((res) => {
-            console.log("✅ 초대한 사용자 수 반영 완료:", res.data);
-          })
-          .catch((err) => {
-            console.error("❌ 초대한 사용자 수 반영 실패:", err);
-          });
-      }
-
-      socket.close();
-    };
-  }, [userId, userInfo]);
-
+  // 사용자 클릭 처리
   const handleUserClick = (targetId: string, clickedType?: string) => {
     const myType = myProfile?.type;
-    if (!clickedType || !myType || !wsRef.current || !userInfo?.name) {
-      console.log("아직 세팅 다 안됨");
-      return;
-    }
+    if (!clickedType || !myType || !wsRef.current || !userInfo?.name) return;
 
     if (clickedType === myType) {
       const pos = positionCache.current.get(targetId);
       if (pos) clickedUserPositions.current.set(targetId, pos);
       setInteractedUserIds((prev) => new Set(prev).add(targetId));
-      console.log("아이콘 클릭");
-      // ✅ WebSocket 상태 확인 후 클릭 전송
+
       if (wsRef.current.readyState === WebSocket.OPEN) {
         wsRef.current.send(
           JSON.stringify({
             type: "user_click",
             fromUserId: userId,
-            fromUserName: userInfo?.name,
+            fromUserName: userInfo.name,
             toUserId: targetId,
           })
         );
@@ -210,6 +108,7 @@ export default function NearbyContent({ session }: { session: any }) {
     <>
       <NearbyHeader />
       <div className="relative flex h-screen items-center justify-center overflow-hidden bg-white">
+        {/* 배경 원 */}
         {[20, 40, 60, 90, 110, 130].map((r, idx) => (
           <div
             key={`circle-${r}`}
@@ -251,7 +150,7 @@ export default function NearbyContent({ session }: { session: any }) {
 
             return (
               <motion.div
-                key={`nearby-${user.userId}-${idx}`} // ✅ 중복 키 방지
+                key={`nearby-${user.userId}-${idx}`}
                 initial={{ scale: 0.5, opacity: 0, y: 10 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.5, opacity: 0, y: 10 }}
