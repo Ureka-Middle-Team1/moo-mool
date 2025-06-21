@@ -6,14 +6,11 @@ import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 import { motion, AnimatePresence } from "framer-motion";
 import { NearbyUser } from "@/types/Nearby";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
-import MyPageModal from "@/components/myPage/MyPageModal";
-import { useModalStore } from "@/store/useModalStore";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { client } from "@/lib/axiosInstance";
 
 export default function NearbyContent({ session }: { session: any }) {
   const userId = session?.user?.id ?? "";
-  const { isModalOpen, setModalOpen, openModal } = useModalStore();
   const { data: myProfile } = useGetUserCharacterProfile(userId);
   const { data: userInfo } = useGetUserInfo(userId);
 
@@ -204,9 +201,7 @@ export default function NearbyContent({ session }: { session: any }) {
 
   return (
     <>
-      <NearbyHeader onAvatarClick={openModal} />
-      {/* 마이페이지 Modal */}
-      <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
+      <NearbyHeader />
       <div className="relative flex h-screen items-center justify-center overflow-hidden bg-white">
         {[20, 40, 60, 90, 110, 130].map((r, idx) => (
           <div
