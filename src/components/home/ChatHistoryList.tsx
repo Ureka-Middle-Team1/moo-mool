@@ -13,7 +13,7 @@ export default function ChatHistoryList() {
   const { data: sessions } = useGetRecentChatSessions(userId);
   const { messages, currentQuestionId } = useChatStore(); // ChatStore에 있는 메시지들 불러오기
 
-  const shouldShowProgress = currentQuestionId > 0 && messages.length >= 2;
+  const shouldShowProgress = messages.length >= 2; // 자연스러운 대화, FSM 대화 모드 모두 포함
 
   const router = useRouter();
   console.log(sessions);

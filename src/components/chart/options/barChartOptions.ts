@@ -1,4 +1,8 @@
-import { ChartOptions, TooltipItem } from "chart.js";
+import { ChartDataset, ChartOptions, TooltipItem } from "chart.js";
+
+interface ExtendedBarDataset extends ChartDataset<"bar", number[]> {
+  rawData?: (number | undefined)[];
+}
 
 //Bar 차트 옵션 정의
 export const barChartOptions: ChartOptions<"bar"> = {
@@ -17,21 +21,31 @@ export const barChartOptions: ChartOptions<"bar"> = {
       duration: 0,
     },
   },
-
   scales: {
     x: {
       beginAtZero: true,
       max: 100,
-      ticks: { display: false },
+      ticks: {
+        font: {
+          size: 12,
+        },
+        color: "#555",
+      },
       grid: {
         lineWidth: 1,
         color: "rgba(0, 0, 0, 0.2)",
       },
     },
     y: {
-      grid: { display: false },
+      grid: {
+        display: false,
+      },
       ticks: {
-        font: { size: 10 },
+        font: {
+          size: 12,
+          weight: "bold",
+        },
+        color: "#333",
       },
     },
   },
@@ -40,20 +54,21 @@ export const barChartOptions: ChartOptions<"bar"> = {
       display: true,
       position: "bottom",
       labels: {
-        font: { size: 10 },
+        font: {
+          size: 12,
+        },
         boxWidth: 10,
         boxHeight: 10,
       },
-      onClick: () => {}, //범례 클릭 숨김기능 제거
+      onClick: () => {}, //범례 클릭 숨김 기능 제거
     },
     tooltip: {
       callbacks: {
         label: (context: TooltipItem<"bar">) => {
-          const dataset = context.dataset as any;
+          const dataset = context.dataset as ExtendedBarDataset;
           const index = context.dataIndex;
           const rawData = dataset.rawData?.[index];
 
-          //만약 rawData가 없는 경우 fallback 처리
           if (rawData === undefined) {
             return `${context.dataset.label}: ${context.parsed.x}%`;
           }

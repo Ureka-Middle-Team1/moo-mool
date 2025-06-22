@@ -1,17 +1,15 @@
 import { Message } from "@/types/Chat";
-import ChatMessage from "./ChatMessage";
+import ChatMessage from "./chatMessage/ChatMessage";
 import { useChatStore } from "@/store/useChatStore";
+import { AnimatePresence } from "framer-motion";
 
 interface ChatMessageListProps {
   messages: Message[];
-  bottomRef?: React.RefObject<HTMLDivElement | null>;
+  bottomRef?: HTMLDivElement;
 }
 
-export default function ChatMessageList({
-  messages,
-  bottomRef,
-}: ChatMessageListProps) {
-  const { getLastBotMessage } = useChatStore();
+export default function ChatMessageList({ messages }: ChatMessageListProps) {
+  const { getLastBotMessage, isTyping } = useChatStore();
 
   const lastBot = getLastBotMessage();
   const isLastMessageBot = lastBot && messages[messages.length - 1] === lastBot;
@@ -25,7 +23,17 @@ export default function ChatMessageList({
             <ChatMessage key={idx} message={msg} isLastBotMessage={isLast} />
           );
         })}
-        <div ref={bottomRef} />
+
+        {/* "입력 중"인 상태일 때 애니메이션 메시지 추가 */}
+        <AnimatePresence initial={false} mode="wait">
+          {isTyping && (
+            <ChatMessage
+              key="typing"
+              message={{ role: "user", content: "" }} // 콘텐츠는 표시하지 않고 애니메이션만
+              isTyping={true}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

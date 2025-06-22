@@ -20,10 +20,16 @@ export default function PlanBenefits({ benefits }: PlanBenefitsProps) {
   });
 
   return (
-    <div className="relative mt-15 min-h-65">
-      <div ref={sliderRef} className="keen-slider px-4 py-2">
+    <div className="relative mt-16 min-h-[18rem] px-4">
+      <div
+        ref={sliderRef}
+        className="keen-slider overflow-visible py-2"
+      >
         {benefits.map((item, index) => (
-          <div key={index} className="keen-slider__slide">
+          <div
+            key={index}
+            className="keen-slider__slide w-[160px]"
+          >
             <BenefitCard
               imageSrc={item.imageSrc}
               title={item.title}

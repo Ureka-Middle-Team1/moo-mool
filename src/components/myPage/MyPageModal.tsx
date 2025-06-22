@@ -121,7 +121,7 @@ export default function MyPageModal({ open, onOpenChange }: Props) {
               <UserStamp />
               {/* 성향 레이더 차트 */}
               <div className="mt-7 flex w-full flex-col">
-                <h2 className="text-lg text-zinc-900">콘텐츠 성향</h2>
+                <h2 className="text-lg text-zinc-900">콘텐츠 능력치</h2>
                 <Suspense fallback={<div>성향 분석 불러오는 중...</div>}>
                   <UserTendencyRadar />
                 </Suspense>
