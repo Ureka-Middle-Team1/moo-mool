@@ -61,6 +61,8 @@ export default function NearbyUserAvatar({
   // ✅ 클릭 (PC 또는 모바일 공통)
   const handleClickAvatar = () => {
     const myType = localStorage.getItem("myType");
+    console.log("isMe : ", isMe);
+    console.log("profile.type : ", profile?.type);
 
     if (!isMe && profile?.type && profile.type === myType) {
       triggerClick();
@@ -103,13 +105,17 @@ export default function NearbyUserAvatar({
       }}>
       {/* ✅ 이미지 표시 */}
       {isEmptyStamp ? (
-        <img
-          src="/assets/icons/empty_stamp.png"
-          alt="empty-stamp"
-          width={48}
-          height={48}
-          style={{ opacity: 0.9 }}
-        />
+        <div
+          className={`relative rounded-full bg-white ${isMe ? "shadow-2xl" : "shadow-xl"}`}
+          style={{ width: size, height: size }}>
+          <Image
+            src="/assets/icons/empty_stamp.png"
+            alt="empty-stamp"
+            width={isMe ? 80 : 48}
+            height={isMe ? 80 : 48}
+            className="scale-90 object-contain"
+          />
+        </div>
       ) : (
         <div
           className={`relative rounded-full bg-white ${isMe ? "shadow-2xl" : "shadow-xl"}`}
