@@ -8,6 +8,7 @@ import Providers from "./providers";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 import { Toaster } from "sonner";
+import { useChatRoomExitCleanup } from "@/hooks/useChatRoomExitCleanup";
 
 export default function RootLayout({
   children,
@@ -16,6 +17,7 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const isSwagger = pathname?.startsWith("/swagger");
+  useChatRoomExitCleanup(); // 채팅창 나갈때 초기화
 
   return (
     <html lang="ko" className="h-full">

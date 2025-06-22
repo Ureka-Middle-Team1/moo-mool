@@ -92,7 +92,7 @@ export function mapPlanToDetailData(
   return {
     name: plan.name,
     price: `월 ${plan.price.toLocaleString()} 원`,
-    tags: ["정제된 태그", getNetworkTypeLabel(plan.networkType), "혜택 풍부"],
+    tags: plan.badges,
     radar: scoreArray,
     bar: scoreArray,
     raw: rawArray,
