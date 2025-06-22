@@ -42,5 +42,6 @@ export function convertToPlanDBApiResponse(
     smsIncluded,
     networkType,
     subscriptionServices: planData.subscriptionServices || [], // 챗봇 결과에서 구독 서비스 정보 사용
+    badges: [],
   };
 }
