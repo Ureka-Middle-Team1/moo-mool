@@ -1,12 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowLeft, X } from "lucide-react";
+import { X } from "lucide-react";
 import { Button } from "../ui/button";
 import HamburgerMenu from "../common/HamburgerMenu";
 import StreamingText from "./StreamingChatTitleText";
-import { useChatModeStore } from "@/store/useChatModeStore";
-import { useSession } from "next-auth/react";
 
 type HeaderProps = {
   title: string;
