@@ -28,10 +28,10 @@ export function NowChatProgressBar({
   currentQuestionId: number;
   totalSteps?: number;
 }) {
-  const progress = Math.max(
-    0,
-    Math.min((currentQuestionId - 1) / (totalSteps - 1), 1)
-  );
+  const progress =
+    currentQuestionId === -1 // "자연스러운 대화 모드"일 경우, 그냥 progressbar가 절반 정도 차있도록 강제
+      ? 0.5
+      : Math.max(0, Math.min((currentQuestionId - 1) / (totalSteps - 1), 1));
 
   return (
     <TooltipProvider>

@@ -30,7 +30,8 @@ export async function GET(
       subscriptionServices: Array.isArray(plan.subscriptionServices)
         ? plan.subscriptionServices
         : [],
-    });
+         badges: Array.isArray(plan.badges) ? plan.badges : [],
+});
   } catch (error) {
     console.error("[PLAN_ID_GET_ERROR]", error);
     return NextResponse.json({ error: "서버 오류" }, { status: 500 });

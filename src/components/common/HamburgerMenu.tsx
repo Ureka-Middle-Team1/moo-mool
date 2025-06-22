@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -31,6 +31,9 @@ export default function HamburgerMenu() {
     setOpen(false);
   };
 
+  const handleLogin = () => {
+    signIn("kakao", { callbackUrl: "/check-user-type" });
+  };
   return (
     <>
       <Sheet open={open} onOpenChange={setOpen}>
@@ -47,7 +50,7 @@ export default function HamburgerMenu() {
             <DialogTitle>사이드 메뉴</DialogTitle>
           </VisuallyHidden>
           {/* ✅ 프로필 영역 */}
-          {isLoggedIn && (
+          {isLoggedIn ? (
             <div
               className="mt-4 mb-6 flex cursor-pointer items-center gap-3"
               onClick={() => {
@@ -70,6 +73,12 @@ export default function HamburgerMenu() {
                 <p className="text-xs text-gray-500">{session.user.email}</p>
               </div>
             </div>
+          ) : (
+            <button
+              onClick={handleLogin}
+              className="mt-4 mb-4 flex h-10 w-24 items-center justify-center rounded-md bg-yellow-300 px-4 py-1 text-sm font-semibold shadow-sm transition hover:bg-yellow-400">
+              로그인
+            </button>
           )}
 
           {/* ✅ 메뉴 네비게이션 */}
