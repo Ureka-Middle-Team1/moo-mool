@@ -37,7 +37,7 @@ export default function PopularPlansList() {
   }
 
   return (
-    <section className="flex w-full flex-col items-center px-4">
+    <section className="xs:px-2 flex w-full flex-col items-center px-4">
       <Carousel className="relative mx-auto w-full max-w-md">
         <CarouselContent className="px-2 py-4">
           {data.map((plan, idx) => (

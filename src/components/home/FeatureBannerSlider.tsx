@@ -7,13 +7,13 @@ import FeatureBannerCard from "./FeatureBannerCard";
 const featureBannerList = [
   {
     subtitle: "요금제 성향, 재미로 풀어봐요!",
-    title: "당신은 ‘팝콘 무너’?\n테스트하고 유형 확인!",
+    title: "당신은 ‘팝콘 무너’?\n테스트로 유형 확인!",
     description: "요금제 성향, 재미로 풀어봐요",
     image: "/assets/banner/meme-test.png",
   },
   {
     subtitle: "이 근처, 나랑 비슷한 사람?",
-    title: "근처 사용자와\n요금제 비교해보세요!",
+    title: "근처 사용자와\n요금제 비교하기!",
     description: "이 근처, 나랑 비슷한 사람?",
     image: "/assets/banner/nearby.png",
   },
