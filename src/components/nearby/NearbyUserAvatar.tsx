@@ -3,7 +3,7 @@
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 type Props = {
   userId: string;
@@ -25,6 +25,50 @@ export default function NearbyUserAvatar({
   const { data: profile } = useGetUserCharacterProfile(userId);
   const { data: userInfo } = useGetUserInfo(userId ?? "");
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // ✅ 공통 동작 처리 함수
+  const triggerClick = () => {
+    if (!isMe && profile?.type && onClick) {
+      onClick(profile.type);
+      console.log("✅ 사용자 선택됨 (공통 로직):", profile.type);
+    }
+  };
+
+  // ✅ 모바일 터치 이벤트 (같은 타입일 때만)
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el || isMe || !profile?.type) return;
+
+    const handleTouch = () => {
+      const myType = localStorage.getItem("myType"); // ✅ 내 타입 비교용 (임시 저장)
+      console.log("myType", myType);
+      console.log("profile.type, ", profile.type);
+
+      if (myType && profile.type === myType) {
+        triggerClick();
+      } else {
+        console.log("❌ 타입 다름으로 터치 무시됨");
+      }
+    };
+
+    el.addEventListener("touchstart", handleTouch);
+    return () => {
+      el.removeEventListener("touchstart", handleTouch);
+    };
+  }, [profile?.type, isMe, onClick]);
+
+  // ✅ 클릭 (PC 또는 모바일 공통)
+  const handleClickAvatar = () => {
+    const myType = localStorage.getItem("myType");
+
+    if (!isMe && profile?.type && profile.type === myType) {
+      triggerClick();
+    } else {
+      console.log("❌ 클릭 무시됨 - 조건 불충분");
+    }
+  };
+
   const imageSrc = profile?.type
     ? `/assets/moono/${profile.type.toLowerCase()}-moono.png`
     : "/assets/moono/default-moono.png";
@@ -45,13 +89,6 @@ export default function NearbyUserAvatar({
   const offsetX = isMe ? -2.2 : 0;
   const size = isMe ? "5rem" : "3rem";
 
-  const handleClickAvatar = () => {
-    if (!isMe && profile?.type) {
-      console.log("클릭한 사용자의 타입= ", profile?.type);
-      onClick?.(profile?.type);
-    }
-  };
-
   return (
     <div
       onClick={handleClickAvatar}
@@ -60,6 +97,9 @@ export default function NearbyUserAvatar({
         transform: `translate(calc(-50% + ${x + offsetX}px), calc(-50% + ${y + offsetY}px))`,
         left: "50%",
         top: "50%",
+        cursor: isMe ? "default" : "pointer",
+        zIndex: 10,
+        touchAction: "manipulation",
       }}>
       {/* ✅ 이미지 표시 */}
       {isEmptyStamp ? (
@@ -75,6 +115,7 @@ export default function NearbyUserAvatar({
           className={`relative rounded-full bg-white ${isMe ? "shadow-2xl" : "shadow-xl"}`}
           style={{ width: size, height: size }}>
           <Image
+            onClick={handleClickAvatar}
             src={imageSrc}
             alt="user-avatar"
             width={isMe ? 80 : 48}
