@@ -115,16 +115,21 @@ export default function NearbyUserAvatar({
 
       {/* ✅ 이미지 표시 */}
       {isEmptyStamp ? (
-        <motion.img
-          initial={{ scale: 1.6, y: -40, opacity: 0 }}
-          animate={{ scale: 1, y: 0, opacity: 1 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          src="/assets/icons/empty_stamp.png"
-          alt="empty-stamp"
-          width={width}
-          height={height}
-          className="object-contain"
-        />
+        <div
+          className="relative"
+          style={{
+            width: `${width}px`,
+            height: `${height}px`,
+          }}>
+          <motion.img
+            initial={{ scale: 1.6, y: -40, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            src="/assets/icons/empty_stamp.png"
+            alt="empty-stamp"
+            className="h-full w-full object-contain" // 👈 이미지가 부모 크기 채우도록 설정
+          />
+        </div>
       ) : (
         <div
           className="relative"
@@ -138,7 +143,7 @@ export default function NearbyUserAvatar({
             alt="user-avatar"
             width={width}
             height={height}
-            className="object-contain" // ✅ scale 제거
+            className="object-contain"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src =
                 "/assets/moono/default-moono.png";
