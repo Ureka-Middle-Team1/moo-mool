@@ -117,13 +117,12 @@ export default function Home() {
 
       {/* 하단 버튼 */}
       <div className="mb-15 flex w-full max-w-xs flex-col gap-3">
-        {!session && (
-          <Button
-            onClick={handleLogin}
-            className="h-12 rounded-lg bg-[#FEE500] text-gray-800 shadow-md">
-            카카오로 시작하기
-          </Button>
-        )}
+        <Button
+          onClick={handleLogin}
+          className="h-12 rounded-lg bg-[#FEE500] text-gray-800 shadow-md">
+          카카오로 시작하기
+        </Button>
+
         <button
           onClick={handleExplore}
           className="cursor-pointer text-sm text-gray-700">

@@ -1,11 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowLeft, X } from "lucide-react";
+import { X } from "lucide-react";
 import { Button } from "../ui/button";
 import HamburgerMenu from "../common/HamburgerMenu";
 import StreamingText from "./StreamingChatTitleText";
-import { useChatModeStore } from "@/store/useChatModeStore";
 
 type HeaderProps = {
   title: string;
@@ -13,14 +12,8 @@ type HeaderProps = {
 
 export default function Header({ title = "챗봇" }: HeaderProps) {
   const router = useRouter();
-
   const handleClick = async () => {
-
-    if (isVoiceMode) {
-      setMode("text");
-    } else {
-      router.back(); // 모든 작업 후에 뒤로가기
-    }
+    router.back(); // 모든 작업 후에 뒤로가기
   };
 
   return (
