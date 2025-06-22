@@ -29,13 +29,13 @@ export default function UserProfile({ invitedCount }: UserProfileProps) {
     <>
       {isLoggedIn ? (
         <div className="flex w-full flex-row items-center gap-7 px-4 py-2">
-          <Avatar className="relative h-[6rem] w-[6rem] rounded-full bg-gray-500 shadow-md">
+          <Avatar className="relative h-[6rem] w-[6rem] overflow-hidden rounded-full bg-gray-500 shadow-md">
             <AvatarImage
               src={imagePath}
               alt="user-avatar"
-              className="absolute inset-0 h-full w-full object-contain"
+              className="h-full w-full rounded-full object-cover"
             />
-            <AvatarFallback className="flex h-full w-full items-center justify-center">
+            <AvatarFallback className="flex h-full w-full items-center justify-center rounded-full">
               🐤
             </AvatarFallback>
           </Avatar>
