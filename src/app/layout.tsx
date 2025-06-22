@@ -7,6 +7,7 @@ import LayoutWrapper from "@/components/common/LayoutWrapper";
 import Providers from "./providers";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
+import { Toaster } from "sonner";
 import { useChatRoomExitCleanup } from "@/hooks/useChatRoomExitCleanup";
 
 export default function RootLayout({
@@ -45,6 +46,7 @@ export default function RootLayout({
         <SessionProvider>
           <Providers>
             {isSwagger ? children : <LayoutWrapper>{children}</LayoutWrapper>}
+            <Toaster position="top-center" richColors />
           </Providers>
         </SessionProvider>
       </body>
