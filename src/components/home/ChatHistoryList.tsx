@@ -1,60 +1,127 @@
-import { useGetRecentChatSessions } from "@/hooks/useGetRecentChatSessions";
+"use client";
+
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import React from "react";
-import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { useChatStore } from "@/store/useChatStore";
-import { NowChatProgressBar } from "./NowChatProgressBar";
+import { useGetRecentChatSessions } from "@/hooks/useGetRecentChatSessions";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import { OngoingChatCard } from "./OngoingChatCard";
+import { ChatSessionCard } from "./ChatSessionCard";
+import { ChatSessionCardSkeleton } from "../skeleton/ChatSessionCardSkeleton";
+import { cn } from "@/lib/utils";
+import { CarouselApi } from "@/components/ui/carousel";
 
 export default function ChatHistoryList() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
-  const { data: sessions } = useGetRecentChatSessions(userId);
-  const { messages, currentQuestionId } = useChatStore(); // ChatStore에 있는 메시지들 불러오기
 
-  const shouldShowProgress = messages.length >= 2; // 자연스러운 대화, FSM 대화 모드 모두 포함
+  const {
+    data: sessions,
+    isLoading,
+    isFetching,
+  } = useGetRecentChatSessions(userId ?? "");
 
-  const router = useRouter();
-  console.log(sessions);
+  const { messages, currentQuestionId } = useChatStore();
+  const shouldShowProgress = currentQuestionId > 0 && messages.length >= 2;
+  const loading = !userId || isLoading || isFetching;
+
+  const totalItems = (shouldShowProgress ? 1 : 0) + (sessions?.length ?? 0);
+
+  const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    const onSelect = () => {
+      setCurrentIndex(carouselApi.selectedScrollSnap());
+    };
+
+    carouselApi.on("select", onSelect); // 이벤트 등록
+    onSelect(); // 초기 인덱스 설정
+
+    // ✅ 정리 함수는 직접 명시적으로 작성해야 함
+    return () => {
+      carouselApi.off("select", onSelect); // 이벤트 해제
+    };
+  }, [carouselApi]);
+
   return (
-    <section className="flex w-full flex-col items-center px-4">
-      <Carousel className="relative mx-auto w-full max-w-md">
-        <CarouselContent className="-ml-4 flex-nowrap space-x-4 px-5 py-5">
-          {/* ✅ 진행중 카드 (맨 앞에 하나만 조건부 렌더링) */}
-          {shouldShowProgress && (
-            <Card
-              className="min-w-full flex-shrink-0 flex-col justify-center rounded-xl bg-white shadow-md"
-              onClick={() => router.push(`/chat`)}>
-              <CardHeader>
-                <CardTitle className="truncate text-base font-semibold text-pink-600">
-                  진행 중인 대화
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <NowChatProgressBar currentQuestionId={currentQuestionId} />
-              </CardContent>
-            </Card>
-          )}
-          {sessions?.map((s, idx) => (
-            <Card
-              key={idx}
-              className="min-w-full flex-shrink-0 cursor-pointer flex-col justify-center rounded-xl bg-white shadow-md"
-              onClick={() => router.push(`/chat/${s.id}`)}>
-              {/* 해당 Section은 "AI 요약 제목"을 띄울 것임 */}
-              <CardHeader>
-                <CardTitle className="truncate text-base font-semibold">
-                  {s.summary || JSON.parse(s.messages)?.[0]?.content}
-                </CardTitle>
-              </CardHeader>
-              {/* 해당 Section은 "추천받은 요금제 이름"을 띄울 것임 */}
-              <CardContent>
-                <p className="line-clamp-2 text-sm text-gray-700">
-                  {s.name || "요금제 제목 없음"}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+    <section className="relative flex flex-col px-4 pt-6">
+      <div className="relative mb-4 h-5 w-full">
+        {/* 라인 */}
+        <div className="absolute top-1/2 right-0 left-0 z-0 h-[2px] -translate-y-1/2 rounded-full bg-pink-100" />
+
+        {/* dot들 */}
+        <div className="relative z-10 flex justify-center gap-x-6">
+          {Array.from({ length: totalItems }).map((_, idx) => {
+            const isCurrent = currentIndex === idx;
+
+            return (
+              <button
+                key={`dot-${idx}`}
+                className={cn(
+                  "h-4 w-4 rounded-full border shadow-sm transition-all duration-200",
+                  isCurrent
+                    ? "border-pink-500 bg-pink-400"
+                    : "border-pink-200 bg-pink-200"
+                )}
+                onClick={() => carouselApi?.scrollTo(idx)}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      <Carousel
+        setApi={setCarouselApi}
+        className="w-full max-w-full overflow-visible px-2">
+        <CarouselContent className="-mx-2 pr-4 pl-2 last:mr-7">
+          {/* 진행 중 */}
+          {shouldShowProgress &&
+            (loading ? (
+              <CarouselItem className="basis-[80%]">
+                <ChatSessionCardSkeleton />
+              </CarouselItem>
+            ) : (
+              <CarouselItem
+                className={cn(
+                  "basis-[80%] transition-shadow duration-300",
+                  currentIndex === 0 && "shadow-lg"
+                )}>
+                <OngoingChatCard currentQuestionId={currentQuestionId} />
+              </CarouselItem>
+            ))}
+
+          {/* 세션 카드 */}
+          {loading
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <CarouselItem key={i} className="basis-[80%]">
+                  <ChatSessionCardSkeleton />
+                </CarouselItem>
+              ))
+            : sessions?.map((s, idx) => {
+                const index = shouldShowProgress ? idx + 1 : idx;
+                return (
+                  <CarouselItem
+                    key={idx}
+                    className={cn(
+                      "basis-[80%] transition-shadow duration-300",
+                      currentIndex === index && "shadow-lg"
+                    )}>
+                    <ChatSessionCard
+                      id={s.id}
+                      summary={
+                        s.summary || JSON.parse(s.messages)?.[0]?.content
+                      }
+                      name={s.name}
+                    />
+                  </CarouselItem>
+                );
+              })}
         </CarouselContent>
       </Carousel>
     </section>

@@ -60,7 +60,7 @@ export default function HomePage() {
   }, [router]);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center bg-gray-50">
       <TopGradient />
       <section className="z-1 flex h-[85%] w-[90%] flex-col items-center">
         <div className="flex w-full items-center justify-between">
@@ -68,22 +68,21 @@ export default function HomePage() {
             <HomeHeader />
           </Suspense>
         </div>
-        <div className="flex w-full flex-col gap-7 px-3 py-5">
+        <div className="flex w-full flex-col gap-8 py-5">
           <FeatureBannerSlider />
+          {/* Suspense로 감싸기 */}
           <div className="flex w-full flex-col">
-            <h2 className="pl-1 text-lg font-semibold text-gray-900">
-              💬 최근 대화내역
+            <h2 className="pl-4 text-lg font-semibold text-gray-900">
+              최근 대화내역
             </h2>
             <ChatHistoryList />
           </div>
-          {/* Suspense로 감싸기 */}
           <Suspense fallback={<div>추천 요금제 불러오는 중...</div>}>
             <HomeRecommendedPlan />
           </Suspense>
-
           <div className="flex w-full flex-col">
-            <h2 className="pl-1 text-lg font-semibold text-gray-900">
-              🔥 요즘 뜨는 요금제
+            <h2 className="pl-4 text-lg font-semibold text-gray-900">
+              요즘 뜨는 요금제
             </h2>
             <PopularPlansList />
           </div>

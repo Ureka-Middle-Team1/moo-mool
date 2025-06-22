@@ -23,7 +23,7 @@ export default function ChatInputBox({
   onSubmit,
   textareaRef,
 }: ChatInputBoxProps) {
-  const formRef = useRef<HTMLFormElement>(null); // 엔터키 중복 방지를 위한 ref
+  const formRef = useRef<HTMLFormElement>(null);
 
   const isStreaming = useChatStreamingStore((state) => state.isStreaming);
   const { setIsTyping } = useChatStore();
@@ -86,7 +86,7 @@ export default function ChatInputBox({
       ref={formRef}
       onSubmit={onSubmit}
       className="w-full border-t border-gray-200 bg-gray-100 px-3 py-3">
-      <div className="flex items-center gap-2 rounded-full bg-[#F2F2F2] px-3 py-2">
+      <div className="flex items-center gap-2 rounded-full bg-gray-400 px-3 py-2">
         {/* 입력창 */}
         <textarea
           ref={textareaRef}
@@ -96,7 +96,8 @@ export default function ChatInputBox({
           onBlur={handleBlur}
           placeholder="무너에게 물어봐!"
           rows={1}
-          className="flex-1 resize-none bg-transparent text-sm placeholder-gray-400 focus:outline-none"
+          className="flex-1 resize-none bg-transparent text-sm placeholder-gray-700 focus:outline-none"
+          style={{ fontSize: "16px" }}
         />
 
         {/* 버튼들 */}
@@ -119,7 +120,7 @@ export default function ChatInputBox({
             className={`rounded-full p-1 transition-colors ${
               input.trim().length > 0 && !isStreaming
                 ? "bg-pink-300 text-white"
-                : "bg-white text-gray-400"
+                : "bg-pink-300 text-gray-100"
             }`}
             disabled={isStreaming || input.trim().length === 0}>
             <ArrowUp className="h-5 w-5" />

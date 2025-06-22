@@ -1,17 +1,21 @@
 "use client";
 
-import CharacterModel from "@/components/chat/CharacterModel";
-import TopGradient from "@/components/planDetail/TopGradient";
-import { Button } from "@/components/ui/button";
-import { OrbitControls } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
 import { signIn } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 // import LoadingPage from "@/components/common/LoadingPage";
 import { toast } from "sonner";
 import { useEffect, useState, useRef } from "react";
+
+import { motion, AnimatePresence } from "framer-motion";
+
+const phrases = [
+  "무너에게 물어보세요",
+  "무엇이든 물어보세요",
+  "당신을 위한 요금제",
+];
 
 export default function Home() {
   const router = useRouter();
@@ -20,7 +24,8 @@ export default function Home() {
   const [redirectPath, setRedirectPath] = useState("");
   const hasShownToast = useRef(false);
 
-  // URL 파라미터에서 메시지 확인
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   useEffect(() => {
     const redirect = searchParams.get("redirect");
 
@@ -79,51 +84,51 @@ export default function Home() {
   }
 
   return (
-    <div className="relative flex h-screen flex-col items-center bg-gradient-to-b from-[#fff1e5] to-[#ffe5f1] px-4">
-      <TopGradient />
-      {/* 무물 로고 영역 */}
-      <div className="z-20 mt-20 flex w-full justify-center">
-        <Image
-          src="/assets/icons/logo.png"
-          alt="logo"
-          width={120}
-          height={120}
-        />
-      </div>
-      {/* 캐릭터 영역 */}
-      <Canvas
-        style={{ width: "60%", height: "45%" }}
-        camera={{ position: [0, 2, 4], fov: 35 }}>
-        <ambientLight intensity={0.9} />
-        <directionalLight position={[2, 2, 5]} intensity={1.2} />
-        <CharacterModel onClick={tmp} isSpeaking={false} isThinking={false} />
-        <OrbitControls
-          enablePan={false}
-          enableZoom={false}
-          enableRotate={false}
-        />
-      </Canvas>
-      <div className="z-10 mt-auto mb-10 flex w-full max-w-xs flex-col gap-4 font-semibold">
-        <Button
-          onClick={handleLogin}
-          variant="pink"
-          className="flex items-center justify-center gap-2 py-6 text-lg font-semibold text-white">
+    <div className="relative flex min-h-screen flex-col items-center justify-between bg-gradient-to-b from-[#fff5f9] to-[#fdfbfb] px-6">
+      {/* 중앙 로고 + 문구 */}
+      <div className="mt-55 flex flex-col items-center justify-center gap-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.7 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}>
           <Image
-            src={"/assets/icons/message-circle.png"}
-            alt="메세지"
-            width={15}
-            height={15}
+            src="/assets/icons/logo.png"
+            alt="무물 로고"
+            width={120}
+            height={120}
+            priority
           />
-          카카오로 시작하기
-          {/* {redirectPath ? "로그인하고 계속하기" : "카카오로 시작하기"} */}
-        </Button>
+        </motion.div>
 
-        <Button
+        <div className="h-6 overflow-hidden text-center text-sm text-gray-700">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={phrases[currentIndex]}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.6 }}
+              className="px-2">
+              {phrases[currentIndex]}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* 하단 버튼 */}
+      <div className="mb-15 flex w-full max-w-xs flex-col gap-3">
+        {!session && (
+          <Button
+            onClick={handleLogin}
+            className="h-12 rounded-lg bg-[#FEE500] text-gray-800 shadow-md">
+            카카오로 시작하기
+          </Button>
+        )}
+        <button
           onClick={handleExplore}
-          variant="pink"
-          className="flex items-center justify-center py-6 text-lg font-semibold text-white">
-          둘러보기
-        </Button>
+          className="cursor-pointer text-sm text-gray-700">
+          {">"} 로그인 없이 둘러보기
+        </button>
       </div>
     </div>
   );
