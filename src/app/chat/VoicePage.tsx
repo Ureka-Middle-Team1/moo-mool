@@ -12,9 +12,16 @@ const CharacterScene = dynamic(
 
 export default function VoicePage() {
   return (
-    <div className="flex h-full flex-col items-center justify-between">
-      <CharacterScene />
-      <VoiceFooter />
+    <div className="relative h-full w-full">
+      {/* 캐릭터 영역 */}
+      <div className="absolute top-0 right-0 bottom-24 left-0 overflow-hidden">
+        <CharacterScene />
+      </div>
+
+      {/* 마이크 버튼 */}
+      <div className="absolute right-0 bottom-5 left-0">
+        <VoiceFooter />
+      </div>
     </div>
   );
 }

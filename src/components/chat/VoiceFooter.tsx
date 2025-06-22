@@ -44,7 +44,7 @@ export default function VoiceFooter() {
   }, [result]);
 
   return (
-    <div className="relative flex h-[20%] w-full flex-col items-center justify-center gap-4">
+    <div className="relative flex w-full flex-col items-center justify-center gap-4 py-4">
       {/*  음성 인식 중일 때 그림자 애니메이션 */}
       <ShadowRing
         isActive={recording}

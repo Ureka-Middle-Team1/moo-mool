@@ -79,7 +79,7 @@ export default function CharacterScene() {
     lastMessage?.planData;
 
   return (
-    <div className="relative flex h-[80%] w-full flex-col items-center justify-center">
+    <div className="relative flex h-full w-full flex-col items-center justify-center">
       {/* 말풍선 */}
       {isSpeaking && latestBotMsg?.content && !shouldShowPlanCard && (
         <SpeechBubble text={streamingText} />
