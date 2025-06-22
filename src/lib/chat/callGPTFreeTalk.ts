@@ -72,13 +72,23 @@ export async function callGPTFreeTalk(
 
   setLastSummary(updatedSummary);
 
+  console.log("gpt 대답: ", reply);
+
   // 응답에서 문장만 출력
   const cleanedReply = reply.replace(summaryRegexGlobal, "").trim();
+
+  console.log("정제된 대답: ", cleanedReply);
 
   // "정확한 답변" 로직으로 가야 하는 경우
   if (reply?.toUpperCase() === "FSM") {
     return {
       message: "FSM",
+      triggeredFSM: true,
+    };
+  } else if (reply.includes("필드 분석 완료")) {
+    // 7개 필드가 모두 분석이 완료된 경우
+    return {
+      message: "필드 분석 완료",
       triggeredFSM: true,
     };
   }

@@ -6,43 +6,37 @@ import { useGetFinalPlanInChatbot } from "./useGetFinalPlanInChatbot";
 import { useChatStore } from "@/store/useChatStore";
 import { useTendencyStore } from "@/store/useTendencyStore";
 
-type Options = {
-  onSuccess?: (data: PlanApiResponse) => void;
-};
-
 // 스마트 초이스에서 응답을 받아오는 useSmartChoiceRecommendation
-export function useSmartChoiceRecommendation(options?: Options) {
+export function useSmartChoiceRecommendation() {
   const { userTendencyInfo } = useTendencyStore();
   const { setRecommendedPlanId } = useChatStore();
   const addMessage = useChatStore((state) => state.appendMessage);
 
   // 구독 서비스까지 포함해서 추천을 수행
-  const { mutate: getFinalPlanInChatbot } = useGetFinalPlanInChatbot({
-    // 스마트 초이스로 가져온 거..
-    onSuccess: (data) => {
-      if (data.result!.length > 0) {
-        addMessage({
-          role: "bot",
-          content: "너에게 딱맞는 요금제 추천해줄게!",
-          type: "plan",
-          planData: data.result![0],
-        });
-        setRecommendedPlanId(data.result![0].id); // chatStore에 저장되어 있는 "추천된 요금제 id" 정보 업데이트
-      }
-    },
-  });
+  const { mutateAsync: getFinalPlanInChatbot } = useGetFinalPlanInChatbot();
 
   return useMutation({
     mutationFn: async (input: SmartChoiceApiInput) => {
-      console.log("input: ", input);
       const res = await client.post("/smartchoice", input); // smart choice 호출
       const parsed = parsePlans(res.data);
-      await getFinalPlanInChatbot({
+
+      const planData = await getFinalPlanInChatbot({
         // subscribe(구독) 정보까지 고려해서 DB를 통해 요금제 정보를 찾아온다
         smartChoicePlans: parsed,
         subscribe: userTendencyInfo.subscribe,
       });
-      return;
+
+      if (!planData) throw new Error("추천된 요금제가 없습니다."); // planData가 존재하지 않다면..
+
+      setRecommendedPlanId(planData.id);
+      addMessage({
+        role: "bot",
+        content: "너에게 딱맞는 요금제 추천해줄게!",
+        type: "plan",
+        planData,
+      });
+
+      return planData.id; // mutation이 planId를 반환하게 함
     },
     retry: 3, // 최대 3회까지 재시도
     onSuccess: () => {

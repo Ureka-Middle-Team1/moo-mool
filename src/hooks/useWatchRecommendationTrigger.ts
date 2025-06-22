@@ -11,16 +11,11 @@ export function useWatchRecommendationTrigger() {
   const { data: session } = useSession(); // 로그인 정보 가져오기
   const { messages } = useChatStore();
 
-  const {
-    currentQuestionId,
-    clearMessages,
-    setCurrentQuestionId,
-    setChatSummary,
-  } = useChatStore();
-  const { userTendencyInfo, resetTendency } = useTendencyStore();
-  const { messages: freeMessages, clear } = useFreeTalkStore();
-  const { hasRecommended, setHasRecommended, recommendedPlanId } =
+  const { currentQuestionId, clearMessages, setCurrentQuestionId } =
     useChatStore();
+  const { userTendencyInfo } = useTendencyStore();
+  const { messages: freeMessages } = useFreeTalkStore();
+  const { hasRecommended, setHasRecommended } = useChatStore();
   const { mutateAsync: recommendPlanAsync } = useSmartChoiceRecommendation();
   const { mutate: chatHistorySummary } = usePostChatbotSummary();
 
@@ -39,14 +34,14 @@ export function useWatchRecommendationTrigger() {
         const { subscribe, ...rest } = userTendencyInfo;
 
         try {
-          // 1. SmartChoice 추천 로직이 끝날 때까지 기다림
-          await recommendPlanAsync(rest);
+          // 1. SmartChoice 추천 로직이 끝날 때까지 기다림, planId는 직접 넘겨 받음
+          const planId = await recommendPlanAsync(rest);
 
           // 2. 채팅 내역의 요약본 저장
           chatHistorySummary({
             userId: session?.user.id,
             messages,
-            planId: recommendedPlanId,
+            planId,
           });
 
           // 3. 추천된 상태라고 표시
@@ -59,16 +54,4 @@ export function useWatchRecommendationTrigger() {
 
     runRecommendation(); // 추천 + 요약 정보 저장 수행
   }, [currentQuestionId, userTendencyInfo]);
-
-  useEffect(() => {
-    // "자연스러운 대화" 모드에서 Smart Choice API 요청 확인
-    const isAllFilled = Object.values(userTendencyInfo).every(
-      (value) => value !== ""
-    );
-
-    if (isAllFilled && !hasRecommended) {
-      // 추천 받은 적 없고, 모든 userTendencyInfo가 채워진 경우
-      setCurrentQuestionId(12);
-    }
-  }, [freeMessages]); // freeMessages가 변하는 것은, "자연스러운 대화" 모드에서만 변경됨
 }

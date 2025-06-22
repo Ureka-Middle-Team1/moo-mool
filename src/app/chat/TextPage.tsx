@@ -47,12 +47,20 @@ export default function TextPage() {
       <ChatProgressToast currentQuestionId={currentQuestionId} />
       <ChatMessageList messages={messages} />
       <QuickReplyList onSubmit={handleSubmit} bottomRef={bottomRef} />
-      <ChatInputBox
-        input={input}
-        setInput={setInput}
-        onSubmit={handleSubmit}
-        textareaRef={textareaRef}
-      />
+
+      {/* 조건부 렌더링 처리, 응답 완료되면 더 이상 입력은 X */}
+      {currentQuestionId === 12 ? (
+        <div className="border-t px-4 py-3 text-center text-sm text-gray-700">
+          이 대화는 종료된 세션입니다. 입력은 불가능합니다.
+        </div>
+      ) : (
+        <ChatInputBox
+          input={input}
+          setInput={setInput}
+          onSubmit={handleSubmit}
+          textareaRef={textareaRef}
+        />
+      )}
     </div>
   );
 }
