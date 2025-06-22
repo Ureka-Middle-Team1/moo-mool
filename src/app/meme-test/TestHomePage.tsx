@@ -1,6 +1,5 @@
 "use client";
 
-import HamburgerMenu from "@/components/common/HamburgerMenu";
 import HomeHeader from "@/components/home/HomeHeader";
 import ShareSection from "@/components/meme/shareSection";
 import { useAnimatedCount } from "@/hooks/useAnimatedCount";
