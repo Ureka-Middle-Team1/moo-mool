@@ -30,6 +30,8 @@ export default function NearbyContent({ session }: { session: any }) {
   const { setMyType } = useNearbyStore();
   const [localInvitedCount, setLocalInvitedCount] = useState(0);
   const { mutate: increaseInvitedCount } = useIncreaseInvitedCount();
+  // 클릭한 사용자 ID → 하트 표시
+  const [heartSenderId, setHeartSenderId] = useState<string | null>(null);
 
   // 내 타입을 글로벌 상태에 저장
   useEffect(() => {
@@ -46,9 +48,6 @@ export default function NearbyContent({ session }: { session: any }) {
     }
   }, [userInfo?.invited_count]);
 
-  // 클릭 시 중복 alert 방지
-  const recentClickRef = useRef<Set<string>>(new Set());
-
   // WebSocket 훅 사용
   const wsRef = useNearbySocket({
     userId,
@@ -58,10 +57,17 @@ export default function NearbyContent({ session }: { session: any }) {
       setUsers(filtered);
     },
     onClickNotice: (from, to, fromId) => {
-      if (!recentClickRef.current.has(fromId)) {
-        alert(`${from}님이 당신을 클릭했습니다`);
-        recentClickRef.current.add(fromId);
+      setHeartSenderId(fromId);
+
+      // 💡 진동 추가
+      if (navigator.vibrate) {
+        navigator.vibrate(300); // 300ms 진동
       }
+
+      // 2초 뒤 하트 사라지게
+      setTimeout(() => {
+        setHeartSenderId(null);
+      }, 2000);
     },
   });
 
@@ -201,6 +207,7 @@ export default function NearbyContent({ session }: { session: any }) {
                   distance={position.distance}
                   onClick={(type) => handleUserClick(user.userId, type)}
                   isEmptyStamp={wasClicked}
+                  showHeart={heartSenderId === user.userId}
                 />
               </motion.div>
             );
