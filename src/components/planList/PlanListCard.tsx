@@ -71,6 +71,7 @@ export default function PlanListCard({
                 "DISNEY+": "/assets/ott/disney.jpg",
                 WAVVE: "/assets/ott/wavve.png",
                 TVING: "/assets/ott/tving.png",
+                MILLIE: "/assets/ott/millie.png",
               };
 
               const imageSrc = imageSrcMap[service];

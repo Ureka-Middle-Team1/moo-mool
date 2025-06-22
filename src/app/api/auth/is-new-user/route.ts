@@ -5,8 +5,16 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  if (!session || !session.user?.email) {
-    return NextResponse.json({ isNew: false }, { status: 401 });
+
+  // 미들웨어에서 인증을 통과했지만, 세션 정보가 없는 경우 서버 오류로 처리
+  if (!session?.user?.email) {
+    console.error(
+      "is-new-user: middleware passed but session or user email is missing."
+    );
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 
   const user = await prisma.user.findUnique({

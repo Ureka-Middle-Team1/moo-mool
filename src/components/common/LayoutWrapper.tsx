@@ -11,6 +11,9 @@ export default function LayoutWrapper({
 }) {
   const pathname = usePathname();
 
+  // h-screen을 적용할 페이지 경로 설정
+  const isFixedScreenPage = pathname === "/" || pathname?.startsWith("/chat");
+
   // 챗봇 버튼을 보여줄 경로 설정
   const visiblePathPatterns = [/^\/plandetail/, /^\/home/, /^\/chat\/[^/]+$/];
   const shouldShowChatbot = visiblePathPatterns.some((pattern) =>
@@ -19,7 +22,10 @@ export default function LayoutWrapper({
 
   return (
     <div className="flex justify-center">
-      <div className="relative flex min-h-screen w-full max-w-[430px] flex-col bg-white">
+      <div
+        className={`relative flex w-full max-w-[430px] flex-col bg-white ${
+          isFixedScreenPage ? "h-screen" : "min-h-screen"
+        }`}>
         {children}
         {shouldShowChatbot && <FloatingChatbotButton />}
       </div>

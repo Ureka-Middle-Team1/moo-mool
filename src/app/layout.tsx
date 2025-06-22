@@ -36,6 +36,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <html lang="ko" className="h-full">
       <body className="m-0 h-full bg-gray-500 p-0">
