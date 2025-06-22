@@ -15,18 +15,17 @@ export default function BenefitCard({
   description,
 }: BenefitCardProps) {
   return (
-    <Card className="flex h-60 w-40 flex-col items-center justify-start rounded-xl bg-white p-4 shadow-md">
-      <div className="mb-3 h-24 w-24 overflow-hidden rounded-full">
-        <Image
-          src={imageSrc}
-          alt={title}
-          width={96}
-          height={96}
-          className="object-cover"
-        />
+    <Card className="mb-4 flex h-60 w-40 flex-col items-center justify-start rounded-xl border border-gray-200 bg-white px-4 py-5">
+      <div className="border-black-500 relative mb-3 aspect-square w-24 overflow-hidden rounded-full border-1 shadow">
+        <Image src={imageSrc} alt={title} fill className="object-cover" />
       </div>
-      <h3 className="text-center text-sm font-semibold">{title}</h3>
-      <p className="mt-1 text-center text-xs text-gray-600">{description}</p>
+
+      <h3 className="text-center text-sm font-semibold text-gray-900">
+        {title}
+      </h3>
+      <p className="mt-1 text-center text-xs leading-tight text-gray-700">
+        {description}
+      </p>
     </Card>
   );
 }
