@@ -10,6 +10,7 @@ export default function LayoutWrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const isChatPage = pathname?.startsWith("/chat");
 
   // 챗봇 버튼을 보여줄 경로 설정
   const visiblePathPatterns = [/^\/plandetail/, /^\/home/, /^\/chat\/[^/]+$/];
@@ -19,7 +20,10 @@ export default function LayoutWrapper({
 
   return (
     <div className="flex justify-center">
-      <div className="relative flex min-h-screen w-full max-w-[430px] flex-col bg-white">
+      <div
+        className={`relative flex w-full max-w-[430px] flex-col bg-white ${
+          isChatPage ? "h-screen" : "min-h-screen"
+        }`}>
         {children}
         {shouldShowChatbot && <FloatingChatbotButton />}
       </div>
