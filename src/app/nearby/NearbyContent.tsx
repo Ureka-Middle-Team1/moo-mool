@@ -8,7 +8,6 @@ import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { useNearbyStore } from "@/hooks/useNearbyStore";
-import { useInviteMultiple } from "@/hooks/useInviteMultiple";
 import { useNearbySocket } from "@/hooks/useNearbySocket";
 import { bounceVariants } from "./animations";
 import { useIncreaseInvitedCount } from "@/hooks/useIncreseInvitedCount";
@@ -31,7 +30,6 @@ export default function NearbyContent({ session }: { session: any }) {
   const { setMyType } = useNearbyStore();
   const [localInvitedCount, setLocalInvitedCount] = useState(0);
   const { mutate: increaseInvitedCount } = useIncreaseInvitedCount();
-  // const { mutate: inviteMultiple } = useInviteMultiple();
 
   // 내 타입을 글로벌 상태에 저장
   useEffect(() => {
@@ -47,31 +45,6 @@ export default function NearbyContent({ session }: { session: any }) {
       setLocalInvitedCount(userInfo.invited_count);
     }
   }, [userInfo?.invited_count]);
-
-  // 초대한 사용자 수 전송
-  // const sendInviteCount = () => {
-  //   if (userId && interactedUserIds.size > 0) {
-  //     inviteMultiple(
-  //       { inviterId: userId, count: interactedUserIds.size },
-  //       {
-  //         onSuccess: (data) =>
-  //           console.log("✅ 초대한 사용자 수 반영 완료:", data),
-  //         onError: (error) =>
-  //           console.error("❌ 초대한 사용자 수 반영 실패:", error),
-  //       }
-  //     );
-  //   }
-  // };
-
-  // // 페이지 이탈 시 초대 수 전송
-  // useEffect(() => {
-  //   const handleLeave = () => sendInviteCount();
-  //   window.addEventListener("pagehide", handleLeave);
-  //   return () => {
-  //     handleLeave();
-  //     window.removeEventListener("pagehide", handleLeave);
-  //   };
-  // }, [userId, interactedUserIds]);
 
   // 클릭 시 중복 alert 방지
   const recentClickRef = useRef<Set<string>>(new Set());
@@ -209,7 +182,7 @@ export default function NearbyContent({ session }: { session: any }) {
 
             if (!position) {
               const angle = Math.random() * 360;
-              const distance = Math.random() * 30 + 100;
+              const distance = Math.random() * 50 + 60;
               position = { angle, distance };
               positionCache.current.set(user.userId, position);
             }
