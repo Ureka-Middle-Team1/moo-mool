@@ -44,6 +44,7 @@ export default function HomeRecommendedPlan() {
               smsIncluded: planData.smsIncluded,
               networkType: planData.networkType,
               subscriptionServices: planData.subscriptionServices || [],
+              badges: planData.badges || [],
             }}
             hideBenefits={true}
           />
