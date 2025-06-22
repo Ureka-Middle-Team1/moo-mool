@@ -13,10 +13,9 @@ type HeaderProps = {
 
 export default function Header({ title = "챗봇" }: HeaderProps) {
   const router = useRouter();
-  const { mode, setMode } = useChatModeStore();
-  const isVoiceMode = mode === "voice";
 
   const handleClick = async () => {
+
     if (isVoiceMode) {
       setMode("text");
     } else {
@@ -27,7 +26,7 @@ export default function Header({ title = "챗봇" }: HeaderProps) {
   return (
     <div className="relative flex h-12 items-center justify-center bg-white">
       <Button className="absolute left-2" variant="ghost" onClick={handleClick}>
-        {isVoiceMode ? <ArrowLeft size={20} /> : <X size={20} />}
+        <X size={20} />
       </Button>
       <div className="text-center text-sm font-semibold">
         {title === "챗봇" ? (
