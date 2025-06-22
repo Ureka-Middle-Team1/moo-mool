@@ -34,6 +34,7 @@ export function useSmartChoiceRecommendation(options?: Options) {
 
   return useMutation({
     mutationFn: async (input: SmartChoiceApiInput) => {
+      console.log("input: ", input);
       const res = await client.post("/smartchoice", input); // smart choice 호출
       const parsed = parsePlans(res.data);
       await getFinalPlanInChatbot({

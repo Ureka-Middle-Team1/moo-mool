@@ -1,5 +1,5 @@
 import { Message } from "@/types/Chat";
-import ChatMessage from "./ChatMessage";
+import ChatMessage from "./chatMessage/ChatMessage";
 import { useChatStore } from "@/store/useChatStore";
 import { AnimatePresence } from "framer-motion";
 
