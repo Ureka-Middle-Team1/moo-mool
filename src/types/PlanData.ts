@@ -12,6 +12,7 @@ export interface PlanDBApiResponse {
   smsIncluded: number;
   networkType: PrismaNetworkType;
   subscriptionServices: string[];
+  badges: string[];
 }
 
 export type PlanSelectionInput = {

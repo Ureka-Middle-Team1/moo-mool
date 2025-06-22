@@ -1,26 +1,19 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import Header from "@/components/chat/ChatbotHeader";
 import TextPage from "./TextPage";
 import VoicePage from "./VoicePage";
 import { useWatchRecommendationTrigger } from "@/hooks/useWatchRecommendationTrigger";
-import { useModalStore } from "@/store/useModalStore";
-import MyPageModal from "@/components/myPage/MyPageModal";
-
-type Mode = "text" | "voice";
+import { useChatModeStore } from "@/store/useChatModeStore";
+import Header from "@/components/chat/ChatbotHeader";
 
 export default function ChatbotPage() {
-  const { isModalOpen, setModalOpen, openModal } = useModalStore();
-  const searchParams = useSearchParams();
-  const mode = (searchParams.get("mode") as Mode) || "text";
+  const { mode } = useChatModeStore();
 
   useWatchRecommendationTrigger();
 
   return (
     <div className="flex h-screen flex-col bg-[#f9f4f4]">
-      <Header title="챗봇" onAvatarClick={() => openModal} />
-      <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
+      <Header title="챗봇" />
       <div className="flex flex-1 flex-col overflow-hidden">
         {mode === "text" ? <TextPage /> : <VoicePage />}
       </div>

@@ -6,6 +6,7 @@ import { useChatStreamingStore } from "@/store/useChatStreamingStore";
 import { SubmitType } from "@/hooks/useChatSubmit";
 import debounce from "lodash.debounce"; // 디바운싱 편하게 해주는 객체 (설치 필요)
 import { Button } from "../ui/button";
+import { useChatModeStore } from "@/store/useChatModeStore";
 
 interface ChatInputBoxProps {
   input: string;
@@ -27,8 +28,8 @@ export default function ChatInputBox({
 }: ChatInputBoxProps) {
   const formRef = useRef<HTMLFormElement>(null);
 
-  const router = useRouter();
   const isStreaming = useChatStreamingStore((state) => state.isStreaming);
+  const { mode, setMode } = useChatModeStore();
 
   // 타이핑 끝 감지를 위한 debounce (1초 후에 타이핑 종료로 간주)
   const debounceTypingEnd = useCallback(
@@ -46,7 +47,7 @@ export default function ChatInputBox({
   }, [debounceTypingEnd]);
 
   const handleMicClick = () => {
-    router.push("?mode=voice");
+    setMode("voice");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
