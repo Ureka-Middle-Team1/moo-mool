@@ -40,7 +40,7 @@ body {
 }
 
 @theme {
-  --breakpoint-xs: 360px;
+  --breakpoint-md: 361px;
 
   /* Colors */
   --color-yellow-100: #fff6d8;

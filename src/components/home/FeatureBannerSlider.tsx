@@ -10,18 +10,21 @@ const featureBannerList = [
     title: "당신은 ‘팝콘 무너’?\n테스트로 유형 확인!",
     description: "요금제 성향, 재미로 풀어봐요",
     image: "/assets/banner/meme-test.png",
+    href: "/meme-test",
   },
   {
     subtitle: "이 근처, 나랑 비슷한 사람?",
     title: "근처 사용자와\n요금제 비교하기!",
     description: "이 근처, 나랑 비슷한 사람?",
     image: "/assets/banner/nearby.png",
+    href: "/nearby",
   },
   {
     subtitle: "말로 하는 요금제 추천",
     title: "음성으로 말하고\n요금제 추천받기!",
     description: "STT/TTS 기반 음성 챗봇 제공",
     image: "/assets/banner/voice.png",
+    href: "/chat",
   },
 ];
 
