@@ -1,13 +1,6 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  DollarSign,
-  Database,
-  GaugeCircle,
-  Phone,
-  Gift,
-} from "lucide-react";
 
 interface StaticStatsCardProps {
   raw: number[];
@@ -15,22 +8,22 @@ interface StaticStatsCardProps {
   isCompare: boolean;
 }
 
-const iconComponents = [
-  { icon: DollarSign, color: "text-amber-400" },
-  { icon: Database, color: "text-blue-400" },
-  { icon: GaugeCircle, color: "text-red-400" },
-  { icon: Phone, color: "text-green-400" },
-  { icon: Gift, color: "text-pink-400" },
-];
+const labels = ["월정액", "월 데이터", "소진 시 속도", "부가통화", "혜택"];
 
-const getLabelByIndex = (i: number, value: number) => {
+const getValueLabel = (i: number, value: number) => {
   switch (i) {
-    case 0: return `월 ${value.toLocaleString()}원`;
-    case 1: return `월 ${value.toLocaleString()}MB`;
-    case 2: return `다 쓰면 ${value.toLocaleString()}Kbps`;
-    case 3: return `부가통화 ${value.toLocaleString()}분`;
-    case 4: return `혜택 ${value.toLocaleString()}원`;
-    default: return value.toString();
+    case 0:
+      return `${value.toLocaleString()}원`;
+    case 1:
+      return `${value.toLocaleString()}MB`;
+    case 2:
+      return `${value.toLocaleString()}Kbps`;
+    case 3:
+      return `${value.toLocaleString()}분`;
+    case 4:
+      return `${value.toLocaleString()}원`;
+    default:
+      return value.toString();
   }
 };
 
@@ -40,51 +33,43 @@ export default function StaticStatsCard({
   isCompare,
 }: StaticStatsCardProps) {
   return (
-    <div className="relative flex w-full justify-center gap-16 py-6 min-h-[20rem] overflow-visible">
-      <motion.div
-        layout
-        className="flex flex-col items-center gap-8 min-w-[9rem]"
-        transition={{ duration: 0.4 }}
-      >
-        {raw.map((value, i) => {
-          const Icon = iconComponents[i].icon;
-          const color = iconComponents[i].color;
-          return (
-            <div key={`raw-${i}`} className="flex flex-col items-center gap-2">
-              <Icon size={36} className={color} />
-              <span className="text-md font-bold text-yellow-500">
-                {getLabelByIndex(i, value)}
-              </span>
-            </div>
-          );
-        })}
-      </motion.div>
+    <div className="w-full px-9">
+      <div className="flex flex-col divide-y divide-gray-200">
+        {raw.map((value, i) => (
+          <div
+            key={`row-${i}`}
+            className="flex items-center justify-between py-3 text-sm sm:text-base">
+            {/* 좌측 라벨 */}
+            <span className="text-gray-800">{labels[i]}</span>
 
-      <AnimatePresence>
-        {isCompare && (
-          <motion.div
-            key="compare"
-            className="flex flex-col items-center gap-8 min-w-[9rem]"
-            initial={{ opacity: 0, x: "5rem" }}
-            animate={{ opacity: 1, x: "0rem" }}
-            exit={{ opacity: 0, x: "5rem" }}
-            transition={{ duration: 0.4 }}
-          >
-            {compareRaw.map((value, i) => {
-              const Icon = iconComponents[i].icon;
-              const color = iconComponents[i].color;
-              return (
-                <div key={`compare-${i}`} className="flex flex-col items-center gap-2">
-                  <Icon size={36} className={color} />
-                  <span className="text-md font-bold text-pink-500">
-                    {getLabelByIndex(i, value)}
-                  </span>
-                </div>
-              );
-            })}
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {/* 우측 값 영역 */}
+            <div className="flex min-w-[10rem] items-center justify-end gap-2">
+              {/* 기존 값 → 항상 motion span으로 */}
+              <motion.span
+                animate={{ x: isCompare ? -8 : 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-sm font-semibold text-gray-900 sm:text-base">
+                {getValueLabel(i, value)}
+              </motion.span>
+
+              {/* 비교 값 → 조건부 애니메이션 */}
+              <AnimatePresence>
+                {isCompare && compareRaw[i] !== undefined && (
+                  <motion.span
+                    key={`compare-${i}`}
+                    initial={{ opacity: 0, x: 8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 8 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-sm font-semibold text-pink-500 sm:text-base">
+                    {getValueLabel(i, compareRaw[i])}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -16,7 +16,7 @@ export default function PlanModeToggle({
   if (disabled) return null;
 
   return (
-    <div className="relative mb-4 flex rounded-lg p-1 bg-gray-400 shadow-sm">
+    <div className="relative mb-1 flex rounded-lg bg-gray-400 p-1 shadow-sm">
       <div className="relative flex w-full">
         <div
           className="absolute h-full w-1/2 rounded-md bg-white transition-transform duration-300"
@@ -31,8 +31,7 @@ export default function PlanModeToggle({
             className={`flex-1 rounded-md px-2 py-1 text-sm transition-none ${
               mode === "basic" ? "font-semibold text-black" : "text-gray-600"
             } hover:bg-transparent hover:text-inherit`}
-            onClick={() => onChange("basic")}
-          >
+            onClick={() => onChange("basic")}>
             기본
           </Button>
 
@@ -41,8 +40,7 @@ export default function PlanModeToggle({
             className={`flex-1 rounded-md px-2 py-1 text-sm transition-none ${
               mode === "compare" ? "font-semibold text-black" : "text-gray-600"
             } hover:bg-transparent hover:text-inherit`}
-            onClick={() => onChange("compare")}
-          >
+            onClick={() => onChange("compare")}>
             내 요금제와 비교
           </Button>
         </div>
