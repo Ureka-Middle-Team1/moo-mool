@@ -2,12 +2,48 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useUserStore } from "@/store/userStore";
+import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
+import { useSession } from "next-auth/react";
 import { gsap } from "gsap";
 
 const STAMP_TOTAL = 5;
 const MAX_STAMP = 10;
 
 export default function UserStamp() {
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+  const { data } = useGetUserCharacterProfile(userId ?? "");
+
+  // data가 없으면 잠금(블러+자물쇠) 처리
+  if (!data) {
+    return (
+      <div className="relative mx-auto grid w-fit grid-cols-5 gap-3">
+        {Array.from({ length: STAMP_TOTAL }).map((_, idx) => (
+          <div
+            key={idx}
+            className="relative flex h-13 w-13 flex-col items-center justify-center">
+            <img
+              src="/assets/stamps/stamp_gray.svg"
+              alt="gray-stamp"
+              className="object-unset h-10 w-10"
+            />
+          </div>
+        ))}
+        {/* 블러 오버레이 */}
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px]">
+          <img
+            src="/assets/stamps/locked.svg"
+            alt="lock"
+            className="h-8 w-8 opacity-80"
+          />
+          <span className="mt-2 text-xs text-gray-800">
+            테스트하고 당신의 무너를 확인해보세요!
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   const invitedCountRaw = useUserStore((state) => state.invitedCount);
   const invitedCount = Math.min(invitedCountRaw, MAX_STAMP);
 
