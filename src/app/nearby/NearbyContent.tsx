@@ -11,6 +11,7 @@ import { useNearbyStore } from "@/hooks/useNearbyStore";
 import { useNearbySocket } from "@/hooks/useNearbySocket";
 import { bounceVariants } from "./animations";
 import { useIncreaseInvitedCount } from "@/hooks/useIncreseInvitedCount";
+import AnimatedCount from "@/components/nearby/AnimatedCount";
 
 export default function NearbyContent({ session }: { session: any }) {
   const userId = session?.user?.id ?? "";
@@ -111,7 +112,7 @@ export default function NearbyContent({ session }: { session: any }) {
       <>
         만렙까지{" "}
         <span className="font-bold text-yellow-400">
-          {10 - localInvitedCount}명
+          <AnimatedCount value={10 - localInvitedCount} />명
         </span>
         !
       </>
@@ -121,7 +122,7 @@ export default function NearbyContent({ session }: { session: any }) {
       <>
         레벨업까지{" "}
         <span className="font-bold text-yellow-400">
-          {5 - localInvitedCount}명
+          <AnimatedCount value={5 - localInvitedCount} />명
         </span>
         !
       </>
