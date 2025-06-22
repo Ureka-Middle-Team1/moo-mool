@@ -1,6 +1,6 @@
 "use client";
 
-import { Mic } from "lucide-react";
+import { Mic, X } from "lucide-react";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import ShadowRing from "./ShadowRing";
 import { useHandleAnswer } from "@/hooks/useHandleAnswer";
@@ -11,6 +11,7 @@ import { useBotResponseGuard } from "@/hooks/useBotResponseGuard";
 import { useVoiceControlStore } from "@/store/useVoiceControlStore";
 import { useChatStore } from "@/store/useChatStore";
 import { handleFreeTalkAnswer } from "@/lib/chat/handleFreeTalkAnswer";
+import { useChatModeStore } from "@/store/useChatModeStore";
 
 export default function VoiceFooter() {
   const { recording, result, toggleRecording } = useVoiceRecorder();
@@ -20,6 +21,7 @@ export default function VoiceFooter() {
   const { setWaitingForBotResponse } = useVoiceControlStore();
   const isSpeaking = useTTSStore((state) => state.isSpeaking);
   const [waitingTrigger, setWaitingTrigger] = useState(false);
+  const { setMode } = useChatModeStore();
   useBotResponseGuard(waitingTrigger);
 
   // 음성 인식 결과가 나올 때 자동으로 handleAnswer 실행 (자연스러운 대화 흐름일 경우엔 callGPTFreeTalk 호출)
@@ -44,7 +46,7 @@ export default function VoiceFooter() {
   }, [result]);
 
   return (
-    <div className="relative flex h-[20%] w-full flex-col items-center justify-center gap-4">
+    <div className="relative flex w-full flex-col items-center justify-center gap-4 py-4">
       {/*  음성 인식 중일 때 그림자 애니메이션 */}
       <ShadowRing
         isActive={recording}
@@ -54,16 +56,24 @@ export default function VoiceFooter() {
         offsetBottom="3.2rem"
       />
 
-      {/*  마이크 버튼 */}
-      <Button
-        onClick={toggleRecording}
-        disabled={isSpeaking}
-        className="z-10 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 shadow-md">
-        <Mic
-          size={30}
-          className={`text-gray-700 ${recording ? "animate-ping" : ""}`}
-        />
-      </Button>
+      {/*  마이크 + X 버튼 */}
+      <div className="z-10 flex flex-row items-center gap-4">
+        <Button
+          onClick={toggleRecording}
+          disabled={isSpeaking}
+          className="z-10 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 shadow-md">
+          <Mic
+            size={30}
+            className={`text-gray-700 ${recording ? "animate-ping" : ""}`}
+          />
+        </Button>
+        <Button
+          onClick={() => setMode("text")}
+          variant="ghost"
+          className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 shadow-md">
+          <X size={28} className="text-gray-700" />
+        </Button>
+      </div>
 
       {/*  인식된 텍스트 출력 */}
       {result && (

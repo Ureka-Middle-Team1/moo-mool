@@ -39,9 +39,6 @@ export async function POST(req: Request) {
     );
   }
 
-  console.log("recentMessages: ", recentMessages);
-  console.log("lastSummary: ", lastSummary);
-
   // GPT API 요청을 위한 메시지 구성
   const gptMessages = [
     { role: "system", content: systemPrompt },

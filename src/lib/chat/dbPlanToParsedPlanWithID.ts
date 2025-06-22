@@ -53,7 +53,7 @@ export function dbPlanToParsedPlanWithID(plan: {
       ? "KT"
       : plan.name.includes("SKT")
         ? "SKT"
-        : "통신사 정보 없음";
+        : "LG U+";
 
   return {
     id: plan.id,

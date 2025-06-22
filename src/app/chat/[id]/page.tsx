@@ -43,7 +43,7 @@ export default function ChatSessionDetailPage() {
         {isLoading ? (
           <ChatbotHeaderSkeleton />
         ) : (
-          <Header title={data.summary} onAvatarClick={() => {}} />
+          <Header title={data.summary} />
         )}
       </div>
 
