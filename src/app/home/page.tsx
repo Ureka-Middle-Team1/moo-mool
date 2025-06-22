@@ -22,12 +22,12 @@ export default function HomePage() {
         </Suspense>
         {/* 마이페이지 Modal */}
         <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
-        <div className="flex w-full flex-col gap-7 py-5">
+        <div className="flex w-full flex-col gap-8 py-5">
           <FeatureBannerSlider />
           {/* Suspense로 감싸기 */}
           <div className="flex w-full flex-col">
-            <h2 className="pl-3 text-lg font-semibold text-gray-900">
-              💬 최근 대화내역
+            <h2 className="pl-4 text-lg font-semibold text-gray-900">
+              최근 대화내역
             </h2>
             <ChatHistoryList />
           </div>
@@ -35,8 +35,8 @@ export default function HomePage() {
             <HomeRecommendedPlan />
           </Suspense>
           <div className="flex w-full flex-col">
-            <h2 className="pl-3 text-lg font-semibold text-gray-900">
-              🔥 요즘 뜨는 요금제
+            <h2 className="pl-4 text-lg font-semibold text-gray-900">
+              요즘 뜨는 요금제
             </h2>
             <PopularPlansList />
           </div>
