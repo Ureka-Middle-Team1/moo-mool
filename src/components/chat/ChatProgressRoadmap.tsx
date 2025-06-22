@@ -10,10 +10,10 @@ interface ChatProgressToastProps {
 }
 
 const stepKeywords: { [key: number]: string } = {
-  1: "무제한",
+  1: "", // "무제한",
   2: "스트리밍",
   3: "무제한",
-  4: "현재 데이터",
+  4: "", //"현재 데이터",
   5: "데이터",
   6: "와이파이",
   7: "전화/문자",
@@ -31,7 +31,7 @@ export default function ChatProgressToast({
   const [prevId, setPrevId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (currentQuestionId === 12) {
+    if (currentQuestionId === 0 || currentQuestionId === 12) {
       setIsVisible(false);
       return;
     }
@@ -58,8 +58,12 @@ export default function ChatProgressToast({
 
   const completedId = currentQuestionId - 1;
 
+  // 진행률 계산 (음수 방지)
+  const progressPercentage =
+    completedId > 0 ? ((completedId - 1) / (totalSteps - 1)) * 100 : 0;
+
   return (
-    <div className="pointer-events-none fixed top-6 left-1/2 z-50 w-full max-w-md -translate-x-1/2 px-4">
+    <div className="pointer-events-none fixed top-14 left-1/2 z-50 w-full max-w-md -translate-x-1/2 px-4">
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -74,7 +78,7 @@ export default function ChatProgressToast({
                 <div
                   className="h-1 rounded-full bg-pink-300 transition-all duration-500"
                   style={{
-                    width: `${((completedId - 1) / (totalSteps - 1)) * 100}%`,
+                    width: `${progressPercentage}%`,
                   }}
                 />
               </div>
@@ -111,7 +115,7 @@ export default function ChatProgressToast({
                       )}
 
                       <motion.div
-                        className={`absolute top-6 left-1/2 -translate-x-1/2 transform text-[10px] font-medium whitespace-nowrap transition-colors duration-300 ${
+                        className={`absolute top-6 left-1/2 -translate-x-1/2 transform text-[8px] font-medium whitespace-nowrap transition-colors duration-300 ${
                           isCompleted ? "text-gray-700" : "text-gray-400"
                         }`}
                         initial={{ opacity: 0, y: 5 }}

@@ -43,11 +43,14 @@ export default function TextPage() {
   const { handleSubmit } = useChatSubmit(input, setInput, textareaRef);
 
   return (
-    <div className="flex h-full flex-1 flex-col overflow-hidden">
+    <div className="relative flex h-full w-full flex-col">
+      {/* Progress Toast */}
       <ChatProgressToast currentQuestionId={currentQuestionId} />
-      <ChatMessageList messages={messages} />
-      <QuickReplyList onSubmit={handleSubmit} bottomRef={bottomRef} />
-
+      {/* 채팅 메시지 영역만 스크롤 */}
+      <div className="scrollbar-hide flex-1 overflow-y-auto pb-20">
+        <ChatMessageList messages={messages} bottomRef={bottomRef} />
+        <QuickReplyList onSubmit={handleSubmit} />
+      </div>
       {/* 조건부 렌더링 처리, 응답 완료되면 더 이상 입력은 X */}
       {currentQuestionId === 12 ? (
         <div className="border-t px-4 py-3 text-center text-sm text-gray-700">

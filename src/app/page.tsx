@@ -79,7 +79,7 @@ export default function Home() {
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center bg-gradient-to-b from-[#fff1e5] to-[#ffe5f1] px-4">
+    <div className="relative flex h-screen flex-col items-center bg-gradient-to-b from-[#fff1e5] to-[#ffe5f1] px-4">
       <TopGradient />
       {/* 무물 로고 영역 */}
       <div className="z-20 mt-20 flex w-full justify-center">
@@ -103,7 +103,6 @@ export default function Home() {
           enableRotate={false}
         />
       </Canvas>
-      {/* 버튼 영역 */}
       <div className="z-10 mt-auto mb-10 flex w-full max-w-xs flex-col gap-4 font-semibold">
         <Button
           onClick={handleLogin}

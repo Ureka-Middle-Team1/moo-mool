@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,7 +11,23 @@ module.exports = {
       fontFamily: {
         kkubulim: ['"kkubulim"', "Helvetica", "sans-serif"],
       },
+      padding: {
+        safe: "env(safe-area-inset-bottom)",
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".scrollbar-hide": {
+          "-ms-overflow-style": "none",
+          "scrollbar-width": "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        },
+      };
+      addUtilities(newUtilities);
+    },
+  ],
 };
