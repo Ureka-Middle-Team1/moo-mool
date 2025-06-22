@@ -36,18 +36,26 @@ export default function FlipCardChart({
     : (raw as number[]);
 
   return (
-    <div
+    <motion.div
       className="ml-[-1rem] h-80 w-full max-w-[360px] cursor-pointer"
       style={{ perspective: "1000px" }}
-      onClick={() => setFlipped(!flipped)}>
+      onClick={() => setFlipped(!flipped)}
+      initial={{ y: 0 }}
+      whileInView={{ y: [-4, 4, -2, 2, 0] }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true, amount: 0.5 }}
+    >
       <motion.div
-        className="relative h-full w-full transition-transform duration-700"
+        className="relative h-full w-full transition-transform duration-300"
         style={{ transformStyle: "preserve-3d" }}
-        animate={{ rotateY: flipped ? 180 : 0 }}>
+        animate={{ rotateY: flipped ? 180 : 0 }}
+        transition={{ duration: 0.2 }}
+      >
         {/* 앞면: 레이더 차트 */}
         <div
           className="absolute h-full w-full"
-          style={{ backfaceVisibility: "hidden" }}>
+          style={{ backfaceVisibility: "hidden" }}
+        >
           <TendencyRadarChart isRounded={true} data={radarData} name={name} />
         </div>
 
@@ -57,10 +65,11 @@ export default function FlipCardChart({
           style={{
             transform: "rotateY(180deg)",
             backfaceVisibility: "hidden",
-          }}>
+          }}
+        >
           <TendencyBarChart data={barData} rawData={rawData} name={name} />
         </div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 }

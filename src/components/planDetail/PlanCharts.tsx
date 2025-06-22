@@ -19,7 +19,7 @@ export default function PlanCharts({ data, mode }: PlanChartsProps) {
 
   return (
     <div className="flex w-full flex-col items-center space-y-8">
-      <div className="flex h-80 w-full max-w-md items-center justify-center">
+      <div className="flex w-full items-center justify-center">
         <StaticStatsCard
           raw={rawBase}
           compareRaw={rawCompare}

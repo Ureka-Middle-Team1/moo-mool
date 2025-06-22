@@ -1,7 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { LABELS } from "@/constants/labels";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  DollarSign,
+  Database,
+  GaugeCircle,
+  Phone,
+  Gift,
+} from "lucide-react";
 
 interface StaticStatsCardProps {
   raw: number[];
@@ -9,46 +15,76 @@ interface StaticStatsCardProps {
   isCompare: boolean;
 }
 
+const iconComponents = [
+  { icon: DollarSign, color: "text-amber-400" },
+  { icon: Database, color: "text-blue-400" },
+  { icon: GaugeCircle, color: "text-red-400" },
+  { icon: Phone, color: "text-green-400" },
+  { icon: Gift, color: "text-pink-400" },
+];
+
+const getLabelByIndex = (i: number, value: number) => {
+  switch (i) {
+    case 0: return `월 ${value.toLocaleString()}원`;
+    case 1: return `월 ${value.toLocaleString()}MB`;
+    case 2: return `다 쓰면 ${value.toLocaleString()}Kbps`;
+    case 3: return `부가통화 ${value.toLocaleString()}분`;
+    case 4: return `혜택 ${value.toLocaleString()}원`;
+    default: return value.toString();
+  }
+};
+
 export default function StaticStatsCard({
   raw,
   compareRaw = [],
   isCompare,
 }: StaticStatsCardProps) {
-  const labels = LABELS;
-
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-xl bg-white shadow-md">
-      {labels.map((label, i) => (
-        <motion.div
-          key={label}
-          className="flex w-[330px] items-center justify-between rounded-lg px-4 py-2 shadow"
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: i * 0.1 }}>
-          <span className="w-[72px] text-left text-sm font-semibold text-gray-600">
-            {label}
-          </span>
+    <div className="relative flex w-full justify-center gap-16 py-6 min-h-[20rem] overflow-visible">
+      <motion.div
+        layout
+        className="flex flex-col items-center gap-8 min-w-[9rem]"
+        transition={{ duration: 0.4 }}
+      >
+        {raw.map((value, i) => {
+          const Icon = iconComponents[i].icon;
+          const color = iconComponents[i].color;
+          return (
+            <div key={`raw-${i}`} className="flex flex-col items-center gap-2">
+              <Icon size={36} className={color} />
+              <span className="text-md font-bold text-yellow-500">
+                {getLabelByIndex(i, value)}
+              </span>
+            </div>
+          );
+        })}
+      </motion.div>
 
-          <div className="relative flex w-[150px] items-center justify-end">
-            <motion.span
-              className="absolute text-sm font-bold text-yellow-500"
-              animate={isCompare ? { x: -80 } : { x: 0 }}
-              transition={{ duration: 0.3 }}>
-              {raw[i]?.toLocaleString()}
-            </motion.span>
-
-            {isCompare && (
-              <motion.span
-                className="absolute text-sm font-bold text-pink-400"
-                initial={{ opacity: 0, x: 80 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1, duration: 0.3 }}>
-                {compareRaw[i]?.toLocaleString()}
-              </motion.span>
-            )}
-          </div>
-        </motion.div>
-      ))}
+      <AnimatePresence>
+        {isCompare && (
+          <motion.div
+            key="compare"
+            className="flex flex-col items-center gap-8 min-w-[9rem]"
+            initial={{ opacity: 0, x: "5rem" }}
+            animate={{ opacity: 1, x: "0rem" }}
+            exit={{ opacity: 0, x: "5rem" }}
+            transition={{ duration: 0.4 }}
+          >
+            {compareRaw.map((value, i) => {
+              const Icon = iconComponents[i].icon;
+              const color = iconComponents[i].color;
+              return (
+                <div key={`compare-${i}`} className="flex flex-col items-center gap-2">
+                  <Icon size={36} className={color} />
+                  <span className="text-md font-bold text-pink-500">
+                    {getLabelByIndex(i, value)}
+                  </span>
+                </div>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
