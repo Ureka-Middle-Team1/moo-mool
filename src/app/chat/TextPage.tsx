@@ -33,18 +33,27 @@ export default function TextPage() {
   const { handleSubmit } = useChatSubmit(input, setInput, textareaRef);
 
   return (
-    <div className="flex h-full flex-1 flex-col overflow-hidden">
+    <div className="relative flex h-full w-full flex-col">
+      {/* Progress Toast */}
       <ChatProgressToast currentQuestionId={currentQuestionId} />
-      <ChatMessageList messages={messages} bottomRef={bottomRef} />
-      <QuickReplyList onSubmit={handleSubmit} />
-      <ChatInputBox
-        input={input}
-        onTypingStart={() => setIsTyping(true)} // 타이핑 시작할 때
-        onTypingEnd={() => setIsTyping(false)} // 타이핑 끝냈을 때
-        setInput={setInput}
-        onSubmit={handleSubmit}
-        textareaRef={textareaRef}
-      />
+
+      {/* 채팅 메시지 영역만 스크롤 */}
+      <div className="scrollbar-hide flex-1 overflow-y-auto pb-20">
+        <ChatMessageList messages={messages} bottomRef={bottomRef} />
+        <QuickReplyList onSubmit={handleSubmit} />
+      </div>
+
+      {/* 입력창 - 고정 */}
+      <div className="absolute right-0 bottom-0 left-0 z-50 bg-gray-100">
+        <ChatInputBox
+          input={input}
+          onTypingStart={() => setIsTyping(true)} // 타이핑 시작할 때
+          onTypingEnd={() => setIsTyping(false)} // 타이핑 끝냈을 때
+          setInput={setInput}
+          onSubmit={handleSubmit}
+          textareaRef={textareaRef}
+        />
+      </div>
     </div>
   );
 }

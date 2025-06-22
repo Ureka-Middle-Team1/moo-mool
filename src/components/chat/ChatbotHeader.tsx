@@ -72,7 +72,7 @@ export default function Header({ title = "챗봇" }: HeaderProps) {
   };
 
   return (
-    <div className="relative flex h-12 items-center justify-center bg-white">
+    <div className="flex h-12 items-center justify-center bg-white">
       <Button className="absolute left-2" variant="ghost" onClick={handleClick}>
         {isVoiceMode ? <ArrowLeft size={20} /> : <X size={20} />}
       </Button>

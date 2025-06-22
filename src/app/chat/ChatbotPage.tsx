@@ -15,11 +15,16 @@ export default function ChatbotPage() {
   useWatchRecommendationTrigger();
 
   return (
-    <div className="flex h-screen flex-col bg-[#FFF6F6]">
-      <Header title="챗봇" />
-      <div className="flex flex-1 flex-col overflow-hidden">
+    <div className="relative flex h-screen w-full flex-col bg-[#FFF6F6]">
+      {/* Header - 고정 */}
+      <header className="absolute top-0 right-0 left-0 z-50 bg-white">
+        <Header title="챗봇" />
+      </header>
+
+      {/* Main Content - 스크롤 가능 */}
+      <main className="flex-1 overflow-hidden pt-12">
         {mode === "text" ? <TextPage /> : <VoicePage />}
-      </div>
+      </main>
     </div>
   );
 }
