@@ -22,8 +22,7 @@ export function useChatSubmit(
 ) {
   const isSubmittingRef = useRef(false);
   const { handleNormalizedAnswer } = useHandleAnswer();
-  const { appendMessage, currentQuestionId, setCurrentQuestionId } =
-    useChatStore();
+  const { currentQuestionId, setCurrentQuestionId } = useChatStore();
 
   const handleSubmit = async (e?: SubmitType) => {
     console.log("handle submit 호출");
@@ -44,6 +43,7 @@ export function useChatSubmit(
 
     try {
       if (currentQuestionId === -1) {
+        // "자연스러운 대화" 모드일 경우
         await handleFreeTalkAnswer(userMessage, setCurrentQuestionId);
         return;
       } else {

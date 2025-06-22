@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import ShareSection from "@/components/meme/shareSection";
 import TrendBar from "@/components/chart/TrendBar";
@@ -19,6 +19,7 @@ import { useChatStore } from "@/store/useChatStore";
 import { useGetSixTypeRecommendPlan } from "@/hooks/useGetSixTypeRecommendPlan";
 import PlanListCard from "@/components/planList/PlanListCard";
 import { convertToPlanDBApiResponse } from "@/utils/planDataConverter";
+import PlanListCardSkeleton from "@/components/skeleton/PlanListCardSkeleton";
 
 export default function ResultPage({ encryptedId }: { encryptedId: string }) {
   const router = useRouter();
@@ -83,7 +84,7 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
     router.push("/meme-test");
   };
   const handleOpenHomeInNewTab = () => {
-    window.open("/", "_blank");
+    window.open("/chat", "_blank");
   };
   const handleNavigateToRankPage = () => {
     router.push("/meme-test/rank");
@@ -126,7 +127,7 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
                 </span>
               ))}
             </div>
-            <div className="mt-3 flex flex-col text-[11px] leading-relaxed">
+            <div className="mt-3 flex flex-col text-[12px] leading-relaxed">
               {splitSentences.map((line, idx) => (
                 <p key={idx} className="mb-[3px]">
                   {renderHighlightedText(line)}
@@ -173,15 +174,19 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
           <div className="flex w-full flex-col items-center gap-4 rounded-lg p-4">
             {/* 현재 요금제 관련 정보는 chat-storage(전역 저장소)에 저장되어 있음, 그것을 가져와 사용 중 */}
             {firstPlanMessage?.planData?.id !== undefined && (
-              <PlanListCard
-                plan={convertToPlanDBApiResponse(firstPlanMessage.planData)}
-              />
+              <Suspense fallback={<PlanListCardSkeleton />}>
+                <PlanListCard
+                  plan={convertToPlanDBApiResponse(firstPlanMessage.planData)}
+                />
+              </Suspense>
             )}
           </div>
           <div className="flex w-[90%] flex-col gap-4">
-            <p className="text-[11px] text-black">
-              본 테스트는 LG유플러스와의 협업을 통해 제작되었으며, <br />
-              테스트 결과에 기반한 추천 요금제는 모두 LG유플러스의 요금제입니다.
+            <p className="text-[11px] text-gray-800">
+              본 테스트의 요금제 추천 결과는 모두 LG유플러스 요금제를 기준으로
+              제공됩니다.
+              <br />
+              [자료 출처: 스마트초이스]
             </p>
           </div>
         </div>
@@ -244,7 +249,7 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
           <div className="mt-4 flex w-[90%] flex-col items-center justify-between">
             <ShareSection
               title="내 결과 공유하기"
-              count={data?.sharedCount || 0}
+              count={user.invited_count || 0}
               id={decryptedId}
               shareUrl={`/meme-test/result/${encryptedId}`}
             />

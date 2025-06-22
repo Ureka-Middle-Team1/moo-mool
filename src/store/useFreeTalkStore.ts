@@ -28,7 +28,8 @@ export const useFreeTalkStore = create<FreeTalkStore>()(
               ? state.userMessageCount + 1
               : state.userMessageCount,
         })),
-      clear: () => set({ messages: [], userMessageCount: 0 }), // 메시지 clear
+      clear: () =>
+        set({ messages: [], userMessageCount: 0, lastSummary: null }), // 메시지 clear
       shouldTriggerSummary: () => get().userMessageCount >= 20,
       resetUserMessageCount: () => set({ userMessageCount: 0 }),
       lastSummary: null,

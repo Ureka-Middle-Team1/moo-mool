@@ -5,6 +5,7 @@ import { SortTarget } from "@/types/sort";
 import { PrismaNetworkType, UINetworkType } from "@/types/network";
 import StickySortFilter from "@/components/planList/StickySortFilter";
 import PlanListCard from "@/components/planList/PlanListCard";
+import PlanListCardSkeleton from "@/components/skeleton/PlanListCardSkeleton";
 import { useInfinitePlans } from "@/hooks/useInfinitePlans";
 import { getScoreContext } from "@/utils/planScore";
 import PlanListTrigger from "@/components/planList/PlanListTrigger";
@@ -12,19 +13,9 @@ import { PlanDBApiResponse } from "@/types/PlanData";
 import HomeHeader from "@/components/home/HomeHeader";
 import TopGradient from "@/components/planDetail/TopGradient";
 import { OTTType } from "@/components/planList/SortFilterPanel";
-import MyPageModal from "@/components/myPage/MyPageModal";
-import { useModalStore } from "@/store/useModalStore";
-
-const getEnumNetworkType = (
-  type: UINetworkType | null
-): PrismaNetworkType | null => {
-  if (type === "5G") return "FIVE_G";
-  if (type === "LTE") return "LTE";
-  return null;
-};
+import HamburgerMenu from "@/components/common/HamburgerMenu";
 
 export default function PlanListPage() {
-  const { isModalOpen, setModalOpen, openModal } = useModalStore();
   const listRef = useRef<HTMLDivElement>(null);
 
   const [sortTarget, setSortTarget] = useState<SortTarget | null>(null);
@@ -32,7 +23,6 @@ export default function PlanListPage() {
   const [selectedNetwork, setSelectedNetwork] = useState<UINetworkType | null>(
     null
   );
-
   const [selectedOttList, setSelectedOttList] = useState<OTTType[]>([]);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
@@ -53,26 +43,11 @@ export default function PlanListPage() {
     }
   }, []);
 
-  if (status === "pending" || !scoreContext) {
-    return (
-      <div className="space-y-4 p-6">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-[120px] w-full animate-pulse rounded-2xl bg-gray-200"
-          />
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-col items-center" ref={listRef}>
+    <div className="flex flex-col items-center bg-gray-50" ref={listRef}>
       <TopGradient />
       <section className="z-1 flex h-[90%] w-[90%] flex-col items-center">
-        <HomeHeader onAvatarClick={openModal} />
-        {/* 마이페이지 Modal */}
-        <MyPageModal open={isModalOpen} onOpenChange={setModalOpen} />
+        <HomeHeader />
         <StickySortFilter
           selectedNetwork={selectedNetwork}
           setSelectedNetwork={setSelectedNetwork}
@@ -84,11 +59,28 @@ export default function PlanListPage() {
           setSelectedOttList={setSelectedOttList}
         />
 
-        <div className="space-y-4">
-          {allPlans.map((plan) => (
-            <PlanListCard key={plan.id} plan={plan} />
-          ))}
+        <div className="flex flex-col items-center space-y-4">
+          {status === "pending" || !scoreContext
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="w-full max-w-xs">
+                  <PlanListCardSkeleton />
+                </div>
+              ))
+            : allPlans.map((plan) => (
+                <PlanListCard key={plan.id} plan={plan} />
+              ))}
         </div>
+
+        {/* ✅ 무한스크롤 하단 로딩용 Skeleton */}
+        {isFetchingNextPage && (
+          <div className="mt-6 flex flex-col items-center space-y-4">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div key={i} className="w-full max-w-xs">
+                <PlanListCardSkeleton />
+              </div>
+            ))}
+          </div>
+        )}
 
         <PlanListTrigger
           fetchNextPage={fetchNextPage}

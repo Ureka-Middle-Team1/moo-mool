@@ -13,6 +13,32 @@ body {
   font-family: var(--font-sans);
 }
 
+/* 모바일에서 키보드가 올라올 때 viewport 높이 대응 */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari */
+  .h-screen {
+    height: -webkit-fill-available;
+  }
+}
+
+/* Android Chrome 대응 */
+@media screen and (max-width: 768px) {
+  .h-screen {
+    height: 100vh;
+    height: 100dvh; /* dynamic viewport height */
+  }
+}
+
+/* 스크롤바 숨김 스타일 */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
 @theme {
   /* Colors */
   --color-yellow-100: #fff6d8;
@@ -98,14 +124,6 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-.scrollbar-hide {
-  -ms-overflow-style: none; /* IE */
-  scrollbar-width: none; /* Firefox */
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
-}
-
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -187,8 +205,5 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-  }
-  body::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
   }
 }

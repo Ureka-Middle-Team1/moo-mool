@@ -30,6 +30,11 @@ const serviceMap: Record<string, PlanDetailData["benefits"][number]> = {
     title: "티빙 3개월",
     description: "이 요금제와 함께 티빙 3개월 구독권을 무료로 누려보세요",
   },
+  MILLIE: {
+    imageSrc: "/assets/ott/millie.png",
+    title: "밀리의 서재 3개월",
+    description: "이 요금제와 함께 밀리의 서재 3개월 구독권을 무료로 누려보세요",
+  },
 };
 
 function getBenefits(services: string[]): PlanDetailData["benefits"] {
@@ -92,7 +97,7 @@ export function mapPlanToDetailData(
   return {
     name: plan.name,
     price: `월 ${plan.price.toLocaleString()} 원`,
-    tags: ["정제된 태그", getNetworkTypeLabel(plan.networkType), "혜택 풍부"],
+    tags: plan.badges,
     radar: scoreArray,
     bar: scoreArray,
     raw: rawArray,

@@ -2,6 +2,7 @@
 
 import { Message } from "@/types/Chat";
 import PlanListCard from "@/components/planList/PlanListCard";
+import PlanListCardSkeleton from "@/components/skeleton/PlanListCardSkeleton";
 import TypingMessage from "./TypingMessage";
 import { useChatStore } from "@/store/useChatStore";
 import QuickReplyList from "./QuickReplyList";
@@ -20,7 +21,7 @@ export default function ChatMessage({
   const { quickReplies } = useChatStore();
 
   // 최종 요금제 카드 추천 버전
-  if (message.type === "plan" && message.planData) {
+  if (message.type === "plan") {
     return (
       <div className="flex items-start justify-start gap-2 py-2">
         <img
@@ -30,11 +31,17 @@ export default function ChatMessage({
         />
         <div className="flex flex-col">
           <span className="mb-1 text-xs text-gray-800">무너</span>
-          {message.content.trim() !== "" && ( // type이 "plan"인 메시지에 대해 content가 비어 있다면 TypeMessage 출력 X
+          {message.content.trim() !== "" && (
             <TypingMessage fullText={message.content} />
           )}
-          <div className="flex w-full flex-col py-3">
-            <PlanListCard plan={convertToPlanDBApiResponse(message.planData)} />
+          <div className="flex w-full max-w-xs flex-col py-3">
+            {message.planData ? (
+              <PlanListCard
+                plan={convertToPlanDBApiResponse(message.planData)}
+              />
+            ) : (
+              <PlanListCardSkeleton />
+            )}
           </div>
         </div>
       </div>
@@ -63,9 +70,7 @@ export default function ChatMessage({
       <div className="flex flex-col">
         <span className="mb-1 text-xs text-gray-800">무너</span>
         {isLastBotMessage ? (
-          <>
-            <TypingMessage fullText={message.content} />
-          </>
+          <TypingMessage fullText={message.content} />
         ) : (
           <div className="max-w-[75%] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl bg-white px-3 py-2 text-sm shadow-md">
             {message.content}
@@ -75,3 +80,4 @@ export default function ChatMessage({
     </div>
   );
 }
+

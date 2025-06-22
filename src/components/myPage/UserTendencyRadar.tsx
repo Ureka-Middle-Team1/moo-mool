@@ -35,6 +35,16 @@ const iconSrcMap: Record<string, string> = {
   Saving: "/assets/moono/saving-moono.png",
 };
 
+// 한글 라벨 매핑
+const labelMap: Record<string, string> = {
+  SNS: "인싸력",
+  Youtube: "영상중독",
+  Chat: "답장센스",
+  Calling: "수다력",
+  Books: "책잘알",
+  Saving: "절약",
+};
+
 export default function UserTendencyRadar() {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
@@ -70,6 +80,7 @@ export default function UserTendencyRadar() {
     });
   }, []);
 
+  // drawTypeAndName 플러그인에서 한글 라벨 사용
   const drawTypeAndName = {
     id: "drawTypeAndName",
     afterDraw(chart: any) {
@@ -86,14 +97,18 @@ export default function UserTendencyRadar() {
       const centerX = r.xCenter;
       const centerY = r.yCenter;
       const radius = r.drawingArea;
-      const imageSize = 45;
+      const imageSize = 42;
 
       labels.forEach((label: string, index: number) => {
+        // 기존 영문 라벨과 한글 라벨 매핑
+        const engLabel =
+          Object.keys(labelMap).find((key) => labelMap[key] === label) || label;
+
         const angle = r.getIndexAngle(index) - Math.PI / 2;
         const x = centerX + (radius + 38) * Math.cos(angle);
         const y = centerY + (radius + 38) * Math.sin(angle);
 
-        const img = loadedImages.current[label];
+        const img = loadedImages.current[engLabel];
         if (img) {
           ctx.drawImage(
             img,
@@ -103,8 +118,8 @@ export default function UserTendencyRadar() {
             imageSize
           );
 
-          ctx.font = "bold 14px Pretendard";
-          ctx.fillStyle = "#EB453F";
+          ctx.font = "14px Pretendard";
+          ctx.fillStyle = "#1A1A1A";
           ctx.textAlign = "center";
           ctx.fillText(label, x, y + imageSize / 2 + 4);
         }
@@ -125,10 +140,10 @@ export default function UserTendencyRadar() {
   }
 
   const radarData = {
-    labels: ["SNS", "Youtube", "Chat", "Calling", "Books", "Saving"],
+    labels: ["인싸력", "영상중독", "답장센스", "수다력", "책잘알", "절약"],
     datasets: [
       {
-        label: "나의 선호도",
+        label: "나의 능력치",
         data: [
           data.sns_level,
           data.youtube_level,
@@ -167,23 +182,23 @@ export default function UserTendencyRadar() {
           display: false,
         },
         grid: {
-          color: "rgba(241, 145, 187, 0.2)",
-          lineWidth: 10,
+          color: "#E5E7EB", // 연한 회색 등으로 변경
+          lineWidth: 1, // 선 굵기 얇게
         },
         angleLines: {
-          color: "rgba(241, 145, 187, 0.4)",
+          color: "#E5E7EB", // 연한 회색 등으로 변경
         },
         ticks: {
           stepSize: 20,
           backdropColor: "transparent",
-          color: "#F191BB",
+          color: "#8a8a8a",
         },
       },
     },
     elements: {
       line: {
-        borderWidth: 4,
-        tension: 0.4,
+        borderWidth: 2,
+        tension: 0, // 곡선 → 직선
       },
       point: {
         radius: 6,
@@ -199,7 +214,7 @@ export default function UserTendencyRadar() {
 
   return (
     <div
-      className="mx-auto h-[22rem] w-full max-w-xl"
+      className="mx-auto h-[20rem] w-full max-w-xl"
       style={{ overflow: "visible" }}>
       <Radar
         data={radarData}
