@@ -9,7 +9,6 @@ import { usePostChatbotSummary } from "@/hooks/usePostChatbotSummary";
 import { useSession } from "next-auth/react";
 import { useFreeTalkStore } from "@/store/useFreeTalkStore";
 import { useTendencyStore } from "@/store/useTendencyStore";
-import { useChatModeStore } from "@/store/useChatModeStore";
 
 type HeaderProps = {
   title: string;
@@ -17,8 +16,6 @@ type HeaderProps = {
 
 export default function Header({ title = "챗봇" }: HeaderProps) {
   const router = useRouter();
-  const { mode, setMode } = useChatModeStore();
-  const isVoiceMode = mode === "voice";
 
   const { data: session } = useSession(); // 로그인 정보 가져오기
   const { messages } = useChatStore();
@@ -34,40 +31,36 @@ export default function Header({ title = "챗봇" }: HeaderProps) {
   const { mutate: chatHistorySummary } = usePostChatbotSummary();
 
   const handleClick = async () => {
-    if (isVoiceMode) {
-      setMode("text");
-    } else {
-      if (currentQuestionId === 12 && hasRecommended) {
-        if (!session?.user?.id) return;
+    if (currentQuestionId === 12 && hasRecommended) {
+      if (!session?.user?.id) return;
 
-        const currentMessages = useChatStore.getState().messages;
-        const lastBotMsg = currentMessages
-          .reverse()
-          .find((m) => m.role === "bot");
-        const planId = lastBotMsg?.planData?.id ?? 5;
+      const currentMessages = useChatStore.getState().messages;
+      const lastBotMsg = currentMessages
+        .reverse()
+        .find((m) => m.role === "bot");
+      const planId = lastBotMsg?.planData?.id ?? 5;
 
-        try {
-          // 모든 작업 순차적으로 수행
-          await chatHistorySummary({
-            userId: session.user.id,
-            messages,
-            planId,
-          });
-          setCurrentQuestionId(0);
-          setHasRecommended(false);
-          clearMessages();
-          clear();
-          resetTendency();
+      try {
+        // 모든 작업 순차적으로 수행
+        await chatHistorySummary({
+          userId: session.user.id,
+          messages,
+          planId,
+        });
+        setCurrentQuestionId(0);
+        setHasRecommended(false);
+        clearMessages();
+        clear();
+        resetTendency();
 
-          // 모든 작업 후에 뒤로가기
-          router.back();
-        } catch (error) {
-          console.error("chatHistorySummary 실패:", error);
-        }
-      } else {
-        // 조건을 만족하지 않는 경우엔 그냥 뒤로 가기
+        // 모든 작업 후에 뒤로가기
         router.back();
+      } catch (error) {
+        console.error("chatHistorySummary 실패:", error);
       }
+    } else {
+      // 조건을 만족하지 않는 경우엔 그냥 뒤로 가기
+      router.back();
     }
   };
 
