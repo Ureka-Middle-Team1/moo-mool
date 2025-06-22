@@ -5,6 +5,7 @@ import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useMemo, useRef } from "react";
+import { maskName } from "./maskName";
 
 type Props = {
   userId: string;
@@ -153,7 +154,7 @@ export default function NearbyUserAvatar({
 
       {/* 이름은 항상 표시 */}
       <span className="mt-1 max-w-[5rem] text-xs break-all text-gray-600">
-        {userInfo?.name}
+        {isMe ? "나" : userInfo?.name ? maskName(userInfo.name) : ""}
       </span>
     </div>
   );
