@@ -13,7 +13,7 @@ type Props = {
   distance?: number;
   isMe?: boolean;
   onClick?: (type?: string) => void;
-  isEmptyStamp?: boolean; // 클릭된 사용자일 경우 empty_stamp로 표시
+  isEmptyStamp?: boolean;
   showHeart?: boolean;
 };
 
@@ -31,7 +31,7 @@ export default function NearbyUserAvatar({
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // 공통 동작 처리 함수
+  // ✅ 클릭 로직
   const triggerClick = () => {
     if (!isMe && profile?.type && onClick) {
       onClick(profile.type);
@@ -39,20 +39,15 @@ export default function NearbyUserAvatar({
     }
   };
 
-  // 모바일 터치 이벤트 (같은 타입일 때만)
+  // ✅ 모바일 터치 이벤트
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el || isMe || !profile?.type) return;
 
     const handleTouch = () => {
-      const myType = localStorage.getItem("myType"); //  내 타입 비교용 (임시 저장)
-      console.log("myType", myType);
-      console.log("profile.type, ", profile.type);
-
+      const myType = localStorage.getItem("myType");
       if (myType && profile.type === myType) {
         triggerClick();
-      } else {
-        console.log("❌ 타입 다름으로 터치 무시됨");
       }
     };
 
@@ -62,16 +57,11 @@ export default function NearbyUserAvatar({
     };
   }, [profile?.type, isMe, onClick]);
 
-  // 클릭 (PC 또는 모바일 공통)
+  // ✅ PC 클릭
   const handleClickAvatar = () => {
     const myType = localStorage.getItem("myType");
-    console.log("isMe : ", isMe);
-    console.log("profile.type : ", profile?.type);
-
     if (!isMe && profile?.type && profile.type === myType) {
       triggerClick();
-    } else {
-      console.log("❌ 클릭 무시됨 - 조건 불충분");
     }
   };
 
@@ -79,7 +69,7 @@ export default function NearbyUserAvatar({
     ? `/assets/moono/${profile.type.toLowerCase()}-moono.png`
     : "/assets/moono/default-moono.png";
 
-  // 위치 고정
+  // ✅ 위치 계산
   const { angleDeg, distancePx } = useMemo(() => {
     const angleDeg = angle ?? Math.random() * 360;
     const rawDistance = distance ?? Math.random() * 30 + 40;
@@ -93,10 +83,12 @@ export default function NearbyUserAvatar({
 
   const offsetY = isMe ? -3.2 : 0;
   const offsetX = isMe ? -2.2 : 0;
-  const size = isMe ? "5rem" : "3rem";
+  const width = isMe ? 48 : 80;
+  const height = isMe ? 48 : 80;
 
   return (
     <div
+      ref={wrapperRef}
       onClick={handleClickAvatar}
       className="absolute flex flex-col items-center text-center"
       style={{
@@ -107,7 +99,7 @@ export default function NearbyUserAvatar({
         zIndex: 10,
         touchAction: "manipulation",
       }}>
-      {/*  하트 애니메이션 */}
+      {/* ✅ 하트 애니메이션 */}
       <AnimatePresence>
         {showHeart && (
           <motion.div
@@ -120,33 +112,33 @@ export default function NearbyUserAvatar({
           </motion.div>
         )}
       </AnimatePresence>
-      {/* 이미지 표시 */}
+
+      {/* ✅ 이미지 표시 */}
       {isEmptyStamp ? (
-        <div
-          className={`relative rounded-full bg-white ${isMe ? "shadow-2xl" : "shadow-xl"}`}
-          style={{ width: size, height: size }}>
-          <motion.img
-            initial={{ scale: 1.6, y: -40, opacity: 0 }}
-            animate={{ scale: 1, y: 0, opacity: 1 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            src="/assets/icons/empty_stamp.png"
-            alt="empty-stamp"
-            width={isMe ? 80 : 48}
-            height={isMe ? 80 : 48}
-            className="scale-90 object-contain"
-          />
-        </div>
+        <motion.img
+          initial={{ scale: 1.6, y: -40, opacity: 0 }}
+          animate={{ scale: 1, y: 0, opacity: 1 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          src="/assets/icons/empty_stamp.png"
+          alt="empty-stamp"
+          width={width}
+          height={height}
+          className="object-contain"
+        />
       ) : (
         <div
-          className={`relative rounded-full bg-white ${isMe ? "shadow-2xl" : "shadow-xl"}`}
-          style={{ width: size, height: size }}>
+          className="relative"
+          style={{
+            width: `${width}px`,
+            height: `${height}px`,
+          }}>
           <Image
             onClick={handleClickAvatar}
             src={imageSrc}
             alt="user-avatar"
-            width={isMe ? 80 : 48}
-            height={isMe ? 80 : 48}
-            className="scale-90 object-contain"
+            width={width}
+            height={height}
+            className="object-contain" // ✅ scale 제거
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src =
                 "/assets/moono/default-moono.png";
@@ -155,7 +147,7 @@ export default function NearbyUserAvatar({
         </div>
       )}
 
-      {/* 이름은 항상 표시 */}
+      {/* ✅ 이름 마스킹 */}
       <span className="mt-1 max-w-[5rem] text-xs break-all text-gray-600">
         {isMe ? "나" : userInfo?.name ? maskName(userInfo.name) : ""}
       </span>
