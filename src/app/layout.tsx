@@ -1,12 +1,34 @@
 import "./globals.css";
 import "./fonts.css";
+import { Metadata } from "next";
 import Providers from "./providers";
 import Script from "next/script";
 import ClientLayout from "@/components/common/ClientLayout";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "무물",
   description: "나에게 딱 맞는 요금제, 재미있게 찾는 방법",
+  openGraph: {
+    title: "무물",
+    description: "나에게 딱 맞는 요금제, 재미있게 찾는 방법",
+    url: "https://moo-mool.com",
+    type: "website",
+    images: [
+      {
+        url: "https://moo-mool.com/assets/banner/moomool_meta.png",
+        width: 1200,
+        height: 630,
+        alt: "무물 미리보기 이미지",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "무물",
+    description: "나에게 딱 맞는 요금제, 재미있게 찾는 방법",
+    images: ["https://moo-mool.com/assets/banner/moomool_meta.png"],
+  },
+  metadataBase: new URL("https://moo-mool.com"),
 };
 
 export default function RootLayout({
@@ -16,33 +38,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className="h-full">
-      <head>
-        <meta property="og:title" content="무물" />
-        <meta
-          property="og:description"
-          content="나에게 딱 맞는 요금제, 재미있게 찾는 방법"
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://moo-mool.com" />
-        <meta
-          property="og:image"
-          content="https://moo-mool.com/assets/banner/moomool_meta.png"
-        />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="무물 미리보기 이미지" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="무물" />
-        <meta
-          name="twitter:description"
-          content="나에게 딱 맞는 요금제, 재미있게 찾는 방법"
-        />
-        <meta
-          name="twitter:image"
-          content="https://moo-mool.com/assets/banner/moomool_meta.png"
-        />
+      <body className="m-0 h-full bg-gray-500 p-0">
+        <Providers>
+          <ClientLayout>{children}</ClientLayout>
+        </Providers>
 
-        {/* 필수 스크립트 */}
+        {/* 구글 애널리틱스 */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-BVLC61P00M"
           strategy="afterInteractive"
@@ -57,15 +58,12 @@ export default function RootLayout({
             });
           `}
         </Script>
+
+        {/* 카카오 SDK */}
         <Script
           src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js"
           strategy="beforeInteractive"
         />
-      </head>
-      <body className="m-0 h-full bg-gray-500 p-0">
-        <Providers>
-          <ClientLayout>{children}</ClientLayout>
-        </Providers>
       </body>
     </html>
   );
