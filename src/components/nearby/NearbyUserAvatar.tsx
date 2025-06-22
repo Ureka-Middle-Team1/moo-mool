@@ -125,7 +125,10 @@ export default function NearbyUserAvatar({
         <div
           className={`relative rounded-full bg-white ${isMe ? "shadow-2xl" : "shadow-xl"}`}
           style={{ width: size, height: size }}>
-          <Image
+          <motion.img
+            initial={{ scale: 1.6, y: -40, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
             src="/assets/icons/empty_stamp.png"
             alt="empty-stamp"
             width={isMe ? 80 : 48}
