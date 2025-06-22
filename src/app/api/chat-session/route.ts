@@ -58,6 +58,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    console.log("plan_id: ", planId);
+
     // 1. 채팅 세션 생성
     const created = await prisma.chatSession.create({
       data: {

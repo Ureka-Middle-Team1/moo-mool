@@ -21,10 +21,13 @@ export async function handleFreeTalkAnswer(
   if (triggeredFSM) {
     if (message.includes("필드 분석 완료")) {
       // "필드 분석 완료"인 경우
-      setCurrentQuestionId(13); // Smart choice API 요청을 위한 트리거
+      setCurrentQuestionId(12); // Smart choice API 요청을 위한 트리거
     } else if (message.includes("FSM")) {
       // "정확한 답변" 로직으로 가야 하는 경우
       setCurrentQuestionId(1); // FSM 흐름의 시작 질문으로 진입
+      const firstFSMQuestion =
+        "오케이, 그럼 이제부터 정확하게 알아보자. 혹시 넌 무제한 요금제 쓰는 중이야?";
+      appendMessage({ role: "bot", content: firstFSMQuestion });
     }
     return;
   }
