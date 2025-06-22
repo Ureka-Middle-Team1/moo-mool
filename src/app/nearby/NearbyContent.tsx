@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { JSX, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NearbyUser } from "@/types/Nearby";
 import NearbyHeader from "@/components/nearby/NearbyHeader";
@@ -8,8 +8,10 @@ import NearbyUserAvatar from "@/components/nearby/NearbyUserAvatar";
 import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { useNearbyStore } from "@/hooks/useNearbyStore";
-import { useInviteMultiple } from "@/hooks/useInviteMultiple";
 import { useNearbySocket } from "@/hooks/useNearbySocket";
+import { bounceVariants } from "./animations";
+import { useIncreaseInvitedCount } from "@/hooks/useIncreseInvitedCount";
+import AnimatedCount from "@/components/nearby/AnimatedCount";
 
 export default function NearbyContent({ session }: { session: any }) {
   const userId = session?.user?.id ?? "";
@@ -27,7 +29,10 @@ export default function NearbyContent({ session }: { session: any }) {
     new Map<string, { angle: number; distance: number }>()
   );
   const { setMyType } = useNearbyStore();
-  const { mutate: inviteMultiple } = useInviteMultiple();
+  const [localInvitedCount, setLocalInvitedCount] = useState(0);
+  const { mutate: increaseInvitedCount } = useIncreaseInvitedCount();
+  // 클릭한 사용자 ID → 하트 표시
+  const [heartSenderId, setHeartSenderId] = useState<string | null>(null);
 
   // 내 타입을 글로벌 상태에 저장
   useEffect(() => {
@@ -37,33 +42,12 @@ export default function NearbyContent({ session }: { session: any }) {
     }
   }, [myProfile?.type]);
 
-  // 초대한 사용자 수 전송
-  const sendInviteCount = () => {
-    if (userId && interactedUserIds.size > 0) {
-      inviteMultiple(
-        { inviterId: userId, count: interactedUserIds.size },
-        {
-          onSuccess: (data) =>
-            console.log("✅ 초대한 사용자 수 반영 완료:", data),
-          onError: (error) =>
-            console.error("❌ 초대한 사용자 수 반영 실패:", error),
-        }
-      );
-    }
-  };
-
-  // 페이지 이탈 시 초대 수 전송
+  // 사용자의 invited_count 수 가져오기
   useEffect(() => {
-    const handleLeave = () => sendInviteCount();
-    window.addEventListener("pagehide", handleLeave);
-    return () => {
-      handleLeave();
-      window.removeEventListener("pagehide", handleLeave);
-    };
-  }, [userId, interactedUserIds]);
-
-  // 클릭 시 중복 alert 방지
-  const recentClickRef = useRef<Set<string>>(new Set());
+    if (userInfo?.invited_count != null && localInvitedCount === 0) {
+      setLocalInvitedCount(userInfo.invited_count);
+    }
+  }, [userInfo?.invited_count]);
 
   // WebSocket 훅 사용
   const wsRef = useNearbySocket({
@@ -74,10 +58,17 @@ export default function NearbyContent({ session }: { session: any }) {
       setUsers(filtered);
     },
     onClickNotice: (from, to, fromId) => {
-      if (!recentClickRef.current.has(fromId)) {
-        alert(`${from}님이 당신을 클릭했습니다`);
-        recentClickRef.current.add(fromId);
+      setHeartSenderId(fromId);
+
+      // 💡 진동 추가
+      if (navigator.vibrate) {
+        navigator.vibrate(300); // 300ms 진동
       }
+
+      // 2초 뒤 하트 사라지게
+      setTimeout(() => {
+        setHeartSenderId(null);
+      }, 2000);
     },
   });
 
@@ -91,6 +82,13 @@ export default function NearbyContent({ session }: { session: any }) {
       if (pos) clickedUserPositions.current.set(targetId, pos);
       setInteractedUserIds((prev) => new Set(prev).add(targetId));
 
+      // 실시간 invitedCount 증가
+      increaseInvitedCount(userId, {
+        onSuccess: () => {
+          setLocalInvitedCount((prev: number) => Math.min(prev + 1, 10));
+        },
+      });
+
       if (wsRef.current.readyState === WebSocket.OPEN) {
         wsRef.current.send(
           JSON.stringify({
@@ -103,6 +101,34 @@ export default function NearbyContent({ session }: { session: any }) {
       }
     }
   };
+
+  //  설명 바 텍스트 동적 생성
+  let boosterDisplay: JSX.Element;
+
+  if (localInvitedCount >= 10) {
+    boosterDisplay = <span className="font-bold text-yellow-400">만렙!</span>;
+  } else if (localInvitedCount >= 5) {
+    boosterDisplay = (
+      <>
+        만렙까지{" "}
+        <span className="font-bold text-yellow-400">
+          <AnimatedCount value={10 - localInvitedCount} />명
+        </span>
+        !
+      </>
+    );
+  } else {
+    boosterDisplay = (
+      <>
+        레벨업까지{" "}
+        <span className="font-bold text-yellow-400">
+          <AnimatedCount value={5 - localInvitedCount} />명
+        </span>
+        !
+      </>
+    );
+  }
+  console.log("bossterDisplay ~~~~~ ", boosterDisplay);
 
   if (!userId) {
     return (
@@ -131,13 +157,27 @@ export default function NearbyContent({ session }: { session: any }) {
         ))}
 
         {/* 나 */}
-        <motion.div
-          key={`nearby-me`}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 120, damping: 12 }}>
-          <NearbyUserAvatar userId={userId} angle={0} distance={0} isMe />
-        </motion.div>
+        <div className="relative flex flex-col items-center">
+          {/* 설명 바 (absolute가 아니라 margin 대신 translate로 명확하게 띄우기) */}
+          <div className="z-40 mb-[-3.5rem] translate-y-[-7rem]">
+            <div className="inline-block rounded-full border border-gray-500 bg-black/70 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-md">
+              {boosterDisplay}
+            </div>
+          </div>
+
+          {/* 아바타 */}
+          <motion.div
+            variants={bounceVariants}
+            animate="visible"
+            initial={false}>
+            <NearbyUserAvatar
+              userId={userId}
+              angle={0}
+              distance={0}
+              isMe={true}
+            />
+          </motion.div>
+        </div>
 
         {/* 주변 유저 */}
         <AnimatePresence>
@@ -149,7 +189,7 @@ export default function NearbyContent({ session }: { session: any }) {
 
             if (!position) {
               const angle = Math.random() * 360;
-              const distance = Math.random() * 30 + 40;
+              const distance = Math.random() * 50 + 45;
               position = { angle, distance };
               positionCache.current.set(user.userId, position);
             }
@@ -157,16 +197,18 @@ export default function NearbyContent({ session }: { session: any }) {
             return (
               <motion.div
                 key={`nearby-${user.userId}-${idx}`}
-                initial={{ scale: 0.5, opacity: 0, y: 10 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
+                initial="hidden"
+                animate="visible"
                 exit={{ scale: 0.5, opacity: 0, y: 10 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                variants={bounceVariants}>
                 <NearbyUserAvatar
                   userId={user.userId}
                   angle={position.angle}
                   distance={position.distance}
                   onClick={(type) => handleUserClick(user.userId, type)}
                   isEmptyStamp={wasClicked}
+                  showHeart={heartSenderId === user.userId}
                 />
               </motion.div>
             );
