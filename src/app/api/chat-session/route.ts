@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // 1. 채팅 세션 생성
     const created = await prisma.chatSession.create({
       data: {
         user_id: userId,
@@ -66,6 +67,14 @@ export async function POST(req: NextRequest) {
         plan_id: planId,
       },
     });
+
+    // 2. 유저의 추천 요금제 DB에 업데이트 (planId가 존재할 때만)
+    if (planId) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { recommended_plan: planId },
+      });
+    }
 
     return NextResponse.json(created);
   } catch (err) {
