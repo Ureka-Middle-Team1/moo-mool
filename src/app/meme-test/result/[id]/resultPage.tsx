@@ -21,6 +21,7 @@ import PlanListCard from "@/components/planList/PlanListCard";
 import { convertToPlanDBApiResponse } from "@/utils/planDataConverter";
 import PlanListCardSkeleton from "@/components/skeleton/PlanListCardSkeleton";
 import NoResultMessage from "@/components/meme/NoResultMessage";
+import LoadingScreen from "@/components/meme/LoadingScreen";
 
 export default function ResultPage({ encryptedId }: { encryptedId: string }) {
   const router = useRouter();
@@ -65,14 +66,7 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
   }
 
   if (isUserLoading || !user) {
-    return (
-      <NoResultMessage
-        message="사용자 정보를 불러오는 중입니다..."
-        subMessage="잠시만 기다려 주세요."
-        imageSrc="/assets/moono/chat-moono.png"
-        buttonText=""
-      />
-    );
+    return <LoadingScreen message="사용자 정보를 불러오는 중입니다..." />;
   }
 
   if (isUserError) {
