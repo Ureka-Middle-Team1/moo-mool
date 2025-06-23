@@ -31,7 +31,6 @@ export const config = {
     // 페이지 경로 (모든 페이지)
     "/chat/:path*",
     "/nearby/:path*",
-    "/planlist/:path*",
     "/meme-test/:id", // meme-test/[id] 테스트 페이지만 제한
 
     // 인증이 필요한 API 경로
