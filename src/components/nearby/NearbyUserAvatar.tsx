@@ -83,7 +83,12 @@ export default function NearbyUserAvatar({
   const { angleDeg, distancePx } = useMemo(() => {
     const angleDeg = angle ?? Math.random() * 360;
     const rawDistance = distance ?? Math.random() * 30 + 40;
-    const distancePx = Math.min(rawDistance * 1.5, 180);
+
+    // 🧠 화면 크기 기준 거리 제한
+    const maxSafeDistance =
+      Math.min(window.innerWidth, window.innerHeight) / 2 - 60;
+    const distancePx = Math.min(rawDistance * 1.5, maxSafeDistance);
+
     return { angleDeg, distancePx };
   }, [userId, angle, distance]);
 
@@ -93,8 +98,8 @@ export default function NearbyUserAvatar({
 
   const offsetY = isMe ? -3.2 : 0;
   const offsetX = isMe ? -2.2 : 0;
-  const width = isMe ? 48 : 80;
-  const height = isMe ? 48 : 80;
+  const width = isMe ? 75 : 50;
+  const height = isMe ? 75 : 50;
 
   return (
     <div
