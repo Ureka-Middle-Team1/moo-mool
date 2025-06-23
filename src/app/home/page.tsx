@@ -91,9 +91,3 @@ export default function HomePage() {
     </div>
   );
 }
-function custom(
-  arg0: (id: any) => JSX.Element,
-  arg1: { duration: number; onAutoClose: () => null; onDismiss: () => null }
-): string | number | null {
-  throw new Error("Function not implemented.");
-}

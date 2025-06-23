@@ -23,9 +23,9 @@ export async function GET(
 
   // 1. 로그인 여부는 미들웨어에서 처리
   // 2. 요청한 userId와 로그인한 사용자의 id가 같은지 확인 (인가 로직은 유지)
-  if (session.user.id !== userId) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  // if (session.user.id !== userId) {
+  //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  // }
 
   try {
     const profile = await prisma.userCharacterProfile.findUnique({

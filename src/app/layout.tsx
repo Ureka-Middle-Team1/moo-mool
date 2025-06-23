@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import Providers from "./providers";
 import Script from "next/script";
 import ClientLayout from "@/components/common/ClientLayout";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "무물",
@@ -46,6 +47,7 @@ export default function RootLayout({
     <html lang="ko" className="h-full">
       <body className="m-0 h-full bg-gray-500 p-0">
         <Providers>
+          <Toaster position="top-center" richColors />
           <ClientLayout>{children}</ClientLayout>
         </Providers>
 
