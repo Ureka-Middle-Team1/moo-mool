@@ -23,6 +23,8 @@ import QuestionExample from "@/components/meme/QuestionExample";
 import ChoiceList from "@/components/meme/ChoiceList";
 import { useUpdateTestedCount } from "@/hooks/useUpdateTestedCount";
 import { useQueryClient } from "@tanstack/react-query";
+import LoadingScreen from "@/components/meme/LoadingScreen";
+import NoResultMessage from "@/components/meme/NoResultMessage";
 
 const difficultyNumberMap: Record<Difficulty, number | null> = {
   low: 1,
@@ -148,14 +150,33 @@ export default function TestQuestionPage() {
 
   const handleBack = () => router.push("/meme-test");
 
-  if (isLoading) return <p>로딩중...</p>;
-  if (error) return <p>문제를 불러오는 중 오류 발생</p>;
-  if (questions.length === 0) return <p>문제가 없습니다.</p>;
+  if (isLoading) return <LoadingScreen message="문제를 불러오는 중..." />;
+  if (error)
+    return (
+      <NoResultMessage
+        message="문제를 불러오는 중 오류가 발생했습니다."
+        buttonText="홈으로"
+        buttonAction={() => router.push("/home")}
+      />
+    );
+  if (questions.length === 0)
+    return (
+      <NoResultMessage
+        message="문제가 없습니다!"
+        subMessage="현재 풀 수 있는 문제가 없습니다."
+        buttonText="홈으로"
+        buttonAction={() => router.push("/home")}
+        imageSrc="/assets/moono/default-moono.png"
+      />
+    );
 
   const question = questions[currentIndex];
   const stageNum = getStageNumber(stageMap[question.stage] || question.stage);
   const diffNum = difficultyNumberMap[question.difficulty];
   const questionNumber = diffNum !== null ? (stageNum - 1) * 3 + diffNum : null;
+  if (isSubmitting) {
+    return <LoadingScreen message="제출 중입니다..." />;
+  }
 
   return (
     <div className="h-full bg-pink-200">

@@ -20,6 +20,7 @@ import { useGetSixTypeRecommendPlan } from "@/hooks/useGetSixTypeRecommendPlan";
 import PlanListCard from "@/components/planList/PlanListCard";
 import { convertToPlanDBApiResponse } from "@/utils/planDataConverter";
 import PlanListCardSkeleton from "@/components/skeleton/PlanListCardSkeleton";
+import NoResultMessage from "@/components/meme/NoResultMessage";
 
 export default function ResultPage({ encryptedId }: { encryptedId: string }) {
   const router = useRouter();
@@ -52,24 +53,49 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
   }, []);
 
   if (!encryptedId || !decryptedId) {
-    return <p>잘못된 접근입니다.</p>;
-  }
-
-  if (isUserLoading) {
-    return <p className="text-center">사용자 정보를 불러오는 중입니다...</p>;
-  }
-
-  if (isUserError || !user) {
     return (
-      <p className="text-center">사용자 정보를 불러오는 데 실패했습니다.</p>
+      <NoResultMessage
+        message="잘못된 접근입니다."
+        subMessage={`유효하지 않은 링크이거나\n접근 권한이 없습니다.`}
+        buttonText="홈으로"
+        buttonAction={() => router.push("/home")}
+        imageSrc="/assets/moono/default-moono.png"
+      />
+    );
+  }
+
+  if (isUserLoading || !user) {
+    return (
+      <NoResultMessage
+        message="사용자 정보를 불러오는 중입니다..."
+        subMessage="잠시만 기다려 주세요."
+        imageSrc="/assets/moono/chat-moono.png"
+        buttonText=""
+      />
+    );
+  }
+
+  if (isUserError) {
+    return (
+      <NoResultMessage
+        message="사용자 정보를 불러오는 데 실패했습니다."
+        subMessage={`네트워크 상태를 확인하거나,\n잠시 후 다시 시도해 주세요.`}
+        buttonText="홈으로"
+        buttonAction={() => router.push("/home")}
+        imageSrc="/assets/moono/calling-moono.png"
+      />
     );
   }
 
   if (!user.characterProfile) {
     return (
-      <p className="text-center">
-        아직 테스트 결과가 없습니다. 테스트를 먼저 진행해주세요.
-      </p>
+      <NoResultMessage
+        message="아직 테스트 결과가 없습니다!"
+        subMessage={`테스트를 먼저 진행해주시면\n나와 닮은 무너를 확인할 수 있어요.`}
+        buttonText="테스트 하러 가기"
+        buttonAction={() => router.push("/meme-test")}
+        imageSrc="/assets/moono/default-moono.png"
+      />
     );
   }
 
