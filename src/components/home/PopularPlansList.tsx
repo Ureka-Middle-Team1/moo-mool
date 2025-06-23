@@ -44,7 +44,7 @@ export default function PopularPlansList() {
             <CarouselItem
               key={plan.id}
               className="flex w-[25rem] justify-center pl-4">
-              <PlanListCard plan={plan} hideBenefits={true} />
+              <PlanListCard plan={plan} />
             </CarouselItem>
           ))}
         </CarouselContent>

@@ -6,6 +6,8 @@ import { useAnimatedCount } from "@/hooks/useAnimatedCount";
 import { useGetTypeRankQuery } from "@/hooks/useGetTypeRankQuery";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import GlobalLoading from "@/app/loading";
+import NoResultMessage from "@/components/meme/NoResultMessage";
 
 export default function TestHomePage() {
   const router = useRouter();
@@ -13,10 +15,17 @@ export default function TestHomePage() {
   const { data, isLoading, isError } = useGetTypeRankQuery();
   const animatedCount = useAnimatedCount(data?.participantCount);
 
-  if (isLoading)
-    return <div className="mt-10 text-center font-medium">로딩 중...</div>;
+  if (isLoading) return <GlobalLoading />;
   if (isError || !data)
-    return <div className="mt-10 text-center">데이터 불러오기 실패</div>;
+    return (
+      <NoResultMessage
+        message="데이터를 불러오는 데 실패했습니다."
+        subMessage={`네트워크 상태를 확인하거나,\n잠시 후 다시 시도해 주세요.`}
+        buttonText="홈으로"
+        buttonAction={() => router.push("/home")}
+        imageSrc="/assets/moono/404-moono.png"
+      />
+    );
 
   const topMoonos = (data?.moonos ?? [])
     .sort((a, b) => b.percent - a.percent)
