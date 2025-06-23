@@ -83,7 +83,7 @@ export default function PlanListCard({
                   alt={service}
                   width={32}
                   height={32}
-                  className={`rounded-full border-2 border-white object-cover ${
+                  className={`border-0.5 rounded-full border-black object-cover ${
                     index !== 0 ? "-ml-3" : ""
                   }`}
                   title={service}

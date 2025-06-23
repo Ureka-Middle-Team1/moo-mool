@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { useEffect, useState, useRef } from "react";
 
 import { motion, AnimatePresence } from "framer-motion";
+import GlobalLoading from "./loading";
 
 const phrases = [
   "무너에게 물어보세요",
@@ -73,14 +74,7 @@ export default function Home() {
 
   // 로딩 중이거나 인증된 사용자는 로딩 페이지 표시
   if (isLoading || isAuthenticated) {
-    return (
-      /* 커스텀 로딩 페이지 추가 */
-      // <LoadingPage
-      //   message={isLoading ? "로그인 확인 중입니다..." : "페이지로 이동 중입니다..."}
-      //   error={null}
-      // />
-      <div>{isLoading ? "로딩중..." : "페이지로 이동 중..."}</div>
-    );
+    return <GlobalLoading />;
   }
 
   return (

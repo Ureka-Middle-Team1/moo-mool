@@ -17,19 +17,15 @@ export default function StageInfo({
   difficulty: Difficulty;
 }) {
   return (
-    <div className="mb-4 text-center text-[17px] text-black">
+    <div className="mb-1 text-center text-[17px] text-black">
       <p
         className={`font-medium ${
           difficulty === "bonus"
             ? "flex justify-center"
             : "flex justify-center gap-5"
         }`}>
-        <span>
-          {stageLabel} - {stageName}
-        </span>
-        {difficulty !== "bonus" && (
-          <span>난이도 {difficultyMap[difficulty]}</span>
-        )}
+        <span>{stageName}</span>
+        {difficulty !== "bonus" && <span>{difficultyMap[difficulty]}</span>}
       </p>
     </div>
   );

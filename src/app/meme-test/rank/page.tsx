@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Header from "@/components/meme/Header";
 import MoonoCard from "@/components/meme/MoonoCard";
 import type { MemeType } from "@/store/memeTypeData";
+import GlobalLoading from "@/app/loading";
 
 export default function RankingPage() {
   const router = useRouter();
@@ -12,8 +13,7 @@ export default function RankingPage() {
 
   const topMoonos = (data?.moonos ?? []).sort((a, b) => b.percent - a.percent);
 
-  if (isLoading)
-    return <div className="mt-10 text-center font-medium">로딩 중...</div>;
+  if (isLoading) return <GlobalLoading />;
   if (isError || !data)
     return <div className="mt-10 text-center">데이터 불러오기 실패</div>;
 

@@ -15,6 +15,7 @@ import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import type { ChartOptions } from "chart.js";
 import EmptyRadarPlaceholder from "../home/EmptyRadarPlaceholder";
 import { useEffect, useRef, useState } from "react";
+import GlobalLoading from "@/app/loading";
 
 // Chart.js 등록
 ChartJS.register(
@@ -128,11 +129,11 @@ export default function UserTendencyRadar() {
   };
 
   if (status === "loading" || isLoading) {
-    return <div>로딩 중...</div>;
+    return <GlobalLoading />;
   }
 
   if (!imagesLoaded) {
-    return <div>이미지 로딩 중...</div>;
+    return <GlobalLoading />;
   }
 
   if (!userId || !data) {
