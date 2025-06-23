@@ -128,7 +128,6 @@ export default function NearbyContent({ session }: { session: any }) {
       </>
     );
   }
-  console.log("bossterDisplay ~~~~~ ", boosterDisplay);
 
   if (!userId) {
     return (

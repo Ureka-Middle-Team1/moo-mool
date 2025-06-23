@@ -44,6 +44,7 @@ export function useNearbySocket({
         })
       );
 
+      // 최초 1회 위치 전송
       const sendLocation = () => {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -66,13 +67,16 @@ export function useNearbySocket({
         );
       };
 
-      sendLocation();
+      // 즉시 1회 추가 위치 전송으로 최초 위치 전송 보장
+      setTimeout(sendLocation, 100);
       intervalId = setInterval(sendLocation, 1000);
     };
 
     socket.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data);
+
+        console.log("[ 전체 유저 ] : ", message.allUsers);
 
         if (
           message.type === "nearby_users" &&
