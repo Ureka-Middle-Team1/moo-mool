@@ -208,6 +208,7 @@ export default function NearbyContent({ session }: { session: any }) {
                   onClick={(type) => handleUserClick(user.userId, type)}
                   isEmptyStamp={wasClicked}
                   showHeart={heartSenderId === user.userId}
+                  isMe={false}
                 />
               </motion.div>
             );

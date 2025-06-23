@@ -6,12 +6,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useMemo, useRef } from "react";
 import { maskName } from "./maskName";
+import { useNearbyStore } from "@/hooks/useNearbyStore";
 
 type Props = {
   userId: string;
   angle?: number;
   distance?: number;
-  isMe?: boolean;
+  isMe: boolean;
   onClick?: (type?: string) => void;
   isEmptyStamp?: boolean;
   showHeart?: boolean;
@@ -30,6 +31,7 @@ export default function NearbyUserAvatar({
   const { data: userInfo } = useGetUserInfo(userId ?? "");
 
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const { myType } = useNearbyStore();
 
   // ✅ 클릭 로직
   const triggerClick = () => {
@@ -58,7 +60,6 @@ export default function NearbyUserAvatar({
   }, [profile?.type, isMe, onClick]);
 
   const handleClickAvatar = () => {
-    const myType = localStorage.getItem("myType");
     console.log("[👆 클릭 시도]", {
       isMe,
       myType,
