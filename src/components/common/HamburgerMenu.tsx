@@ -32,17 +32,18 @@ export default function HamburgerMenu() {
   };
 
   const handleLogin = () => {
-    signIn("kakao", { callbackUrl: "/check-user-type" });
+    signIn("kakao", { callbackUrl: window.location.pathname });
   };
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <button
-          onClick={() => {}}
-          className="flex h-10 w-10 items-center justify-center rounded-full p-0 transition hover:bg-gray-100">
-          <Menu className="h-6 w-6" />
-        </button>
-      </SheetTrigger>
+    <>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <button
+            onClick={() => {}}
+            className="flex h-10 w-10 items-center justify-center rounded-full p-0 transition hover:bg-gray-100">
+            <Menu className="h-6 w-6" />
+          </button>
+        </SheetTrigger>
         <SheetContent
           side="right"
           className="h-screen w-[80vw] max-w-xs px-6 py-4 sm:w-[60vw]">
@@ -80,35 +81,37 @@ export default function HamburgerMenu() {
               로그인
             </button>
           )}
-        {/* ✅ 메뉴 네비게이션 */}
-        <nav className="space-y-4">
-          <button
-            onClick={() => handleNavigate("/home")}
-            className="text-md hover:text-primary block font-semibold">
-            홈
-          </button>
-          <button
-            onClick={() => handleNavigate("/chat")}
-            className="text-md hover:text-primary block font-semibold">
-            챗봇
-          </button>
-          <button
-            onClick={() => handleNavigate("/planlist")}
-            className="text-md hover:text-primary block font-semibold">
-            요금제 리스트
-          </button>
-          <button
-            onClick={() => handleNavigate("/meme-test")}
-            className="text-md hover:text-primary block font-semibold">
-            밈 테스트
-          </button>
-          <button
-            onClick={() => handleNavigate("/nearby")}
-            className="text-md hover:text-primary block font-semibold">
-            주변 친구 찾기
-          </button>
-        </nav>
-      </SheetContent>
-    </Sheet>
+          {/* ✅ 메뉴 네비게이션 */}
+          <nav className="space-y-4">
+            <button
+              onClick={() => handleNavigate("/home")}
+              className="text-md hover:text-primary block font-semibold">
+              홈
+            </button>
+            <button
+              onClick={() => handleNavigate("/chat")}
+              className="text-md hover:text-primary block font-semibold">
+              챗봇
+            </button>
+            <button
+              onClick={() => handleNavigate("/planlist")}
+              className="text-md hover:text-primary block font-semibold">
+              요금제 리스트
+            </button>
+            <button
+              onClick={() => handleNavigate("/meme-test")}
+              className="text-md hover:text-primary block font-semibold">
+              밈 테스트
+            </button>
+            <button
+              onClick={() => handleNavigate("/nearby")}
+              className="text-md hover:text-primary block font-semibold">
+              주변 친구 찾기
+            </button>
+          </nav>
+        </SheetContent>
+      </Sheet>
+      <MyPageModal open={isMyPageOpen} onOpenChange={setIsMyPageOpen} />
+    </>
   );
 }
