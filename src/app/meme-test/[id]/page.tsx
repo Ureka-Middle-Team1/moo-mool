@@ -179,12 +179,12 @@ export default function TestQuestionPage() {
   }
 
   return (
-    <div className="h-full bg-pink-200">
+    <div className="scrollbar-hide h-screen overflow-y-scroll bg-pink-200">
       <Header onBack={handleBack} />
       <ProgressBar currentIndex={currentIndex} total={questions.length} />
       <StageInfo
-        stageLabel={stageMap[question.stage] || question.stage} // "stage1" 등
-        stageName={question.stage} // "SNS" 등
+        stageLabel={stageMap[question.stage] || question.stage}
+        stageName={question.stage}
         difficulty={question.difficulty}
       />
       <QuestionNumber
