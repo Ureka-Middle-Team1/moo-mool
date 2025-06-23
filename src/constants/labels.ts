@@ -35,6 +35,7 @@ export const OTT_LABELS: Record<string, string> = {
   "DISNEY+": "디즈니+",
   WAVVE: "웨이브",
   TVING: "티빙",
+  MILLIE: "밀리의 서재",
 };
 
 //네트워크 라벨 매핑
