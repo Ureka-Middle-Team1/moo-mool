@@ -116,9 +116,7 @@ export default function ChatHistoryList() {
                     )}>
                     <ChatSessionCard
                       id={s.id}
-                      summary={
-                        s.summary || JSON.parse(s.messages)?.[0]?.content
-                      }
+                      summary={s.summary || "요약 내용 없음"}
                       name={s.name}
                     />
                   </CarouselItem>
