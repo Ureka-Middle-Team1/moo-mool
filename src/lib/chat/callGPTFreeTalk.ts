@@ -39,7 +39,7 @@ export async function callGPTFreeTalk(
 
   // 특정 필드에 대한 정보가 반영 되었는지, 응답의 정규식으로 확인
   const summaryRegexGlobal =
-    /^정리하겠습니다:\s*(voice|data|sms|age|type|dis|subscribe):([A-Z0-9_+]+)(?:\s|$)/gm;
+    /정리하겠습니다:\s*(voice|data|sms|age|type|dis|subscribe):([^\s]+)(?:\s|$)/g;
 
   const safeSummary = lastSummary ?? ""; // lastSummary가 null일 경우에는 공백
   const matches = [...reply.matchAll(summaryRegexGlobal)];

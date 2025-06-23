@@ -26,7 +26,9 @@ export default function ChatHistoryList() {
   } = useGetRecentChatSessions(userId ?? "");
 
   const { messages, currentQuestionId } = useChatStore();
-  const shouldShowProgress = currentQuestionId > 0 && messages.length >= 2;
+  // currnetQuestionId가 -1~11 사이이고, message 길이가 2 이상(대화를 시작한 시점)일 때만 progress 표시
+  const shouldShowProgress =
+    currentQuestionId >= -1 && currentQuestionId < 12 && messages.length >= 2;
   const loading = !userId || isLoading || isFetching;
 
   const totalItems = (shouldShowProgress ? 1 : 0) + (sessions?.length ?? 0);
