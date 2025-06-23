@@ -1,22 +1,67 @@
 "use client";
 export const dynamic = "force-dynamic";
-import { JSX, Suspense, useEffect, useRef } from "react";
+import { JSX, Suspense, useEffect, useRef, useState } from "react";
 import HomeHeader from "@/components/home/HomeHeader";
 import HomeRecommendedPlan from "@/components/home/HomeRecommendedPlan";
 import PopularPlansList from "@/components/home/PopularPlansList";
 import TopGradient from "@/components/planDetail/TopGradient";
 import ChatHistoryList from "@/components/home/ChatHistoryList";
 import FeatureBannerSlider from "@/components/home/FeatureBannerSlider";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import JoinAlertToast from "@/components/nearby/JoinAlertToast";
 import { useToast } from "@/components/nearby/use-toast";
+import { toast as sonnerToast } from "sonner";
+import LoginRequiredToast from "@/components/common/LoginRequiredToast";
+import { useSession, signIn } from "next-auth/react";
 
 let toastId: string | number | null = null; // 중복 방지용
 
 export default function HomePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { status } = useSession();
   const { custom, dismiss } = useToast();
   const socketRef = useRef<WebSocket | null>(null);
+  const [redirectPath, setRedirectPath] = useState("");
+  const hasShownToast = useRef(false);
+
+  const handleLogin = () => {
+    const callbackUrl = redirectPath || "/home";
+    signIn("kakao", { callbackUrl });
+  };
+
+  useEffect(() => {
+    const redirect = searchParams.get("redirect");
+
+    if (status === "unauthenticated" && redirect && !hasShownToast.current) {
+      hasShownToast.current = true;
+      setRedirectPath(redirect);
+
+      setTimeout(() => {
+        try {
+          sonnerToast.custom(
+            (t) => (
+              <LoginRequiredToast
+                toastId={t}
+                onLoginClick={() => handleLogin()}
+              />
+            ),
+            {
+              id: "login-required-toast",
+              duration: 5000,
+              unstyled: true,
+            }
+          );
+        } catch (error) {
+          console.error("Toast 표시 실패:", error);
+        }
+      }, 100);
+
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete("redirect");
+      window.history.replaceState({}, "", newUrl.toString());
+    }
+  }, [searchParams, status]);
 
   useEffect(() => {
     const socket = new WebSocket(process.env.NEXT_PUBLIC_WSS_SERVER_URL!);
