@@ -187,8 +187,57 @@ export default function NearbyContent({ session }: { session: any }) {
               : positionCache.current.get(user.userId);
 
             if (!position) {
-              const angle = Math.random() * 360;
-              const distance = Math.random() * 50 + 45;
+              const existingPositions = Array.from(
+                positionCache.current.values()
+              );
+              let angle = 0;
+              let distance = 0;
+              let safe = false;
+
+              const minDistance = 80;
+              const maxDistance = 130;
+
+              const isFarEnough = (
+                x1: number,
+                y1: number,
+                x2: number,
+                y2: number,
+                minGap = 60 // 최소 거리(px)
+              ) => {
+                const dx = x1 - x2;
+                const dy = y1 - y2;
+                return Math.sqrt(dx * dx + dy * dy) > minGap;
+              };
+
+              for (let attempt = 0; attempt < 30; attempt++) {
+                angle = Math.random() * 360;
+                distance =
+                  Math.random() * (maxDistance - minDistance) + minDistance;
+
+                const rad = (angle * Math.PI) / 180;
+                const x = Math.cos(rad) * distance;
+                const y = Math.sin(rad) * distance;
+
+                // 다른 위치들과 충분히 떨어져 있는지 확인
+                const overlap = existingPositions.some((pos) => {
+                  const rad2 = (pos.angle * Math.PI) / 180;
+                  const x2 = Math.cos(rad2) * pos.distance;
+                  const y2 = Math.sin(rad2) * pos.distance;
+                  return !isFarEnough(x, y, x2, y2);
+                });
+
+                if (!overlap) {
+                  safe = true;
+                  break;
+                }
+              }
+
+              if (!safe) {
+                // 실패 시, 가장 멀리 배치
+                angle = Math.random() * 360;
+                distance = maxDistance;
+              }
+
               position = { angle, distance };
               positionCache.current.set(user.userId, position);
             }
