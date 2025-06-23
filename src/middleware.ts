@@ -16,7 +16,7 @@ export async function middleware(req: NextRequest) {
     }
 
     // 2. 비로그인 상태에서 보호된 페이지 접근 시, 홈페이지로 리디렉션
-    const redirectUrl = new URL("/", req.url);
+    const redirectUrl = new URL("/home", req.url);
     redirectUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(redirectUrl);
   }
@@ -31,7 +31,6 @@ export const config = {
     // 페이지 경로 (모든 페이지)
     "/chat/:path*",
     "/nearby/:path*",
-    "/planlist/:path*",
     "/meme-test/:id", // meme-test/[id] 테스트 페이지만 제한
 
     // 인증이 필요한 API 경로
