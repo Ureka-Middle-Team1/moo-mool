@@ -5,45 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
-
-const slides = [
-  {
-    id: 1,
-    title: "내게 딱 맞는 AI 요금제 추천",
-    description: "복잡한 요금제,\nAI가 당신에게 꼭 맞는 걸 찾아드려요",
-    highlight: "AI 요금제 추천",
-    image: "/assets/icons/moomool_banner.png",
-  },
-  {
-    id: 2,
-    title: "나의 콘텐츠 성향은?",
-    description: "영상부터 음악까지,\n당신의 취향을 반영한 요금제",
-    highlight: "콘텐츠",
-    image: "/assets/icons/moomool_banner.png",
-  },
-  {
-    id: 3,
-    title: "나의 콘텐츠 성향은?",
-    description: "영상부터 음악까지,\n당신의 취향을 반영한 요금제",
-    highlight: "콘텐츠",
-    image: "/assets/icons/moomool_banner.png",
-  },
-  {
-    id: 4,
-    title: "나의 콘텐츠 성향은?",
-    description: "영상부터 음악까지,\n당신의 취향을 반영한 요금제",
-    highlight: "콘텐츠",
-    image: "/assets/icons/moomool_banner.png",
-  },
-  {
-    id: 5,
-    title: "나의 콘텐츠 성향은?",
-    description: "영상부터 음악까지,\n당신의 취향을 반영한 요금제",
-    highlight: "콘텐츠",
-    image: "/assets/icons/moomool_banner.png",
-  },
-];
+import { onboardingSlides as slides } from "@/constants/onboardingData";
 
 function HighlightedText({
   text,
@@ -84,9 +46,6 @@ export default function onBoardingPage() {
   const currentSlide = slideState.index;
   const direction = slideState.direction;
   const isLastSlide = currentSlide === slides.length - 1;
-
-  const { data: session } = useSession();
-  const callbackUrl = "/home";
 
   const goToSlide = (nextIndex: number) => {
     setSlideState((prev) => ({
@@ -156,7 +115,9 @@ export default function onBoardingPage() {
 
         {/* 버튼 */}
         <div className="flex justify-center">
-          <Button className="w-[70%]" onClick={handleLast}>
+          <Button
+            className="h-12 w-[80%] rounded-lg bg-black text-gray-100 shadow-md"
+            onClick={handleLast}>
             {isLastSlide ? "시작하기" : "다음으로"}
           </Button>
         </div>
