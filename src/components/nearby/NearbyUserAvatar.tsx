@@ -57,11 +57,20 @@ export default function NearbyUserAvatar({
     };
   }, [profile?.type, isMe, onClick]);
 
-  // ✅ PC 클릭
   const handleClickAvatar = () => {
     const myType = localStorage.getItem("myType");
+    console.log("[👆 클릭 시도]", {
+      isMe,
+      myType,
+      userId,
+      profileType: profile?.type,
+    });
+
     if (!isMe && profile?.type && profile.type === myType) {
+      console.log("✅ triggerClick 실행됨");
       triggerClick();
+    } else {
+      console.warn("❌ 클릭 조건 불충족");
     }
   };
 
