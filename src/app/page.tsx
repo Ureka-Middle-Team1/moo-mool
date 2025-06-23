@@ -42,7 +42,7 @@ export default function Home() {
   }
 
   return (
-    <div className="relative flex h-screen flex-col items-center bg-gradient-to-b from-[#fff1e5] to-[#ffe5f1] px-4">
+    <div className="relative flex h-screen flex-col items-center bg-gradient-to-b from-[#fff5f9] to-[#fdfbfb] px-6">
       {/* 중앙 로고 + 문구 */}
       <div className="flex flex-1 flex-col items-center justify-center">
         <div className="flex flex-col items-center justify-center gap-4">
