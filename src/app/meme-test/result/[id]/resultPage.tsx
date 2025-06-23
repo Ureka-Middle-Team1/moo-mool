@@ -104,7 +104,7 @@ export default function ResultPage({ encryptedId }: { encryptedId: string }) {
     router.push("/meme-test");
   };
   const handleOpenHomeInNewTab = () => {
-    router.push("/chat");
+    router.push("/");
   };
   const handleNavigateToRankPage = () => {
     router.push("/meme-test/rank");
