@@ -6,12 +6,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useMemo, useRef } from "react";
 import { maskName } from "./maskName";
+import { useNearbyStore } from "@/hooks/useNearbyStore";
 
 type Props = {
   userId: string;
   angle?: number;
   distance?: number;
-  isMe?: boolean;
+  isMe: boolean;
   onClick?: (type?: string) => void;
   isEmptyStamp?: boolean;
   showHeart?: boolean;
@@ -30,6 +31,7 @@ export default function NearbyUserAvatar({
   const { data: userInfo } = useGetUserInfo(userId ?? "");
 
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const { myType } = useNearbyStore();
 
   // ✅ 클릭 로직
   const triggerClick = () => {
@@ -57,11 +59,19 @@ export default function NearbyUserAvatar({
     };
   }, [profile?.type, isMe, onClick]);
 
-  // ✅ PC 클릭
   const handleClickAvatar = () => {
-    const myType = localStorage.getItem("myType");
+    console.log("[👆 클릭 시도]", {
+      isMe,
+      myType,
+      userId,
+      profileType: profile?.type,
+    });
+
     if (!isMe && profile?.type && profile.type === myType) {
+      console.log("✅ triggerClick 실행됨");
       triggerClick();
+    } else {
+      console.warn("❌ 클릭 조건 불충족");
     }
   };
 
@@ -73,7 +83,12 @@ export default function NearbyUserAvatar({
   const { angleDeg, distancePx } = useMemo(() => {
     const angleDeg = angle ?? Math.random() * 360;
     const rawDistance = distance ?? Math.random() * 30 + 40;
-    const distancePx = Math.min(rawDistance * 1.5, 180);
+
+    // 🧠 화면 크기 기준 거리 제한
+    const maxSafeDistance =
+      Math.min(window.innerWidth, window.innerHeight) / 2 - 60;
+    const distancePx = Math.min(rawDistance * 1.5, maxSafeDistance);
+
     return { angleDeg, distancePx };
   }, [userId, angle, distance]);
 
@@ -83,8 +98,8 @@ export default function NearbyUserAvatar({
 
   const offsetY = isMe ? -3.2 : 0;
   const offsetX = isMe ? -2.2 : 0;
-  const width = isMe ? 48 : 80;
-  const height = isMe ? 48 : 80;
+  const width = isMe ? 75 : 50;
+  const height = isMe ? 75 : 50;
 
   return (
     <div
