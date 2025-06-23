@@ -33,7 +33,7 @@ export default function PlanListCard({
   return (
     <div
       onClick={handleClick}
-      className="w-full max-w-[21rem] cursor-pointer rounded-2xl border border-gray-400 bg-gray-100 px-8 py-5 shadow-md transition">
+      className="w-full max-w-[18rem] cursor-pointer rounded-2xl border border-gray-400 bg-gray-100 px-7 py-5 shadow-md transition md:max-w-[19rem]">
       <div className="mb-1 flex items-center justify-between">
         <span className="text-sm text-gray-800">LG U+</span>
         <span className="text-sm font-semibold text-pink-600">

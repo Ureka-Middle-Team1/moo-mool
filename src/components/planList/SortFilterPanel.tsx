@@ -66,9 +66,9 @@ export default function SortFilterPanel({
     "rounded-md border px-3 py-2 backdrop-blur-sm bg-white/30 text-sm text-black w-full appearance-none text-left";
 
   return (
-    <div className="flex w-auto justify-start px-4 py-4">
+    <div className="flex w-full max-w-full justify-start py-4">
       <div className="inline-flex gap-4">
-        <div className="relative w-[6rem]">
+        <div className="relative w-[3rem]">
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
@@ -82,7 +82,7 @@ export default function SortFilterPanel({
           <ChevronDown className="pointer-events-none absolute top-2.5 right-3 h-4 w-4 text-gray-500" />
         </div>
 
-        <div className="relative w-[8rem]">
+        <div className="relative w-[7rem]">
           <select
             value={sortTarget ?? ""}
             onChange={(e) =>
@@ -103,7 +103,7 @@ export default function SortFilterPanel({
           <ChevronDown className="pointer-events-none absolute top-2.5 right-3 h-4 w-4 text-gray-500" />
         </div>
 
-        <div className="relative w-[7rem]">
+        <div className="relative w-[6rem]">
           <button
             onClick={() => setShowFilterMenu(!showFilterMenu)}
             className={baseClass}>

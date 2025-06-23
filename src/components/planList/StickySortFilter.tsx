@@ -27,7 +27,7 @@ export default function StickySortFilter({
   setSelectedOttList,
 }: StickySortFilterProps) {
   return (
-    <div className="sticky top-[0rem] z-10">
+    <div className="sticky top-[0rem] z-10 w-full max-w-[18rem]">
       <SortFilterPanel
         selectedNetwork={selectedNetwork}
         setSelectedNetwork={setSelectedNetwork}

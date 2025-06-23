@@ -26,7 +26,7 @@ export default function PlanInfo({
 
       <div className="my-1 mb-5 flex flex-wrap gap-1">
         {data.tags.map((tag, index) => (
-          <TagBadge key={index} text={tag}/>
+          <TagBadge key={index} text={tag} />
         ))}
       </div>
 

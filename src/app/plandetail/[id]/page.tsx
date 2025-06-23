@@ -75,9 +75,9 @@ export default function PlanDetailPage() {
   return (
     <>
       <PlanDetailHeader />
-      <main className="relative flex flex-col items-center space-y-8 overflow-hidden bg-gradient-to-b">
+      <main className="relative flex flex-col items-center space-y-8 overflow-hidden bg-gray-200">
         <TopGradient />
-        <section className="relative z-10 w-full space-y-[3rem]">
+        <section className="relative z-10 w-full space-y-[1rem]">
           {isLoadingContent || !planData ? (
             <PlanInfoSkeleton />
           ) : (

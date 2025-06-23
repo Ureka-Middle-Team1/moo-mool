@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "무물",
     description: "나에게 딱 맞는 요금제, 재미있게 찾는 방법",
+
     url: "https://moo-mool.com",
     type: "website",
     images: [
@@ -31,12 +32,16 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://moo-mool.com"),
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <html lang="ko" className="h-full">
       <body className="m-0 h-full bg-gray-500 p-0">
