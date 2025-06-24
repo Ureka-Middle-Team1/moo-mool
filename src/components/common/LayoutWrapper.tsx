@@ -3,6 +3,7 @@
 
 import { usePathname } from "next/navigation";
 import FloatingChatbotButton from "./FloatingChatbotButton";
+import { useChatRoomExitCleanup } from "@/hooks/useChatRoomExitCleanup";
 
 export default function LayoutWrapper({
   children,
@@ -10,6 +11,8 @@ export default function LayoutWrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+
+  useChatRoomExitCleanup();
 
   // h-screen을 적용할 페이지 경로 설정
   const isFixedScreenPage = pathname === "/" || pathname?.startsWith("/chat");
