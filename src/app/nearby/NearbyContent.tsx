@@ -14,6 +14,8 @@ import { useIncreaseInvitedCount } from "@/hooks/useIncreseInvitedCount";
 import AnimatedCount from "@/components/nearby/AnimatedCount";
 import { useCustomToast } from "@/components/toast/CustomToastProvider";
 
+const MIN_DISTANCE_BETWEEN_USERS = 80; // 겹치지 않게 하기 위한 최소 거리(px)
+
 export default function NearbyContent({ session }: { session: any }) {
   const userId = session?.user?.id ?? "";
   const { data: myProfile, isLoading: isProfileLoading } =
@@ -115,11 +117,23 @@ export default function NearbyContent({ session }: { session: any }) {
       </>
     ));
 
-  if (!userId) {
-    return (
-      <div className="p-4 text-center text-gray-500">로그인이 필요합니다</div>
-    );
-  }
+  const isFarEnough = (angle: number, distance: number) => {
+    const rad = (angle * Math.PI) / 180;
+    const x = Math.cos(rad) * distance;
+    const y = Math.sin(rad) * distance;
+
+    for (const pos of positionCache.current.values()) {
+      const otherRad = (pos.angle * Math.PI) / 180;
+      const ox = Math.cos(otherRad) * pos.distance;
+      const oy = Math.sin(otherRad) * pos.distance;
+      const dx = ox - x;
+      const dy = oy - y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < MIN_DISTANCE_BETWEEN_USERS) return false;
+    }
+
+    return true;
+  };
 
   return (
     <>
@@ -177,9 +191,18 @@ export default function NearbyContent({ session }: { session: any }) {
               : positionCache.current.get(user.userId);
 
             if (!position) {
-              const angle = Math.random() * 360;
-              const distance = Math.random() * 20 + 60;
-              position = { angle, distance };
+              let tries = 0;
+              let newPos;
+              while (tries < 50) {
+                const angle = Math.random() * 360;
+                const distance = Math.random() * 20 + 100;
+                if (isFarEnough(angle, distance)) {
+                  newPos = { angle, distance };
+                  break;
+                }
+                tries++;
+              }
+              position = newPos ?? { angle: Math.random() * 360, distance: 80 };
               positionCache.current.set(user.userId, position);
             }
 
