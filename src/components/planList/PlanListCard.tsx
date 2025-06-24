@@ -40,7 +40,11 @@ export default function PlanListCard({
           월 {price.toLocaleString()}원
         </span>
       </div>
-      <div className="text-lg font-bold">{name}</div>
+      <div
+        className="max-w-full truncate overflow-hidden text-lg font-bold whitespace-nowrap"
+        title={name}>
+        {name}
+      </div>
 
       <div className="scrollbar-hide mt-2 flex w-full flex-nowrap gap-2 overflow-x-auto">
         <Badge className="border-0 bg-[#EEF2FF] whitespace-nowrap text-[#4F46E5]">
