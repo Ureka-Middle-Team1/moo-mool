@@ -75,8 +75,17 @@ export default function NearbyUserAvatar({
     }
   };
 
-  const imageSrc = profile?.type
-    ? `/assets/moono/${profile.type.toLowerCase()}-moono.png`
+  // ✅ 레벨에 따라 이미지 경로 동적으로 계산
+  const invitedCount = userInfo?.invited_count ?? 0;
+  const level = invitedCount >= 10 ? 3 : invitedCount >= 5 ? 2 : 1;
+  const characterType = profile?.type?.toLowerCase();
+
+  const imageSrc = characterType
+    ? isMe
+      ? level === 1
+        ? `/assets/moono/${characterType}-moono.png`
+        : `/assets/moono/lv${level}/${characterType}-moono.png`
+      : `/assets/moono/${characterType}-moono.png`
     : "/assets/moono/default-moono.png";
 
   // ✅ 위치 계산
@@ -142,7 +151,7 @@ export default function NearbyUserAvatar({
             transition={{ duration: 0.3, ease: "easeOut" }}
             src="/assets/icons/empty_stamp.png"
             alt="empty-stamp"
-            className="h-full w-full object-contain" // 👈 이미지가 부모 크기 채우도록 설정
+            className="h-full w-full object-contain"
           />
         </div>
       ) : (

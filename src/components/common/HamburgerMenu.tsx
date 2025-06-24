@@ -11,11 +11,11 @@ import { DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import MyPageModal from "@/components/myPage/MyPageModal";
 import { useMyPageModalStore } from "@/store/useMyPageModalStore";
+import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 
 export default function HamburgerMenu() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-
   const { open: isMyPageOpen, setOpen: setIsMyPageOpen } =
     useMyPageModalStore();
 
@@ -25,7 +25,7 @@ export default function HamburgerMenu() {
   const { data: userCharacterProfile } = useGetUserCharacterProfile(
     userId ?? ""
   );
-
+  const { data: userInfo } = useGetUserInfo(userId);
   const handleNavigate = (path: string) => {
     router.push(path);
     setOpen(false);
@@ -34,6 +34,17 @@ export default function HamburgerMenu() {
   const handleLogin = () => {
     signIn("kakao", { callbackUrl: window.location.pathname });
   };
+
+  // 초대한 친구 수에 따라 레벨 결정 (props로 받은 invitedCount 사용)
+  const invitedCount = userInfo?.invited_count ?? 0;
+  const level = invitedCount >= 10 ? 3 : invitedCount >= 5 ? 2 : 1;
+  const characterType = userCharacterProfile?.type?.toLowerCase();
+  const imagePath = characterType
+    ? level === 1
+      ? `/assets/moono/${characterType}-moono.png`
+      : `/assets/moono/lv${level}/${characterType}-moono.png`
+    : session?.user?.image;
+
   return (
     <>
       <Sheet open={open} onOpenChange={setOpen}>
@@ -59,11 +70,7 @@ export default function HamburgerMenu() {
                 setOpen(false);
               }}>
               <img
-                src={
-                  userCharacterProfile?.type
-                    ? `/assets/moono/${userCharacterProfile.type.toLowerCase()}-moono.png`
-                    : session.user.image
-                }
+                src={imagePath}
                 alt="user-avatar"
                 className="h-10 w-10 rounded-full border border-gray-300 object-contain"
               />
