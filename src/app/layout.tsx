@@ -3,8 +3,8 @@ import "./fonts.css";
 import { Metadata } from "next";
 import Providers from "./providers";
 import Script from "next/script";
-import ClientLayout from "@/components/common/ClientLayout";
 import { Toaster } from "sonner";
+import LayoutWrapper from "@/components/common/LayoutWrapper";
 
 export const metadata: Metadata = {
   title: "무물",
@@ -45,10 +45,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className="h-full">
+      <head>
+        {/* favicon 추가 */}
+        <link
+          rel="icon"
+          href="/assets/stamps/stamp_red.svg"
+          type="image/svg+xml"
+        />
+      </head>
       <body className="m-0 h-full bg-gray-500 p-0">
         <Providers>
           <Toaster position="top-center" richColors />
-          <ClientLayout>{children}</ClientLayout>
+          <LayoutWrapper>{children}</LayoutWrapper>
         </Providers>
 
         {/* 구글 애널리틱스 */}
