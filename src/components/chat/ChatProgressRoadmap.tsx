@@ -31,12 +31,12 @@ export default function ChatProgressToast({
   const [prevId, setPrevId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (currentQuestionId === 0 || currentQuestionId === 12) {
+    if (currentQuestionId === 0) {
       setIsVisible(false);
       return;
     }
 
-    if (currentQuestionId !== prevId && currentQuestionId <= 11) {
+    if (currentQuestionId !== prevId && currentQuestionId <= 12) {
       setPrevId(currentQuestionId);
       setIsVisible(true);
 
@@ -54,13 +54,16 @@ export default function ChatProgressToast({
     return { x };
   };
 
-  if (currentQuestionId === 0 || currentQuestionId === 12) return null;
+  if (currentQuestionId === 0) return null;
 
   const completedId = currentQuestionId - 1;
 
   // 진행률 계산 (음수 방지)
   const progressPercentage =
     completedId > 0 ? ((completedId - 1) / (totalSteps - 1)) * 100 : 0;
+  if (progressPercentage === 0) {
+    return null;
+  }
 
   return (
     <div className="pointer-events-none fixed top-14 left-1/2 z-50 w-full max-w-md -translate-x-1/2 px-4">
@@ -89,7 +92,6 @@ export default function ChatProgressToast({
                   const position = getStepPosition(step - 1);
                   const isCompleted = step < currentQuestionId;
                   const isLastCompleted = step === completedId;
-
                   return (
                     <div
                       key={step}
