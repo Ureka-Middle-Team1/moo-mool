@@ -31,7 +31,8 @@ export default function QuickReplyList({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.3 }}
-        className="w-full px-4 pb-2">
+        className="fixed bottom-[4.5rem] left-1/2 z-50 w-full max-w-md -translate-x-1/2 px-7"
+        style={{ backgroundColor: "transparent" }}>
         <div className="scrollbar-hide overflow-x-auto">
           <div className="inline-flex w-fit gap-2 whitespace-nowrap">
             {quickReplies.map((reply, idx) => (
@@ -43,7 +44,7 @@ export default function QuickReplyList({
             ))}
           </div>
         </div>
-        <div ref={bottomRef} /> {/* 스크롤 기준점 */}
+        <div ref={bottomRef} />
       </motion.div>
     </AnimatePresence>
   );
