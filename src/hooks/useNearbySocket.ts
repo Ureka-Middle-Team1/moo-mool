@@ -82,7 +82,7 @@ export function useNearbySocket({
           message.type === "nearby_users" &&
           Array.isArray(message.nearbyUsers)
         ) {
-          console.log("📍 [근처 유저 목록]", message.nearbyUsers);
+          // consㅗole.log("📍 [근처 유저 목록]", message.nearbyUsers);
           onNearbyUsers(message.nearbyUsers);
         }
 

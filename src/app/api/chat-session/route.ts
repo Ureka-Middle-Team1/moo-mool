@@ -1,15 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 // GET: 최근 채팅 세션 5개
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
 
+  // 로그인 세션 확인
+  const session = await getServerSession(authOptions);
+  const currentUserId = session?.user?.id;
+
   if (!userId) {
     return NextResponse.json(
       { error: "userId가 필요합니다." },
       { status: 400 }
+    );
+  }
+
+  // 권한 검증: 요청한 userId가 현재 로그인한 사용자의 ID와 일치하는지 확인
+  if (userId !== currentUserId) {
+    return NextResponse.json(
+      { error: "세션을 찾을 수 없습니다" },
+      { status: 404 }
     );
   }
 
@@ -51,10 +65,22 @@ export async function POST(req: NextRequest) {
   try {
     const { userId, messages, summary, planId } = await req.json();
 
+    // 로그인 세션 확인
+    const session = await getServerSession(authOptions);
+    const currentUserId = session?.user?.id;
+
     if (!userId || !Array.isArray(messages)) {
       return NextResponse.json(
         { error: "유효하지 않은 요청" },
         { status: 400 }
+      );
+    }
+
+    // 권한 검증: 요청한 userId가 현재 로그인한 사용자의 ID와 일치하는지 확인
+    if (userId !== currentUserId) {
+      return NextResponse.json(
+        { error: "세션을 찾을 수 없습니다" },
+        { status: 404 }
       );
     }
 
