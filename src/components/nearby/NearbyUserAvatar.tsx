@@ -75,17 +75,14 @@ export default function NearbyUserAvatar({
     }
   };
 
-  // ✅ 레벨에 따라 이미지 경로 동적으로 계산
+  // ✅ 레벨 계산
   const invitedCount = userInfo?.invited_count ?? 0;
   const level = invitedCount >= 10 ? 3 : invitedCount >= 5 ? 2 : 1;
   const characterType = profile?.type?.toLowerCase();
 
+  // ✅ 레벨 기반 이미지 경로 (나 자신이든 타인이든 동일 처리)
   const imageSrc = characterType
-    ? isMe
-      ? level === 1
-        ? `/assets/moono/${characterType}-moono.png`
-        : `/assets/moono/lv${level}/${characterType}-moono.png`
-      : `/assets/moono/${characterType}-moono.png`
+    ? `/assets/moono/${level === 1 ? "" : `lv${level}/`}${characterType}-moono.png`
     : "/assets/moono/default-moono.png";
 
   // ✅ 위치 계산
