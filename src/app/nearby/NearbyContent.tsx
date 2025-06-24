@@ -1,6 +1,6 @@
 "use client";
 
-import { JSX, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { NearbyUser } from "@/types/Nearby";
 import NearbyHeader from "@/components/nearby/NearbyHeader";
@@ -14,10 +14,14 @@ import { useIncreaseInvitedCount } from "@/hooks/useIncreseInvitedCount";
 import AnimatedCount from "@/components/nearby/AnimatedCount";
 import { useCustomToast } from "@/components/toast/CustomToastProvider";
 
+const MIN_DISTANCE_BETWEEN_USERS = 80; // 겹치지 않게 하기 위한 최소 거리(px)
+
 export default function NearbyContent({ session }: { session: any }) {
   const userId = session?.user?.id ?? "";
-  const { data: myProfile } = useGetUserCharacterProfile(userId);
-  const { data: userInfo } = useGetUserInfo(userId);
+  const { data: myProfile, isLoading: isProfileLoading } =
+    useGetUserCharacterProfile(userId);
+  const { data: userInfo, isLoading: isUserInfoLoading } =
+    useGetUserInfo(userId);
   const [users, setUsers] = useState<NearbyUser[]>([]);
   const [interactedUserIds, setInteractedUserIds] = useState<Set<string>>(
     new Set()
@@ -35,9 +39,7 @@ export default function NearbyContent({ session }: { session: any }) {
   const toast = useCustomToast();
 
   useEffect(() => {
-    if (myProfile?.type) {
-      setMyType(myProfile.type);
-    }
+    if (myProfile?.type) setMyType(myProfile.type);
   }, [myProfile?.type]);
 
   useEffect(() => {
@@ -86,17 +88,16 @@ export default function NearbyContent({ session }: { session: any }) {
         );
       }
     } else {
-      if (navigator.vibrate) navigator.vibrate(200); // ✅ 진동
-
-      console.log("🍞 토스트 실행 준비");
-
+      if (navigator.vibrate) navigator.vibrate(200);
       toast("나와 다른 타입의 사용자는 누를 수 없어요!");
     }
   };
 
-  // 설명 바 텍스트
-  const boosterDisplay: JSX.Element =
-    localInvitedCount >= 10 ? (
+  const loading = isProfileLoading || isUserInfoLoading;
+
+  const boosterDisplay =
+    !loading &&
+    (localInvitedCount >= 10 ? (
       <span className="font-bold text-yellow-400">만렙!</span>
     ) : localInvitedCount >= 5 ? (
       <>
@@ -114,19 +115,30 @@ export default function NearbyContent({ session }: { session: any }) {
         </span>
         !
       </>
-    );
+    ));
 
-  if (!userId) {
-    return (
-      <div className="p-4 text-center text-gray-500">로그인이 필요합니다</div>
-    );
-  }
+  const isFarEnough = (angle: number, distance: number) => {
+    const rad = (angle * Math.PI) / 180;
+    const x = Math.cos(rad) * distance;
+    const y = Math.sin(rad) * distance;
+
+    for (const pos of positionCache.current.values()) {
+      const otherRad = (pos.angle * Math.PI) / 180;
+      const ox = Math.cos(otherRad) * pos.distance;
+      const oy = Math.sin(otherRad) * pos.distance;
+      const dx = ox - x;
+      const dy = oy - y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < MIN_DISTANCE_BETWEEN_USERS) return false;
+    }
+
+    return true;
+  };
 
   return (
     <>
       <NearbyHeader />
       <div className="relative flex h-screen items-center justify-center overflow-hidden bg-white">
-        {/* 배경 원 */}
         {[20, 40, 60, 90, 110, 130].map((r, idx) => (
           <div
             key={`circle-${r}`}
@@ -143,48 +155,64 @@ export default function NearbyContent({ session }: { session: any }) {
         ))}
 
         {/* 나 */}
-        <div className="relative flex flex-col items-center">
-          <div className="z-40 mb-[-3.5rem] translate-y-[-7rem]">
-            <div className="inline-block rounded-full border border-gray-500 bg-black/70 px-4 py-2 text-sm font-medium text-white shadow-md">
-              {boosterDisplay}
-            </div>
-          </div>
-          <motion.div
-            variants={bounceVariants}
-            animate="visible"
-            initial={false}>
-            <NearbyUserAvatar
-              userId={userId}
-              angle={0}
-              distance={0}
-              isMe={true}
-            />
-          </motion.div>
-        </div>
+        <AnimatePresence>
+          {!loading && (
+            <motion.div
+              className="relative flex flex-col items-center"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}>
+              <div className="z-40 mb-[-3.5rem] translate-y-[-7rem]">
+                <div className="inline-block rounded-full border border-gray-500 bg-black/70 px-4 py-2 text-sm font-medium text-white shadow-md">
+                  {boosterDisplay}
+                </div>
+              </div>
+              <motion.div
+                variants={bounceVariants}
+                animate="visible"
+                initial={false}>
+                <NearbyUserAvatar
+                  userId={userId}
+                  angle={0}
+                  distance={0}
+                  isMe={true}
+                />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* 주변 유저 */}
         <AnimatePresence>
-          {users.map((user, idx) => {
+          {users.map((user) => {
             const wasClicked = interactedUserIds.has(user.userId);
             let position = wasClicked
               ? clickedUserPositions.current.get(user.userId)
               : positionCache.current.get(user.userId);
 
             if (!position) {
-              const angle = Math.random() * 360;
-              const distance = Math.random() * 50 + 45;
-              position = { angle, distance };
+              let tries = 0;
+              let newPos;
+              while (tries < 50) {
+                const angle = Math.random() * 360;
+                const distance = Math.random() * 20 + 100;
+                if (isFarEnough(angle, distance)) {
+                  newPos = { angle, distance };
+                  break;
+                }
+                tries++;
+              }
+              position = newPos ?? { angle: Math.random() * 360, distance: 80 };
               positionCache.current.set(user.userId, position);
             }
 
             return (
               <motion.div
-                key={`nearby-${user.userId}-${idx}`}
-                initial="hidden"
-                animate="visible"
-                exit={{ scale: 0.5, opacity: 0, y: 10 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                variants={bounceVariants}>
+                key={user.userId}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}>
                 <NearbyUserAvatar
                   userId={user.userId}
                   angle={position.angle}
