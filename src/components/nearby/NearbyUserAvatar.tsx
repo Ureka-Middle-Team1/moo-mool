@@ -31,70 +31,28 @@ export default function NearbyUserAvatar({
   const { data: userInfo } = useGetUserInfo(userId ?? "");
 
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const { myType } = useNearbyStore();
-
-  // ✅ 클릭 로직
-  const triggerClick = () => {
-    if (!isMe && profile?.type && onClick) {
-      onClick(profile.type);
-      console.log("✅ 사용자 선택됨 (공통 로직):", profile.type);
-    }
-  };
-
-  // ✅ 모바일 터치 이벤트
-  useEffect(() => {
-    const el = wrapperRef.current;
-    if (!el || isMe || !profile?.type) return;
-
-    const handleTouch = () => {
-      const myType = localStorage.getItem("myType");
-      if (myType && profile.type === myType) {
-        triggerClick();
-      }
-    };
-
-    el.addEventListener("touchstart", handleTouch);
-    return () => {
-      el.removeEventListener("touchstart", handleTouch);
-    };
-  }, [profile?.type, isMe, onClick]);
 
   const handleClickAvatar = () => {
-    console.log("[👆 클릭 시도]", {
-      isMe,
-      myType,
-      userId,
-      profileType: profile?.type,
-    });
-
-    if (!isMe && profile?.type && profile.type === myType) {
-      console.log("✅ triggerClick 실행됨");
-      triggerClick();
-    } else {
-      console.warn("❌ 클릭 조건 불충족");
+    if (!isMe && profile?.type && onClick) {
+      console.log("✅ 아바타 클릭됨 → 타입 전달:", profile.type);
+      onClick(profile.type);
     }
   };
 
-  // ✅ 레벨 계산
   const invitedCount = userInfo?.invited_count ?? 0;
   const level = invitedCount >= 10 ? 3 : invitedCount >= 5 ? 2 : 1;
   const characterType = profile?.type?.toLowerCase();
 
-  // ✅ 레벨 기반 이미지 경로 (나 자신이든 타인이든 동일 처리)
   const imageSrc = characterType
     ? `/assets/moono/${level === 1 ? "" : `lv${level}/`}${characterType}-moono.png`
     : "/assets/moono/default-moono.png";
 
-  // ✅ 위치 계산
   const { angleDeg, distancePx } = useMemo(() => {
     const angleDeg = angle ?? Math.random() * 360;
     const rawDistance = distance ?? Math.random() * 30 + 40;
-
-    // 🧠 화면 크기 기준 거리 제한
     const maxSafeDistance =
       Math.min(window.innerWidth, window.innerHeight) / 2 - 60;
     const distancePx = Math.min(rawDistance * 1.5, maxSafeDistance);
-
     return { angleDeg, distancePx };
   }, [userId, angle, distance]);
 
@@ -120,7 +78,6 @@ export default function NearbyUserAvatar({
         zIndex: 10,
         touchAction: "manipulation",
       }}>
-      {/* ✅ 하트 애니메이션 */}
       <AnimatePresence>
         {showHeart && (
           <motion.div
@@ -134,14 +91,10 @@ export default function NearbyUserAvatar({
         )}
       </AnimatePresence>
 
-      {/* ✅ 이미지 표시 */}
       {isEmptyStamp ? (
         <div
           className="relative"
-          style={{
-            width: `${width}px`,
-            height: `${height}px`,
-          }}>
+          style={{ width: `${width}px`, height: `${height}px` }}>
           <motion.img
             initial={{ scale: 1.6, y: -40, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
@@ -154,10 +107,7 @@ export default function NearbyUserAvatar({
       ) : (
         <div
           className="relative"
-          style={{
-            width: `${width}px`,
-            height: `${height}px`,
-          }}>
+          style={{ width: `${width}px`, height: `${height}px` }}>
           <Image
             onClick={handleClickAvatar}
             src={imageSrc}
@@ -173,7 +123,6 @@ export default function NearbyUserAvatar({
         </div>
       )}
 
-      {/* ✅ 이름 마스킹 */}
       <span className="mt-1 max-w-[5rem] text-xs break-all text-gray-600">
         {isMe ? "나" : userInfo?.name ? maskName(userInfo.name) : ""}
       </span>

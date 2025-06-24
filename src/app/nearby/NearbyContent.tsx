@@ -12,7 +12,7 @@ import { useNearbySocket } from "@/hooks/useNearbySocket";
 import { bounceVariants } from "./animations";
 import { useIncreaseInvitedCount } from "@/hooks/useIncreseInvitedCount";
 import AnimatedCount from "@/components/nearby/AnimatedCount";
-import { useToast } from "@/components/nearby/use-toast";
+import { useCustomToast } from "@/components/toast/CustomToastProvider";
 
 export default function NearbyContent({ session }: { session: any }) {
   const userId = session?.user?.id ?? "";
@@ -31,8 +31,8 @@ export default function NearbyContent({ session }: { session: any }) {
   const [localInvitedCount, setLocalInvitedCount] = useState(0);
   const [heartSenderId, setHeartSenderId] = useState<string | null>(null);
   const { mutate: increaseInvitedCount } = useIncreaseInvitedCount();
-  const { toast } = useToast();
   const { setMyType } = useNearbyStore();
+  const toast = useCustomToast();
 
   useEffect(() => {
     if (myProfile?.type) {
@@ -86,24 +86,11 @@ export default function NearbyContent({ session }: { session: any }) {
         );
       }
     } else {
-      if (navigator.vibrate) navigator.vibrate(200);
+      if (navigator.vibrate) navigator.vibrate(200); // ✅ 진동
 
-      toast.custom(
-        () => (
-          <div
-            className="rounded-full bg-gray-800 px-4 py-2 text-sm text-white shadow-md"
-            style={{
-              position: "fixed",
-              bottom: "3rem",
-              left: "50%",
-              transform: "translateX(-50%)",
-              zIndex: 9999,
-            }}>
-            나와 다른 타입의 사용자는 누를 수 없어요!
-          </div>
-        ),
-        { duration: 2000 }
-      );
+      console.log("🍞 토스트 실행 준비");
+
+      toast("나와 다른 타입의 사용자는 누를 수 없어요!");
     }
   };
 
