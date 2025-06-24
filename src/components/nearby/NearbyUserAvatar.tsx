@@ -126,7 +126,7 @@ export default function NearbyUserAvatar({
         </div>
       )}
 
-      <span className="mt-1 max-w-[5rem] text-xs break-all text-gray-600">
+      <span className="mt-1 max-w-[5rem] text-sm break-all text-gray-600">
         {isMe ? "나" : userInfo?.name ? maskName(userInfo.name) : ""}
       </span>
     </div>
