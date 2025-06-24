@@ -5,6 +5,7 @@ import Providers from "./providers";
 import Script from "next/script";
 import { Toaster } from "sonner";
 import LayoutWrapper from "@/components/common/LayoutWrapper";
+import { CustomToastProvider } from "@/components/toast/CustomToastProvider";
 
 export const metadata: Metadata = {
   title: "무물",
@@ -37,7 +38,6 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
 };
-import { CustomToastProvider } from "@/components/toast/CustomToastProvider"; // ✅ 추가
 
 export default function RootLayout({
   children,
@@ -56,15 +56,13 @@ export default function RootLayout({
       </head>
       <body className="m-0 h-full bg-gray-500 p-0">
         <Providers>
-          <Toaster position="top-center" richColors /> {/* 기본 toast */}
+          <Toaster position="top-center" richColors />
           <CustomToastProvider>
-            {" "}
-            {/* ✅ 커스텀 toast용 provider */}
             <LayoutWrapper>{children}</LayoutWrapper>
           </CustomToastProvider>
         </Providers>
 
-        {/* Google Analytics */}
+        {/* 구글 애널리틱스 */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-BVLC61P00M"
           strategy="afterInteractive"
@@ -80,7 +78,7 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Kakao SDK */}
+        {/* 카카오 SDK */}
         <Script
           src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js"
           strategy="beforeInteractive"
