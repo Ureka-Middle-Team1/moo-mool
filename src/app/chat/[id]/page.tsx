@@ -7,6 +7,7 @@ import { Message } from "@/types/Chat";
 import Header from "@/components/chat/ChatbotHeader";
 import ChatbotHeaderSkeleton from "@/components/skeleton/ChatHeaderSkeleton";
 import ChatMessageListSkeleton from "@/components/skeleton/ChatMessageListSkeleton";
+import NotFound from "@/app/not-found";
 
 export default function ChatSessionDetailPage() {
   const { id } = useParams();
@@ -16,9 +17,7 @@ export default function ChatSessionDetailPage() {
 
   // 에러 처리
   if (error) {
-    return (
-      <div className="p-4 text-sm text-red-500">세션을 불러올 수 없습니다.</div>
-    );
+    return <NotFound />;
   }
 
   // 메시지 파싱
