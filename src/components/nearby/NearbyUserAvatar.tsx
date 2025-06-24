@@ -4,9 +4,8 @@ import { useGetUserCharacterProfile } from "@/hooks/useGetUserCharacterProfile";
 import { useGetUserInfo } from "@/hooks/useGetUserInfo";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { maskName } from "./maskName";
-import { useNearbyStore } from "@/hooks/useNearbyStore";
 
 type Props = {
   userId: string;
@@ -27,26 +26,25 @@ export default function NearbyUserAvatar({
   isEmptyStamp = false,
   showHeart = false,
 }: Props) {
-  const { data: profile } = useGetUserCharacterProfile(userId);
-  const { data: userInfo } = useGetUserInfo(userId ?? "");
+  // ✅ 훅은 항상 호출
+  const { data: profile, isLoading: isProfileLoading } =
+    useGetUserCharacterProfile(userId);
+  const { data: userInfo, isLoading: isUserInfoLoading } =
+    useGetUserInfo(userId);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const handleClickAvatar = () => {
-    if (!isMe && profile?.type && onClick) {
-      console.log("✅ 아바타 클릭됨 → 타입 전달:", profile.type);
-      onClick(profile.type);
-    }
-  };
+  const loading = isProfileLoading || isUserInfoLoading;
 
+  const characterType = profile?.type?.toLowerCase();
   const invitedCount = userInfo?.invited_count ?? 0;
   const level = invitedCount >= 10 ? 3 : invitedCount >= 5 ? 2 : 1;
-  const characterType = profile?.type?.toLowerCase();
 
   const imageSrc = characterType
     ? `/assets/moono/${level === 1 ? "" : `lv${level}/`}${characterType}-moono.png`
     : "/assets/moono/default-moono.png";
 
+  // ✅ useMemo는 항상 같은 위치에서 호출되도록 보장
   const { angleDeg, distancePx } = useMemo(() => {
     const angleDeg = angle ?? Math.random() * 360;
     const rawDistance = distance ?? Math.random() * 30 + 40;
@@ -64,6 +62,16 @@ export default function NearbyUserAvatar({
   const offsetX = isMe ? -2.2 : 0;
   const width = isMe ? 75 : 50;
   const height = isMe ? 75 : 50;
+
+  const handleClickAvatar = () => {
+    if (!isMe && profile?.type && onClick) {
+      console.log("✅ 아바타 클릭됨 → 타입 전달:", profile.type);
+      onClick(profile.type);
+    }
+  };
+
+  // ✅ 로딩 중이면 렌더링 생략하되, 훅은 항상 호출된 상태
+  if (loading) return null;
 
   return (
     <div
@@ -92,9 +100,7 @@ export default function NearbyUserAvatar({
       </AnimatePresence>
 
       {isEmptyStamp ? (
-        <div
-          className="relative"
-          style={{ width: `${width}px`, height: `${height}px` }}>
+        <div className="relative" style={{ width, height }}>
           <motion.img
             initial={{ scale: 1.6, y: -40, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
@@ -105,11 +111,8 @@ export default function NearbyUserAvatar({
           />
         </div>
       ) : (
-        <div
-          className="relative"
-          style={{ width: `${width}px`, height: `${height}px` }}>
+        <div className="relative" style={{ width, height }}>
           <Image
-            onClick={handleClickAvatar}
             src={imageSrc}
             alt="user-avatar"
             width={width}
@@ -123,7 +126,7 @@ export default function NearbyUserAvatar({
         </div>
       )}
 
-      <span className="mt-1 max-w-[5rem] text-xs break-all text-gray-600">
+      <span className="mt-1 max-w-[5rem] text-sm break-all text-gray-600">
         {isMe ? "나" : userInfo?.name ? maskName(userInfo.name) : ""}
       </span>
     </div>
