@@ -19,9 +19,13 @@ export default function PlanInfo({
 }: PlanInfoProps) {
   return (
     <div className="px-8">
-      <h1 className="pt-5 text-[1.75rem] leading-snug font-bold [word-break:keep-all] text-gray-900">
-        {data.name}
-      </h1>
+      <div className="scrollbar-hide w-full overflow-x-auto whitespace-nowrap">
+        <h1
+          className="inline-block max-w-full truncate pt-5 text-[1.75rem] leading-snug font-bold [word-break:keep-all] text-gray-900"
+          title={data.name}>
+          {data.name}
+        </h1>
+      </div>
       <p className="text-[1rem] font-semibold text-gray-900">{data.price}</p>
 
       <div className="my-1 mb-5 flex flex-wrap gap-1">
