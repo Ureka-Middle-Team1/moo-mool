@@ -12,6 +12,7 @@ import { useNearbySocket } from "@/hooks/useNearbySocket";
 import { bounceVariants } from "./animations";
 import { useIncreaseInvitedCount } from "@/hooks/useIncreseInvitedCount";
 import AnimatedCount from "@/components/nearby/AnimatedCount";
+import { useToast } from "@/components/nearby/use-toast";
 
 export default function NearbyContent({ session }: { session: any }) {
   const userId = session?.user?.id ?? "";
@@ -21,35 +22,30 @@ export default function NearbyContent({ session }: { session: any }) {
   const [interactedUserIds, setInteractedUserIds] = useState<Set<string>>(
     new Set()
   );
-
   const positionCache = useRef(
     new Map<string, { angle: number; distance: number }>()
   );
   const clickedUserPositions = useRef(
     new Map<string, { angle: number; distance: number }>()
   );
-  const { setMyType } = useNearbyStore();
   const [localInvitedCount, setLocalInvitedCount] = useState(0);
-  const { mutate: increaseInvitedCount } = useIncreaseInvitedCount();
-  // 클릭한 사용자 ID → 하트 표시
   const [heartSenderId, setHeartSenderId] = useState<string | null>(null);
+  const { mutate: increaseInvitedCount } = useIncreaseInvitedCount();
+  const { toast } = useToast();
+  const { setMyType } = useNearbyStore();
 
-  // 내 타입을 글로벌 상태에 저장
   useEffect(() => {
     if (myProfile?.type) {
       setMyType(myProfile.type);
-      console.log(" 내 타입 저장됨:", myProfile.type);
     }
   }, [myProfile?.type]);
 
-  // 사용자의 invited_count 수 가져오기
   useEffect(() => {
     if (userInfo?.invited_count != null && localInvitedCount === 0) {
       setLocalInvitedCount(userInfo.invited_count);
     }
   }, [userInfo?.invited_count]);
 
-  // WebSocket 훅 사용
   const wsRef = useNearbySocket({
     userId,
     userName: userInfo?.name ?? "",
@@ -59,20 +55,11 @@ export default function NearbyContent({ session }: { session: any }) {
     },
     onClickNotice: (from, to, fromId) => {
       setHeartSenderId(fromId);
-
-      // 💡 진동 추가
-      if (navigator.vibrate) {
-        navigator.vibrate(300); // 300ms 진동
-      }
-
-      // 2초 뒤 하트 사라지게
-      setTimeout(() => {
-        setHeartSenderId(null);
-      }, 2000);
+      if (navigator.vibrate) navigator.vibrate(300);
+      setTimeout(() => setHeartSenderId(null), 2000);
     },
   });
 
-  // 사용자 클릭 처리
   const handleUserClick = (targetId: string, clickedType?: string) => {
     const myType = myProfile?.type;
     if (!clickedType || !myType || !wsRef.current || !userInfo?.name) return;
@@ -82,10 +69,9 @@ export default function NearbyContent({ session }: { session: any }) {
       if (pos) clickedUserPositions.current.set(targetId, pos);
       setInteractedUserIds((prev) => new Set(prev).add(targetId));
 
-      // 실시간 invitedCount 증가
       increaseInvitedCount(userId, {
         onSuccess: () => {
-          setLocalInvitedCount((prev: number) => Math.min(prev + 1, 10));
+          setLocalInvitedCount((prev) => Math.min(prev + 1, 10));
         },
       });
 
@@ -99,16 +85,33 @@ export default function NearbyContent({ session }: { session: any }) {
           })
         );
       }
+    } else {
+      if (navigator.vibrate) navigator.vibrate(200);
+
+      toast.custom(
+        () => (
+          <div
+            className="rounded-full bg-gray-800 px-4 py-2 text-sm text-white shadow-md"
+            style={{
+              position: "fixed",
+              bottom: "3rem",
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 9999,
+            }}>
+            나와 다른 타입의 사용자는 누를 수 없어요!
+          </div>
+        ),
+        { duration: 2000 }
+      );
     }
   };
 
-  //  설명 바 텍스트 동적 생성
-  let boosterDisplay: JSX.Element;
-
-  if (localInvitedCount >= 10) {
-    boosterDisplay = <span className="font-bold text-yellow-400">만렙!</span>;
-  } else if (localInvitedCount >= 5) {
-    boosterDisplay = (
+  // 설명 바 텍스트
+  const boosterDisplay: JSX.Element =
+    localInvitedCount >= 10 ? (
+      <span className="font-bold text-yellow-400">만렙!</span>
+    ) : localInvitedCount >= 5 ? (
       <>
         만렙까지{" "}
         <span className="font-bold text-yellow-400">
@@ -116,9 +119,7 @@ export default function NearbyContent({ session }: { session: any }) {
         </span>
         !
       </>
-    );
-  } else {
-    boosterDisplay = (
+    ) : (
       <>
         레벨업까지{" "}
         <span className="font-bold text-yellow-400">
@@ -127,7 +128,6 @@ export default function NearbyContent({ session }: { session: any }) {
         !
       </>
     );
-  }
 
   if (!userId) {
     return (
@@ -157,14 +157,11 @@ export default function NearbyContent({ session }: { session: any }) {
 
         {/* 나 */}
         <div className="relative flex flex-col items-center">
-          {/* 설명 바 (absolute가 아니라 margin 대신 translate로 명확하게 띄우기) */}
           <div className="z-40 mb-[-3.5rem] translate-y-[-7rem]">
-            <div className="inline-block rounded-full border border-gray-500 bg-black/70 px-4 py-2 text-sm font-medium whitespace-nowrap text-white shadow-md">
+            <div className="inline-block rounded-full border border-gray-500 bg-black/70 px-4 py-2 text-sm font-medium text-white shadow-md">
               {boosterDisplay}
             </div>
           </div>
-
-          {/* 아바타 */}
           <motion.div
             variants={bounceVariants}
             animate="visible"
@@ -187,57 +184,8 @@ export default function NearbyContent({ session }: { session: any }) {
               : positionCache.current.get(user.userId);
 
             if (!position) {
-              const existingPositions = Array.from(
-                positionCache.current.values()
-              );
-              let angle = 0;
-              let distance = 0;
-              let safe = false;
-
-              const minDistance = 80;
-              const maxDistance = 130;
-
-              const isFarEnough = (
-                x1: number,
-                y1: number,
-                x2: number,
-                y2: number,
-                minGap = 60 // 최소 거리(px)
-              ) => {
-                const dx = x1 - x2;
-                const dy = y1 - y2;
-                return Math.sqrt(dx * dx + dy * dy) > minGap;
-              };
-
-              for (let attempt = 0; attempt < 30; attempt++) {
-                angle = Math.random() * 360;
-                distance =
-                  Math.random() * (maxDistance - minDistance) + minDistance;
-
-                const rad = (angle * Math.PI) / 180;
-                const x = Math.cos(rad) * distance;
-                const y = Math.sin(rad) * distance;
-
-                // 다른 위치들과 충분히 떨어져 있는지 확인
-                const overlap = existingPositions.some((pos) => {
-                  const rad2 = (pos.angle * Math.PI) / 180;
-                  const x2 = Math.cos(rad2) * pos.distance;
-                  const y2 = Math.sin(rad2) * pos.distance;
-                  return !isFarEnough(x, y, x2, y2);
-                });
-
-                if (!overlap) {
-                  safe = true;
-                  break;
-                }
-              }
-
-              if (!safe) {
-                // 실패 시, 가장 멀리 배치
-                angle = Math.random() * 360;
-                distance = maxDistance;
-              }
-
+              const angle = Math.random() * 360;
+              const distance = Math.random() * 50 + 45;
               position = { angle, distance };
               positionCache.current.set(user.userId, position);
             }
