@@ -45,6 +45,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className="h-full">
+      <head>
+        {/* favicon 추가 */}
+        <link
+          rel="icon"
+          href="/assets/stamps/stamp_red.svg"
+          type="image/svg+xml"
+        />
+      </head>
       <body className="m-0 h-full bg-gray-500 p-0">
         <Providers>
           <Toaster position="top-center" richColors />
