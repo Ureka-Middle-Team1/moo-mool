@@ -184,7 +184,7 @@ export default function NearbyContent({ session }: { session: any }) {
 
         {/* 주변 유저 */}
         <AnimatePresence>
-          {users.map((user, idx) => {
+          {users.map((user) => {
             const wasClicked = interactedUserIds.has(user.userId);
             let position = wasClicked
               ? clickedUserPositions.current.get(user.userId)
@@ -208,8 +208,8 @@ export default function NearbyContent({ session }: { session: any }) {
 
             return (
               <motion.div
-                key={`nearby-${user.userId}-${idx}`}
-                initial={{ opacity: 0, y: 30 }}
+                key={user.userId}
+                initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}>
