@@ -47,7 +47,7 @@ export default function TextPage() {
       {/* Progress Toast */}
       <ChatProgressToast currentQuestionId={currentQuestionId} />
       {/* 채팅 메시지 영역만 스크롤 */}
-      <div className="scrollbar-hide flex-1 overflow-y-auto pb-9">
+      <div className="scrollbar-hide flex-1 overflow-y-auto">
         <ChatMessageList messages={messages} />
         <QuickReplyList onSubmit={handleSubmit} bottomRef={bottomRef} />
       </div>

@@ -16,7 +16,7 @@ export default function ChatMessageList({ messages }: ChatMessageListProps) {
 
   return (
     <div className="scrollbar-hide h-full overflow-y-auto">
-      <div className="space-y-2 px-4 py-2">
+      <div className="space-y-2 px-4 py-2 pb-10">
         {messages.map((msg, idx) => {
           const isLast = isLastMessageBot && msg === lastBot;
           return (
