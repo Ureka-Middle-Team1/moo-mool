@@ -178,7 +178,7 @@ export default function NearbyContent({ session }: { session: any }) {
 
             if (!position) {
               const angle = Math.random() * 360;
-              const distance = Math.random() * 50 + 45;
+              const distance = Math.random() * 20 + 60;
               position = { angle, distance };
               positionCache.current.set(user.userId, position);
             }
