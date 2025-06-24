@@ -26,7 +26,7 @@ export function CustomToastProvider({ children }: { children: ReactNode }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-12 left-1/2 z-[9999999] -translate-x-1/2 transform rounded-full bg-gray-900/80 px-4 py-2 text-sm text-white shadow-lg"
+            className="fixed bottom-12 left-1/2 z-[9999999] w-[min(65vw,370px)] -translate-x-1/2 transform overflow-visible rounded-full bg-gray-900/80 px-6 py-2 text-center text-[clamp(10px,3vw,16px)] whitespace-nowrap text-white shadow-lg"
             style={{ pointerEvents: "auto" }}>
             {message}
           </motion.div>
