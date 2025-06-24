@@ -113,7 +113,6 @@ export default function NearbyUserAvatar({
       ) : (
         <div className="relative" style={{ width, height }}>
           <Image
-            onClick={handleClickAvatar}
             src={imageSrc}
             alt="user-avatar"
             width={width}
