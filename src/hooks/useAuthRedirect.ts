@@ -17,12 +17,12 @@ export const useAuthRedirect = () => {
           if (data.isNew) {
             router.replace("/onboarding");
           } else {
-            router.replace("/onboarding");
+            router.replace("/home");
           }
         } catch (error) {
           console.error("사용자 타입 확인 실패:", error);
           // 에러 발생 시 기본적으로 홈으로 이동
-          router.replace("/onboarding");
+          router.replace("/home");
         }
       };
 
