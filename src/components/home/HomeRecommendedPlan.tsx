@@ -5,10 +5,14 @@ import { useGetPlanById } from "@/hooks/useGetPlanById";
 import { useSession } from "next-auth/react";
 import PlanListCard from "../planList/PlanListCard";
 import PlanListCardSkeleton from "@/components/skeleton/PlanListCardSkeleton";
+import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { CarouselItem } from "../ui/carousel";
 
 export default function HomeRecommendedPlan() {
   const { data: session, status } = useSession();
   const userId = session?.user?.id;
+  const router = useRouter();
 
   const { data: userInfo, isLoading: userLoading } = useGetUserInfo(
     userId ?? ""
@@ -22,7 +26,26 @@ export default function HomeRecommendedPlan() {
   } = useGetPlanById(recommendedPlanId);
 
   const isLoadingAll = status === "loading" || userLoading || planLoading;
-
+  if (status === "unauthenticated")
+    return (
+      <div className="flex w-full flex-col items-center justify-center gap-3">
+        <h2 className="text-gray-900x flex w-full pl-4 text-lg font-semibold">
+          나의 추천 요금제
+        </h2>
+        <Card
+          onClick={() => router.push("/")}
+          className="my-2 flex w-[15rem] cursor-pointer flex-col justify-center rounded-xl border border-gray-300 bg-white p-4 shadow-sm md:mx-8 md:max-w-[19rem]">
+          <CardHeader className="p-0 pb-1">
+            <CardTitle className="truncate text-sm font-semibold text-gray-900">
+              아직 추천받은 요금제가 없어요
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0 pt-1">
+            <p className="truncate text-xs text-gray-600">로그인하러 가기</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
   return (
     <div className="flex w-full flex-col items-center justify-center gap-3">
       <h2 className="text-gray-900x flex w-full pl-4 text-lg font-semibold">
@@ -31,8 +54,10 @@ export default function HomeRecommendedPlan() {
 
       <div className="flex w-[21rem] items-center justify-center">
         {isLoadingAll || !userId ? (
+          // ⏳ 로딩 중이면 스켈레톤
           <PlanListCardSkeleton />
         ) : planData && !planError ? (
+          // ✅ 정상 데이터 있을 때 PlanCard 렌더링
           <PlanListCard
             plan={{
               id: planData.id,
@@ -48,7 +73,12 @@ export default function HomeRecommendedPlan() {
             }}
             hideBenefits={true}
           />
-        ) : null}
+        ) : (
+          // planData가 없거나 에러일 때 보여줄 UI
+          <div className="ml-1 flex h-full w-[14rem] items-center justify-center rounded-xl border border-gray-300 bg-white p-4 shadow-sm md:w-[16rem]">
+            <p className="text-sm text-gray-500">추천받은 요금제가 없습니다.</p>
+          </div>
+        )}
       </div>
     </div>
   );
