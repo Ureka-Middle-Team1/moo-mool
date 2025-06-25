@@ -31,8 +31,13 @@ export async function GET(
 
     if (!profile) {
       return NextResponse.json(
-        { message: "UserCharacterProfile not found" },
-        { status: 404 }
+        {
+          user_id: userId,
+          type: "default",
+          plan: null,
+          isDefault: true, // 선택: 클라이언트에서 구분하려면
+        },
+        { status: 200 }
       );
     }
 

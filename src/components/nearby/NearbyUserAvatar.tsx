@@ -26,25 +26,30 @@ export default function NearbyUserAvatar({
   isEmptyStamp = false,
   showHeart = false,
 }: Props) {
-  // ✅ 훅은 항상 호출
-  const { data: profile, isLoading: isProfileLoading } =
-    useGetUserCharacterProfile(userId);
+  const {
+    data: profile,
+    isLoading: isProfileLoading,
+    isError: isProfileError,
+  } = useGetUserCharacterProfile(userId);
   const { data: userInfo, isLoading: isUserInfoLoading } =
     useGetUserInfo(userId);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
-
   const loading = isProfileLoading || isUserInfoLoading;
 
-  const characterType = profile?.type?.toLowerCase();
+  // ✅ profile이 없거나 에러일 경우 "default"로 fallback
+  const characterType = !isProfileError
+    ? (profile?.type?.toLowerCase() ?? "default")
+    : "default";
+
   const invitedCount = userInfo?.invited_count ?? 0;
   const level = invitedCount >= 10 ? 3 : invitedCount >= 5 ? 2 : 1;
 
-  const imageSrc = characterType
-    ? `/assets/moono/${level === 1 ? "" : `lv${level}/`}${characterType}-moono.png`
-    : "/assets/moono/default-moono.png";
+  const imageSrc =
+    characterType === "default"
+      ? "/assets/moono/default-moono.png"
+      : `/assets/moono/${level === 1 ? "" : `lv${level}/`}${characterType}-moono.png`;
 
-  // ✅ useMemo는 항상 같은 위치에서 호출되도록 보장
   const { angleDeg, distancePx } = useMemo(() => {
     const angleDeg = angle ?? Math.random() * 360;
     const rawDistance = distance ?? Math.random() * 30 + 40;
@@ -64,13 +69,16 @@ export default function NearbyUserAvatar({
   const height = isMe ? 75 : 50;
 
   const handleClickAvatar = () => {
-    if (!isMe && profile?.type && onClick) {
-      console.log("✅ 아바타 클릭됨 → 타입 전달:", profile.type);
-      onClick(profile.type);
+    if (!isMe && onClick) {
+      const clickType = !isProfileError
+        ? (profile?.type ?? "default")
+        : "default";
+      console.log("✅ 아바타 클릭됨 → 타입 전달:", clickType);
+      onClick(clickType);
     }
   };
 
-  // ✅ 로딩 중이면 렌더링 생략하되, 훅은 항상 호출된 상태
+  // ✅ 로딩 중이면 생략 (훅은 호출되어 있음)
   if (loading) return null;
 
   return (
@@ -113,14 +121,17 @@ export default function NearbyUserAvatar({
       ) : (
         <div className="relative" style={{ width, height }}>
           <Image
+            key={imageSrc}
             src={imageSrc}
             alt="user-avatar"
             width={width}
             height={height}
             className="object-contain"
             onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src =
-                "/assets/moono/default-moono.png";
+              const target = e.currentTarget as HTMLImageElement;
+              if (!target.src.includes("default-moono.png")) {
+                target.src = "/assets/moono/default-moono.png";
+              }
             }}
           />
         </div>
