@@ -11,6 +11,6 @@ export const useGetPlanById = (id: number | undefined) => {
       console.log(res.data);
       return res.data;
     },
-    enabled: id !== undefined,
+    enabled: id != null,
   });
 };
