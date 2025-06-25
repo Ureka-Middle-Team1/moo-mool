@@ -42,8 +42,9 @@ export default function TypingMessage({
   return (
     <>
       <div
-        className="max-w-[75%] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl bg-white px-3 py-2 text-sm shadow-md"
-        style={{ width: `${estimatedWidth}px` }}>
+        className="inline-block max-w-[15rem] min-w-[80px] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl bg-white px-3 py-2 text-sm break-words shadow-md"
+        // style={{ width: `${estimatedWidth}px` }}
+      >
         {displayedText}
       </div>
       <div ref={bottomRef} />

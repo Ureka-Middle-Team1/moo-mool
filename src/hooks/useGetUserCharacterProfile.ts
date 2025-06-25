@@ -10,7 +10,7 @@ export const useGetUserCharacterProfile = (userId: string) => {
       const { data } = await client.get(`/user-character-profile/${userId}`);
       return data;
     },
-    staleTime: 1000 * 60 * 5, // 5분 캐싱
+    staleTime: 0,
     retry: 2,
   });
 };
