@@ -25,7 +25,7 @@ export default function Home() {
 
   const handleLogin = () => {
     // 리다이렉트 경로가 있으면 로그인 후 해당 페이지로 이동
-    signIn("kakao", { callbackUrl: "/home" });
+    signIn("kakao", { callbackUrl: "/onboarding" });
   };
 
   const handleExplore = () => {
