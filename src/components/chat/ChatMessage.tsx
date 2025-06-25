@@ -72,7 +72,7 @@ export default function ChatMessage({
         {isLastBotMessage ? (
           <TypingMessage fullText={message.content} />
         ) : (
-          <div className="max-w-[75%] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl bg-white px-3 py-2 text-sm shadow-md">
+          <div className="inline-block max-w-[15rem] min-w-[80px] rounded-tr-2xl rounded-br-2xl rounded-bl-2xl bg-white px-3 py-2 text-sm break-words shadow-md">
             {message.content}
           </div>
         )}
@@ -80,4 +80,3 @@ export default function ChatMessage({
     </div>
   );
 }
-
