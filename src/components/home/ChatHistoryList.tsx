@@ -14,11 +14,13 @@ import { ChatSessionCard } from "./ChatSessionCard";
 import { ChatSessionCardSkeleton } from "../skeleton/ChatSessionCardSkeleton";
 import { cn } from "@/lib/utils";
 import { CarouselApi } from "@/components/ui/carousel";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { useRouter } from "next/navigation";
 
 export default function ChatHistoryList() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const userId = session?.user?.id;
-
+  const router = useRouter();
   const {
     data: sessions,
     isLoading,
@@ -50,6 +52,22 @@ export default function ChatHistoryList() {
       carouselApi.off("select", onSelect); // 이벤트 해제
     };
   }, [carouselApi]);
+
+  if (status === "unauthenticated")
+    return (
+      <Card
+        onClick={() => router.push("/")}
+        className="mx-11 my-2 flex w-[15rem] cursor-pointer flex-col justify-center rounded-xl border border-gray-300 bg-white p-4 shadow-sm md:ml-17">
+        <CardHeader className="p-0 pb-1">
+          <CardTitle className="truncate text-sm font-semibold text-gray-900">
+            아직 대화내역이 없어요
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0 pt-1">
+          <p className="truncate text-xs text-gray-600">로그인하러 가기</p>
+        </CardContent>
+      </Card>
+    );
 
   return (
     <section className="relative flex flex-col px-4 pt-6">
