@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/axiosInstance";
+import { AxiosError } from "axios";
 
 // Chat Session을 불러오는 Hook
 export const useGetChatSession = (sessionId: number | null) => {
@@ -12,6 +13,5 @@ export const useGetChatSession = (sessionId: number | null) => {
       return res.data;
     },
     enabled: !!sessionId, // sessionId가 있을 때만 실행
-    staleTime: 1000 * 60 * 5, // 5분 캐시
   });
 };

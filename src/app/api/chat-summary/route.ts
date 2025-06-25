@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { client } from "@/lib/axiosInstance";
 import fs from "fs/promises";
 import path from "path";
+import { getSummaryPrompt } from "@/lib/chat/prompts/getSummaryPrompt";
 
 // 사용자가 챗봇을 종료할 경우, 지금까지의 챗봇 대화 내역을 요약하기 위해 GPT 모델에 요청을 보내는 함수
 export async function POST(req: NextRequest) {
@@ -16,11 +17,12 @@ export async function POST(req: NextRequest) {
     }
 
     // 대화 내역에 대해서 공백 포함 11줄짜리 요약을 수행하는 프롬프트 호출
-    const basePath = path.resolve(process.cwd(), "src/lib/chat/prompts");
-    const systemPrompt = await fs.readFile(
-      path.join(basePath, "chatbot_result_summary.txt"),
-      "utf-8"
-    );
+    // const basePath = path.resolve(process.cwd(), "src/lib/chat/prompts");
+    // const systemPrompt = await fs.readFile(
+    //   path.join(basePath, "chatbot_result_summary.txt"),
+    //   "utf-8"
+    // );
+    const systemPrompt = await getSummaryPrompt();
 
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
