@@ -190,6 +190,7 @@ export default function NearbyContent({ session }: { session: any }) {
               ? clickedUserPositions.current.get(user.userId)
               : positionCache.current.get(user.userId);
 
+            // ✅ 위치 캐시 없으면 새로 생성 (겹치지 않게)
             if (!position) {
               let tries = 0;
               let newPos;
@@ -207,22 +208,24 @@ export default function NearbyContent({ session }: { session: any }) {
             }
 
             return (
-              <motion.div
-                key={user.userId}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}>
-                <NearbyUserAvatar
-                  userId={user.userId}
-                  angle={position.angle}
-                  distance={position.distance}
-                  onClick={(type) => handleUserClick(user.userId, type)}
-                  isEmptyStamp={wasClicked}
-                  showHeart={heartSenderId === user.userId}
-                  isMe={false}
-                />
-              </motion.div>
+              <div key={user.userId}>
+                {/* ✅ transform 애니메이션 없이 opacity만 적용 */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}>
+                  <NearbyUserAvatar
+                    userId={user.userId}
+                    angle={position.angle}
+                    distance={position.distance}
+                    onClick={(type) => handleUserClick(user.userId, type)}
+                    isEmptyStamp={wasClicked}
+                    showHeart={heartSenderId === user.userId}
+                    isMe={false}
+                  />
+                </motion.div>
+              </div>
             );
           })}
         </AnimatePresence>
