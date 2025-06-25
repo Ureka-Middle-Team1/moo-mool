@@ -7,6 +7,7 @@ import PlanListCard from "../planList/PlanListCard";
 import PlanListCardSkeleton from "@/components/skeleton/PlanListCardSkeleton";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { CarouselItem } from "../ui/carousel";
 
 export default function HomeRecommendedPlan() {
   const { data: session, status } = useSession();
@@ -53,8 +54,10 @@ export default function HomeRecommendedPlan() {
 
       <div className="flex w-[21rem] items-center justify-center">
         {isLoadingAll || !userId ? (
+          // ⏳ 로딩 중이면 스켈레톤
           <PlanListCardSkeleton />
         ) : planData && !planError ? (
+          // ✅ 정상 데이터 있을 때 PlanCard 렌더링
           <PlanListCard
             plan={{
               id: planData.id,
@@ -70,7 +73,12 @@ export default function HomeRecommendedPlan() {
             }}
             hideBenefits={true}
           />
-        ) : null}
+        ) : (
+          // planData가 없거나 에러일 때 보여줄 UI
+          <div className="ml-1 flex h-full w-[14rem] items-center justify-center rounded-xl border border-gray-300 bg-white p-4 shadow-sm md:w-[16rem]">
+            <p className="text-sm text-gray-500">추천받은 요금제가 없습니다.</p>
+          </div>
+        )}
       </div>
     </div>
   );

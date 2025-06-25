@@ -117,29 +117,42 @@ export default function ChatHistoryList() {
             ))}
 
           {/* 세션 카드 */}
-          {loading
-            ? Array.from({ length: 3 }).map((_, i) => (
-                <CarouselItem key={i} className="basis-[80%]">
-                  <ChatSessionCardSkeleton />
+          {loading ? (
+            // 로딩 중일 때: 스켈레톤 3개 표시
+            Array.from({ length: 3 }).map((_, i) => (
+              <CarouselItem key={i} className="basis-[80%]">
+                <ChatSessionCardSkeleton />
+              </CarouselItem>
+            ))
+          ) : sessions && sessions.length === 0 ? (
+            // 데이터가 없을 때: 커스텀 UI
+            <CarouselItem className="mb-3 basis-[100%]">
+              <div className="ml-1 flex h-full w-full items-center justify-center rounded-xl border border-gray-300 bg-white p-4 shadow-sm">
+                <p className="text-sm text-gray-500">
+                  최근 대화 내역이 없습니다.
+                </p>
+              </div>
+            </CarouselItem>
+          ) : (
+            // ✅ 세션이 있을 때: 실제 카드 렌더링
+            sessions?.map((s, idx) => {
+              const index = shouldShowProgress ? idx + 1 : idx;
+              return (
+                <CarouselItem
+                  key={idx}
+                  className={cn(
+                    "basis-[80%] transition-shadow duration-300",
+                    currentIndex === index && "shadow-lg"
+                  )}>
+                  <ChatSessionCard
+                    id={s.id}
+                    summary={s.summary || "요약 내용 없음"}
+                    name={s.name}
+                  />
                 </CarouselItem>
-              ))
-            : sessions?.map((s, idx) => {
-                const index = shouldShowProgress ? idx + 1 : idx;
-                return (
-                  <CarouselItem
-                    key={idx}
-                    className={cn(
-                      "basis-[80%] transition-shadow duration-300",
-                      currentIndex === index && "shadow-lg"
-                    )}>
-                    <ChatSessionCard
-                      id={s.id}
-                      summary={s.summary || "요약 내용 없음"}
-                      name={s.name}
-                    />
-                  </CarouselItem>
-                );
-              })}
+              );
+            })
+          )}
         </CarouselContent>
       </Carousel>
     </section>
