@@ -64,6 +64,9 @@ export default function NearbyContent({ session }: { session: any }) {
 
   const handleUserClick = (targetId: string, clickedType?: string) => {
     const myType = myProfile?.type;
+    // 이미 클릭된 사용자라면 아무 동작 없이 return
+    if (interactedUserIds.has(targetId)) return;
+
     if (!clickedType || !myType || !wsRef.current || !userInfo?.name) return;
 
     if (clickedType === myType) {
