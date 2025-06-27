@@ -33,8 +33,7 @@
 
 
 ## 🛠️ 시스템 아키텍쳐
-<img width="600" src="https://github.com/user-attachments/assets/32c041ce-f31b-45a3-aca4-bb168ffd810d" alt="moomool_architecture" style="border:1px solid black;">
-
+<img width="1432" alt="image" src="https://github.com/user-attachments/assets/39333b56-7eb0-412d-98b1-b2e81d41f980" />
 
 <br/>
 <br/>
@@ -43,7 +42,7 @@
 
 
 ## 📌 ERD
-<img width="600" src="https://github.com/user-attachments/assets/4ae5ead7-b541-41ad-8247-0054f470f5b4" alt="moomool_erd" style="border:1px solid black;">
+<img width="1234" alt="image" src="https://github.com/user-attachments/assets/e6bf385b-800d-46cb-a77d-7d2382873719" />
 
 
 <br/>
