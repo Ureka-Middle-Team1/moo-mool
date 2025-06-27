@@ -73,20 +73,20 @@ npm run dev
   </tr>
   <tr>
     <td align="center">
-      <img src="https://avatars.githubusercontent.com/u/108103346?v=4" width="120" height="120"/>
+      <a href="https://github.com/silverain02"><img src="https://avatars.githubusercontent.com/u/108103346?v=4" width="120" height="120"/></a>
     </td>
     <td align="center">
-      <img src="https://avatars.githubusercontent.com/u/88071251?v=4" width="120" height="120"/>
+      <a href="https://github.com/arty0928"><img src="https://avatars.githubusercontent.com/u/88071251?v=4" width="120" height="120"/></a>
     </td>
     <td align="center">
-      <img src="https://avatars.githubusercontent.com/u/198835896?v=4" width="120" height="120"/>
+      <a href="https://github.com/heejun8"><img src="https://avatars.githubusercontent.com/u/198835896?v=4" width="120" height="120"/></a>
     </td>
     <td align="center">
-      <img src="https://avatars.githubusercontent.com/u/195983909?v=4" width="120" height="120"/>
+      <a href="https://github.com/minji-38"><img src="https://avatars.githubusercontent.com/u/195983909?v=4" width="120" height="120"/></a>
     <td align="center">
-      <img src="https://avatars.githubusercontent.com/u/55499429?v=4" width="120" height="120"/>
+      <a href="https://github.com/alotofhee"><img src="https://avatars.githubusercontent.com/u/55499429?v=4" width="120" height="120"/></a>
     <td align="center">
-      <img src="https://avatars.githubusercontent.com/u/127181459?v=4" width="120" height="120"/>
+      <a href="https://github.com/gichulLimitLess"><img src="https://avatars.githubusercontent.com/u/127181459?v=4" width="120" height="120"/></a>
     </td>
   </tr>
   <tr>
