@@ -1,71 +1,46 @@
-# 성향테스트 기반 AI 요금제 추천 서비스, 무물
-> LG 유플러스 유레카 SW 교육과정 2기 프론트엔드 종합프로젝트 1조
+## 성향테스트 기반 AI 요금제 추천 서비스, 무물🐙
+<div align="center">
 
-## 💡 개요
-무물(Moo-mool)은 성향 테스트와 챗봇을 통해 **나에게 딱 맞는 통신사 요금제를 추천**해주는 AI 맞춤형 서비스입니다.  
+  ![무물배너](https://github.com/user-attachments/assets/540f7747-c3a8-434c-bc23-88ef7bf35f7b)
 
+**성향 테스트와 챗봇을 통해 **나에게 딱 맞는 통신사 요금제를 추천**해주는 AI 맞춤형 서비스**  
+ _유레카 프론트엔드 개발자 2기 종합 프로젝트 우수상🎖️_
 
-![무물배너](https://github.com/user-attachments/assets/540f7747-c3a8-434c-bc23-88ef7bf35f7b)
+</div>
 
-### 🔗 [무물 바로가기 ](https://moo-mool.com/)
+### 🔗 [moo-mool.com](https://moo-mool.com/) 
 
-### 🔗 [무물 시연 영상 보기](https://www.youtube.com/watch?v=edAW9odsNyo)
+### 🔗 [무물 시연 영상 Youtube](https://www.youtube.com/watch?v=edAW9odsNyo)
 ![_-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/e18e4c18-609d-4eef-8b96-4bea9b5c811b)
-
-
 
 </div>
 
 <br/>
 <br/>
 
+## 프로젝트 개요
+
+| 항목           | 내용                             |
+| -------------- | -------------------------------- |
+| **프로젝트명** | 무물 moo-mool                    |
+| **팀명**       | YouGodIT                         |
+| **주제**       | 성향테스트 기반 AI 요금제 추천 서비스 |
+| **타겟층**     | SNS 트렌드에 민감한 MZ세대    |
+| **개발 기간**  | 2025.06.04 ~ 2025.06.26 (약 3주) |
+| **팀 구성**    | Frontend 5명 (Full-Stack + AI)   |
+
+<br/>
+<br/>
+
 ## 🔧 기능 소개
-**1. 🔐 소셜 로그인 & 인증 시스템 (NextAuth + Middleware)**
-<br/>
-- `NextAuth.js + Kakao/Google/Naver OAuth2`: 다양한 소셜 로그인 구현
-- `JWT (HttpOnly Cookie 저장)`: 안전한 인증 정보 관리
-- `Next.js Middleware`: 인증된 사용자만 접근 가능한 경로 보호
-- `Zustand + localStorage`: 인증 상태 및 사용자 정보 전역 관리
-- `Axios Interceptor`: 401 응답 시 자동으로 Refresh Token 재요청 처리
-<br/>
-<br/>
+| 기능 미리보기 | 기능 설명 |
+|:-------------:|-----------|
+| <img src="https://github.com/user-attachments/assets/64b5383a-3844-4f9f-8867-339163413bdb" width="220"/> | **1. 🔐 소셜 로그인 & 인증 시스템 (NextAuth + Middleware)**<br/><br/>- `NextAuth.js + Kakao/Google/Naver OAuth2`: 다양한 소셜 로그인 구현<br/>- `JWT (HttpOnly Cookie 저장)`: 안전한 인증 정보 관리<br/>- `Next.js Middleware`: 인증된 사용자만 접근 가능한 경로 보호<br/>- `Zustand + localStorage`: 인증 상태 및 사용자 정보 전역 관리<br/>- `Axios Interceptor`: 401 응답 시 자동으로 Refresh Token 재요청 처리 |
+| <img src="https://github.com/user-attachments/assets/fd9a339d-0034-4584-b373-7ec56dc4dd21" width="220"/> | **2. 💡요금제 탐색 및 비교**<br/><br/>- `Next.js + Prisma (MySQL)` : 서버 API 및 DB 연동<br/>- `Chart.js` : 사용 요금제와 추천 요금제 비교 시각화<br/>- `Tailwind CSS + Framer Motion` : 리스트/카드 기반 UI 구성 및 애니메이션<br/>- `TanStack Query (React Query)` : 요금제 리스트 페이지네이션 및 Lazy Loading<br/>- `URL 쿼리 기반 필터링` : 통신망(LTE/5G), 가격, OTT 포함 여부 서버 필터링 |
+| <img src="https://github.com/user-attachments/assets/936460d7-b497-4be1-af16-c5be2657bd05" width="220"/> | **3. 🧠 AI 챗봇 요금제 추천 (텍스트/음성)**<br/><br/>- OpenAI 기반 챗봇과 대화하며 요금제 추천<br/>- 텍스트/음성 입력 모두 지원<br/>- 성향 질문 기반 요금제 추천 대화 흐름 구성<br/>- 대화 중 모드 전환(정확 / 자연) 가능<br/>- 챗봇 중간 이탈 후 재접속 시 대화 이어짐 |
+| <img src="https://github.com/user-attachments/assets/05576cd0-3627-4088-b99c-670042d2c65c" width="220"/> | **4. 🎭 밈 테스트 기반 무너 캐릭터와 요금제 추천**<br/><br/>- 6가지 카테고리`(SNS, Youtube, Call, Chat, Books, Savings)`의 질문을 통해 사용자 통신 성향 도출<br/>- `Next.js App Router + Prisma` : 성향 분석 결과 저장 및 추천 흐름<br/>- `CryptoJS (AES)` : 공유 링크 내 userId 암호화 및 복호화 처리<br/>- `generateMetadata()` : 공유 페이지 별 OG 메타태그 동적 설정<br/>- `KakaoTalk SDK` : 카카오톡 공유 기능 및 클릭 트래킹 구현<br/>- `Zustand` : 테스트 결과 및 상태 전역 관리<br/>- `OG Preview 최적화` : 공유자 이름 포함한 미리보기 문구 자동 반영 |
+| <img src="https://github.com/user-attachments/assets/4de03fa5-2ac3-4e57-9c32-95ba6a7ee11a" width="220"/> | **5. 🧭 주변 사용자 탐색 & 실시간 상호작용**<br/><br/>- `WebSocket (ws)` : 사용자 위치 실시간 공유 및 클릭 이벤트 전송<br/>- `Geolocation API` : GPS 기반 사용자 위치 탐지 및 반경 100m 내 접속자 존재 탐지<br/>- `Vibration API + 하트 애니메이션` : 상대방 클릭 시 피드백 제공<br/>- `Zustand + useRef/useMemo` : 상태 캐시 및 렌더링 최적화<br/>- `Framer Motion` : 아바타 등장 및 클릭 시 동적 애니메이션 처리<br/>- `Sonner` : 커스텀 토스트로 근처 사용자 탐색 반경 100m 내 접속자 존재 시 Home 화면에 toast 알림 |
 
-**2.💡요금제 탐색 및 비교** : 필터, 정렬 기능 포함한 리스트 및 상세 비교
-<br/>
-- `Next.js + Prisma (MySQL)` : 서버 API 및 DB 연동
-- `Chart.js` : 사용 요금제와 추천 요금제 비교 시각화
-- `Tailwind CSS + Framer Motion` : 리스트/카드 기반 UI 구성 및 애니메이션
-- `TanStack Query (React Query)` : 요금제 리스트 페이지네이션 및 Lazy Loading
-- `URL 쿼리 기반 필터링` : 통신망(LTE/5G), 가격, OTT 포함 여부 서버 필터링
-<br/>
-<br/>
-
-**3. 챗봇** : 텍스트·음성 입력을 통해 요금제 추천 대화 진행 (OpenAI 연동) 
-중간에 대화를 이탈해도 
-
-<br/>
-<br/>
-
-**4. 🎭 밈 테스트 기반 무너 캐릭터와 요금제 추천**
-<br/>
-- 6가지 카테고리`(SNS, Youtube, Call, Chat, Books, Savings)`의 질문을 통해 사용자 통신 성향 도출
-- `Next.js App Router + Prisma` : 성향 분석 결과 저장 및 추천 흐름
-- `CryptoJS (AES)` : 공유 링크 내 userId 암호화 및 복호화 처리
-- `generateMetadata()` : 공유 페이지 별 OG 메타태그 동적 설정
-- `KakaoTalk SDK` : 카카오톡 공유 기능 및 클릭 트래킹 구현
-- `Zustand` : 테스트 결과 및 상태 전역 관리
-- `OG Preview 최적화` : 공유자 이름 포함한 미리보기 문구 자동 반영
-<br/>
-<br/>
-
-**5. 🧭 주변 사용자 탐색 & 실시간 상호작용**
-<br/>
-- `WebSocket (ws)` : 사용자 위치 실시간 공유 및 클릭 이벤트 전송
-- `Geolocation API` : GPS 기반 사용자 위치 탐지 및 반경 100m 내 접속자 존재 탐지
-- `Vibration API + 하트 애니메이션` : 상대방 클릭 시 피드백 제공
-- `Zustand + useRef/useMemo` : 상태 캐시 및 렌더링 최적화
-- `Framer Motion` : 아바타 등장 및 클릭 시 동적 애니메이션 처리
-- `Sonner` : 커스텀 토스트로 근처 사용자 탐색 반경 100m 내 접속자 존재 시 Home 화면에 toast 알림
 
 <br/>
 <br/>
@@ -85,6 +60,19 @@
 <br/>
 <br/>
 
+## 👥 팀원 및 역할 소개
+| 프로필 | 이름 | 주요 역할 및 기여 내용 |
+|--------|------|----------------------|
+| <img src="https://avatars.githubusercontent.com/u/108103346?v=4" width="100" /> | **이은비**<br/>[@silverain02](https://github.com/silverain02) | **팀장 · 음성 챗봇 리드**<br/>- 프로젝트 기획 총괄 및 워크플로우 설계<br/>- 음성 입력 기반 AI 요금제 챗봇 구현<br/>- LangChain 기반 대화 흐름 설계 및 상태 관리<br/>- 음성 인식 처리 로직 및 UI 컴포넌트 구성<br/>- 요금제 추천 흐름 설계 및 테스트 |
+| <img src="https://avatars.githubusercontent.com/u/88071251?v=4" width="100" /> | **박은서**<br/>[@arty0928](https://github.com/arty0928) | **풀스택 · 근거리 통신 & 공유 시스템 리드**<br/>- 서비스 전체 워크플로우 설계<br/>- 실시간 위치 공유 시스템 및 Node.js 서버 구현 <br/>- ERD 설계 기반 Prisma ORM으로 DB 스키마 및 관계형 모델링 구축<br/>- Kakao OAuth2 사용자 상태 Zustand 전역 관리<br/>- 위치 기반 사용자 정보 수집 및 클릭 이벤트 처리 로직 구현<br/>- 성향 테스트 제출 및 레벨업 시스템 API 구현<br/>- 공유 URL 내 userId AES 암호화 및 CryptoJS 기반 보안 처리 및 OG 메타 태그 동적 설정<br/>- 보상 시스템 로직 설계 및 클릭 이벤트 연동<br/>- 테스트 홈·결과 페이지, Nearby 위치 UI |
+| <img src="https://avatars.githubusercontent.com/u/198835896?v=4" width="100" /> | **박희준**<br/>[@heejun8](https://github.com/heejun8) | **풀스택 · 요금제 시각화 및 추천 시스템**<br/>- Chart.js 기반 요금제 비교 시각화 구현<br/>- 사용자의 현재 요금제와 추천 요금제 시각적 비교 인터페이스 개발<br/>- 요금제 상세 정보 페이지 및 필터·정렬 기능 구현<br/>- 요금제 리스트 Pagination 및 Lazy Loading 처리<br/>- 추천 요금제 데이터 가공 및 백엔드 API 연동 |
+| <img src="https://avatars.githubusercontent.com/u/195983909?v=4" width="100" /> | **안민지**<br/>[@minji-38](https://github.com/minji-38) | **풀스택 · 밈 테스트 UI 및 콘텐츠 리드**<br/>- 밈 테스트 디자인 총괄 및 문항 콘텐츠 제작<br/>- 문항 설계 및 결과 유형 매칭 로직 구현<br/>- 성향 테스트 결과 페이지, 마이페이지 UI 및 애니메이션 적용<br/>- 마이페이지 모달 및 공통 햄버거 메뉴 구현 |
+| <img src="https://avatars.githubusercontent.com/u/55499429?v=4" width="100" /> | **정다희**<br/>[@alotofhee](https://github.com/alotofhee) | **풀스택 · AI 챗봇 플로우 & 인증 시스템 설계**<br/>- ERD 설계 및 Swagger API 문서 작성<br/>- Next.js `middleware.ts` 기반 인증 라우팅 구현<br/>- 로그인 여부에 따라 페이지 접근 제한 및 리디렉션 처리<br/>- 랜딩, 온보딩 페이지 UI 및 인터랙션 구현<br/>- AI 챗봇 단계별 로드맵 모달 UI 및 흐름 제어 로직 구현 |
+| <img src="https://avatars.githubusercontent.com/u/127181459?v=4" width="100" /> | **허준호**<br/>[@gichulLimitLess](https://github.com/gichulLimitLess) | **풀스택 · AI 챗봇 & 요금제 추천 시스템 리드**<br/>- OpenAI 연동 챗봇 대화 흐름 설계 및 질문 템플릿 구성<br/>- 추천 요금제 응답 JSON 파싱 및 카드형 UI 렌더링 처리<br/>- 자연스러운 모드 / 정확한 모드 전환 로직 구현<br/>- 요금제 추천 시스템 API 통합 및 응답 최적화<br/>- 사용자 챗봇 대화 기록 저장 및 AI 요약 기능 구현 |
+
+
+<br/>
+<br/>
 
 ## 🛠️ 시스템 아키텍쳐
 <img width="1432" alt="image" src="https://github.com/user-attachments/assets/39333b56-7eb0-412d-98b1-b2e81d41f980" />
@@ -108,44 +96,5 @@ npm run dev
 <br/>
 <br/>
 
-
-
-## 👥 팀원 및 역할 소개
-
-
-<table align="center">
-  <tr>
-    <td align="center"><b>이은비</b></td>
-    <td align="center"><b>박은서</b></td>
-    <td align="center"><b>박희준</b></td>
-    <td align="center"><b>안민지</b></td>
-    <td align="center"><b>정다희</b></td>
-    <td align="center"><b>허준호</b></td>
-  </tr>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/silverain02"><img src="https://avatars.githubusercontent.com/u/108103346?v=4" width="120" height="120"/></a>
-    </td>
-    <td align="center">
-      <a href="https://github.com/arty0928"><img src="https://avatars.githubusercontent.com/u/88071251?v=4" width="120" height="120"/></a>
-    </td>
-    <td align="center">
-      <a href="https://github.com/heejun8"><img src="https://avatars.githubusercontent.com/u/198835896?v=4" width="120" height="120"/></a>
-    </td>
-    <td align="center">
-      <a href="https://github.com/minji-38"><img src="https://avatars.githubusercontent.com/u/195983909?v=4" width="120" height="120"/></a>
-    <td align="center">
-      <a href="https://github.com/alotofhee"><img src="https://avatars.githubusercontent.com/u/55499429?v=4" width="120" height="120"/></a>
-    <td align="center">
-      <a href="https://github.com/gichulLimitLess"><img src="https://avatars.githubusercontent.com/u/127181459?v=4" width="120" height="120"/></a>
-    </td>
-  </tr>
-  <tr>
-  <td align="center">팀장<br>음성챗봇</td>
-    <td align="center">풀스택<br>주변 친구 찾기</td>
-    <td align="center">풀스택<br>요금제 시각화</td>
-    <td align="center">풀스택, 디자인<br>밈테스트</td>
-    <td align="center">풀스택<br>챗봇</td>
-    <td align="center">풀스택, AI<br>챗봇</td>
-  </tr>
-</table>
+---
+**Team YouGodIT** | LG U+ URECA 프론트엔드 개발자 과정 2기 종합프로젝트 1조
