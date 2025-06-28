@@ -8,10 +8,13 @@
 
 </div>
 
+### 🗣️ [발표 자료](https://www.canva.com/design/DAGrUWfVK6s/5B5iXslpYCPDJdLXwNfOYQ/edit?utm_content=DAGrUWfVK6s&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
 ### 🔗 [moo-mool.com](https://moo-mool.com/) 
 
 ### 🔗 [무물 시연 영상 Youtube](https://www.youtube.com/watch?v=edAW9odsNyo)
 ![_-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/e18e4c18-609d-4eef-8b96-4bea9b5c811b)
+
 
 </div>
 
