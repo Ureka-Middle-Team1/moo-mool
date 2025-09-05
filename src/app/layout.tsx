@@ -1,4 +1,5 @@
 import LayoutWrapper from "@/components/common/LayoutWrapper";
+import KakaoSDKProvider from "@/components/kakao/KakaoSDKProvider";
 import { CustomToastProvider } from "@/components/toast/CustomToastProvider";
 import { Metadata } from "next";
 import Script from "next/script";
@@ -69,15 +70,11 @@ export default function RootLayout({
             });
           `}
         </Script>
-
-        {/* 카카오 SDK */}
-        <Script
-          src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js"
-          strategy="beforeInteractive"
-        />
       </head>
+
       <body className="m-0 h-full bg-gray-500 p-0">
         <Providers>
+          <KakaoSDKProvider />
           <Toaster position="top-center" richColors />
           <CustomToastProvider>
             <LayoutWrapper>{children}</LayoutWrapper>
