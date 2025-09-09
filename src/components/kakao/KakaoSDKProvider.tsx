@@ -4,7 +4,6 @@ import Script from "next/script";
 
 export default function KakaoSDKProvider() {
   const handleLoad = () => {
-    const w = window as any;
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init(process.env.KAKAO_CLIENT_ID!);
     }
