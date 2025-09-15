@@ -1,11 +1,12 @@
-import "./globals.css";
-import "./fonts.css";
+import LayoutWrapper from "@/components/common/LayoutWrapper";
+import KakaoSDKProvider from "@/components/kakao/KakaoSDKProvider";
+import { CustomToastProvider } from "@/components/toast/CustomToastProvider";
 import { Metadata } from "next";
-import Providers from "./providers";
 import Script from "next/script";
 import { Toaster } from "sonner";
-import LayoutWrapper from "@/components/common/LayoutWrapper";
-import { CustomToastProvider } from "@/components/toast/CustomToastProvider";
+import "./fonts.css";
+import "./globals.css";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "무물",
@@ -53,14 +54,6 @@ export default function RootLayout({
           href="/assets/stamps/stamp_red.svg"
           type="image/svg+xml"
         />
-      </head>
-      <body className="m-0 h-full bg-gray-500 p-0">
-        <Providers>
-          <Toaster position="top-center" richColors />
-          <CustomToastProvider>
-            <LayoutWrapper>{children}</LayoutWrapper>
-          </CustomToastProvider>
-        </Providers>
 
         {/* 구글 애널리틱스 */}
         <Script
@@ -77,12 +70,16 @@ export default function RootLayout({
             });
           `}
         </Script>
+      </head>
 
-        {/* 카카오 SDK */}
-        <Script
-          src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js"
-          strategy="beforeInteractive"
-        />
+      <body className="m-0 h-full bg-gray-500 p-0">
+        <Providers>
+          <KakaoSDKProvider />
+          <Toaster position="top-center" richColors />
+          <CustomToastProvider>
+            <LayoutWrapper>{children}</LayoutWrapper>
+          </CustomToastProvider>
+        </Providers>
       </body>
     </html>
   );
