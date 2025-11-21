@@ -73,7 +73,6 @@ export default function NearbyUserAvatar({
       const clickType = !isProfileError
         ? (profile?.type ?? "default")
         : "default";
-      console.log("✅ 아바타 클릭됨 → 타입 전달:", clickType);
       onClick(clickType);
     }
   };

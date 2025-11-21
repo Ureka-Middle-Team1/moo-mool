@@ -34,8 +34,6 @@ export function useNearbySocket({
     let intervalId: NodeJS.Timeout;
 
     socket.onopen = () => {
-      console.log("✅ WebSocket 연결됨");
-
       // ✅ 접속 알림 전송
       socket.send(
         JSON.stringify({
@@ -76,13 +74,10 @@ export function useNearbySocket({
       try {
         const message = JSON.parse(event.data);
 
-        console.log("[ 전체 유저 ] : ", message.allUsers);
-
         if (
           message.type === "nearby_users" &&
           Array.isArray(message.nearbyUsers)
         ) {
-          // consㅗole.log("📍 [근처 유저 목록]", message.nearbyUsers);
           onNearbyUsers(message.nearbyUsers);
         }
 
@@ -108,9 +103,7 @@ export function useNearbySocket({
       console.error("❌ WebSocket 에러:", e);
     };
 
-    socket.onclose = () => {
-      console.log("❌ WebSocket 연결 종료");
-    };
+    socket.onclose = () => {};
 
     return () => {
       if (wsRef.current?.readyState === WebSocket.OPEN) {

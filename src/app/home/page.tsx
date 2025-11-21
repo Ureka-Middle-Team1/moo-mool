@@ -68,8 +68,6 @@ export default function HomePage() {
     socketRef.current = socket;
 
     socket.onopen = () => {
-      console.log("✅ HomePage WebSocket 연결됨");
-
       socket.send(
         JSON.stringify({
           type: "home_ready",
@@ -79,7 +77,7 @@ export default function HomePage() {
 
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      console.log("메세지 전달", message);
+      // console.log("메세지 전달", message);
 
       if (message.type === "nearby_user_joined") {
         if (toastId === null) {
@@ -95,9 +93,7 @@ export default function HomePage() {
       console.error("WebSocket 에러:", e);
     };
 
-    socket.onclose = () => {
-      console.log("❌ HomePage WebSocket 연결 종료");
-    };
+    socket.onclose = () => {};
 
     return () => {
       socket.close();
